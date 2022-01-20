@@ -11,7 +11,7 @@ IOS
   编辑 android/app/src/main/res/values/strings.xml
   <resources>
 
-- <string name=“app_name">old product name</string>
+- <string name="app_name">old product name</string>
 
 * <string name="app_name">new product name</string>  
   </resources>

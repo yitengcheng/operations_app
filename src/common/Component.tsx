@@ -1,20 +1,20 @@
-import React from 'react';
-import {Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import React from "react";
+import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
 
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 export const NavBar = (props: any) => {
-  const {title, rightTitle, onRightClick, navigation} = props;
+  const { title, rightTitle, onRightClick, navigation } = props;
   const goBack = () => {
     navigation.goBack();
   };
-  const theme = useSelector(state => {
+  const theme = useSelector((state) => {
     return state.theme.theme;
   });
   return (
-    <View style={[{backgroundColor: theme.primary}, styles.navBar]}>
-      {Object.hasOwn(props, 'navigation') ? (
+    <View style={[{ backgroundColor: theme.primary }, styles.navBar]}>
+      {Object.hasOwn(props, "navigation") ? (
         <TouchableOpacity onPress={goBack}>
           <AntDesign name="left" size={24} color="#FFF" />
         </TouchableOpacity>
@@ -32,8 +32,8 @@ export const NavBar = (props: any) => {
 };
 
 export const ConfirmButton = (props: any) => {
-  const {title, onClick, buttonStyle, fontStyle} = props;
-  const theme = useSelector(state => {
+  const { title, onClick, buttonStyle, fontStyle } = props;
+  const theme = useSelector((state) => {
     return state.theme.theme;
   });
   return (
@@ -47,7 +47,8 @@ export const ConfirmButton = (props: any) => {
               borderColor: theme.borderColor,
               ...styles.buttonStyle,
             },
-      ]}>
+      ]}
+    >
       <Text
         style={[
           fontStyle
@@ -56,7 +57,8 @@ export const ConfirmButton = (props: any) => {
                 fontSize: theme.fontSize,
                 color: theme.fontColor,
               },
-        ]}>
+        ]}
+      >
         {title}
       </Text>
     </TouchableOpacity>
@@ -64,8 +66,8 @@ export const ConfirmButton = (props: any) => {
 };
 
 export const WarrningButton = (props: any) => {
-  const {title, onClick, buttonStyle, fontStyle} = props;
-  const theme = useSelector(state => {
+  const { title, onClick, buttonStyle, fontStyle } = props;
+  const theme = useSelector((state) => {
     return state.theme.theme;
   });
   return (
@@ -79,7 +81,8 @@ export const WarrningButton = (props: any) => {
               borderColor: theme.borderColor,
               ...styles.buttonStyle,
             },
-      ]}>
+      ]}
+    >
       <Text
         style={[
           fontStyle
@@ -88,7 +91,8 @@ export const WarrningButton = (props: any) => {
                 fontSize: theme.fontSize,
                 color: theme.fontColor,
               },
-        ]}>
+        ]}
+      >
         {title}
       </Text>
     </TouchableOpacity>
@@ -96,8 +100,8 @@ export const WarrningButton = (props: any) => {
 };
 
 export const ErrorButton = (props: any) => {
-  const {title, onClick, buttonStyle, fontStyle} = props;
-  const theme = useSelector(state => {
+  const { title, onClick, buttonStyle, fontStyle } = props;
+  const theme = useSelector((state) => {
     return state.theme.theme;
   });
   return (
@@ -111,7 +115,8 @@ export const ErrorButton = (props: any) => {
               borderColor: theme.borderColor,
               ...styles.buttonStyle,
             },
-      ]}>
+      ]}
+    >
       <Text
         style={[
           fontStyle
@@ -120,7 +125,8 @@ export const ErrorButton = (props: any) => {
                 fontSize: theme.fontSize,
                 color: theme.fontColor,
               },
-        ]}>
+        ]}
+      >
         {title}
       </Text>
     </TouchableOpacity>
@@ -129,15 +135,15 @@ export const ErrorButton = (props: any) => {
 
 const styles = StyleSheet.create({
   navBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     height: 44,
   },
   titleLayout: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
     left: 40,
     right: 40,
     top: 0,
@@ -145,17 +151,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   button: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     paddingRight: 15,
     fontSize: 16,
   },
   buttonStyle: {
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
     borderWidth: 1,
     flex: 1,
+    minHeight: 45,
   },
 });
