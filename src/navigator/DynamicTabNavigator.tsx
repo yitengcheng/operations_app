@@ -1,16 +1,16 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {tabs} from './routers';
-import {useSelector} from 'react-redux';
+import { tabs } from './routers';
+import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
 export const DynamicTabNavigator = (props: any) => {
-  const {Test} = tabs;
+  const { Test } = tabs;
   const bottomNavigation = {
     Test,
   }; // 根据需要定制显示的tab
-  const theme = useSelector(state => {
+  const theme = useSelector((state) => {
     return state.theme.theme;
   });
   return (
@@ -21,8 +21,9 @@ export const DynamicTabNavigator = (props: any) => {
           paddingBottom: 5,
           height: 55,
         },
-      }}>
-      {Object.entries(bottomNavigation).map(item => {
+      }}
+    >
+      {Object.entries(bottomNavigation).map((item) => {
         return (
           <Tab.Screen
             key={item[0]}

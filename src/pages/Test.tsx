@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import {
   ConfirmButton,
@@ -12,17 +11,18 @@ import {
   WarrningButton,
   ErrorButton,
 } from '../common/Component';
+
 export default (props: any) => {
   const toDetail = () => {
     const {
-      navigation: {navigate},
+      navigation: { navigate },
     } = props;
     navigate('Detail');
   };
   return (
     <SafeAreaView style={styles.root}>
       <NavBar title="测试" />
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         <ConfirmButton title="详情" onClick={toDetail} />
         <WarrningButton title="警告" />
         <ErrorButton title="错误" />

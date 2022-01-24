@@ -1,11 +1,11 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
-import { tabs } from "./routers";
-import { useSelector } from "react-redux";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
+import { tabs } from './routers';
+import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
-export const DynamicTabNavigator = (props: any) => {
+export const DynamicTabNavigator = () => {
   const { Test } = tabs;
   const bottomNavigation = {
     Test,

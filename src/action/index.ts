@@ -1,4 +1,4 @@
-import {onThemeChange} from './theme/index';
+import { onThemeChange } from './theme/index';
 
 export default {
   onThemeChange,

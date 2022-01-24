@@ -9,5 +9,5 @@ import Types from '../types';
  * @returns {{type: string,theme: *}}
  */
 export function onThemeChange(theme: any): {} {
-  return {type: Types.THEME_CHANGE, theme};
+  return { type: Types.THEME_CHANGE, theme };
 }

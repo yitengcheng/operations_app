@@ -1,8 +1,8 @@
-import React from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 
-import AntDesign from "react-native-vector-icons/AntDesign";
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export const NavBar = (props: any) => {
   const { title, rightTitle, onRightClick, navigation } = props;
@@ -14,12 +14,12 @@ export const NavBar = (props: any) => {
   });
   return (
     <View style={[{ backgroundColor: theme.primary }, styles.navBar]}>
-      {Object.hasOwn(props, "navigation") ? (
+      {Object.hasOwn(props, 'navigation') ? (
         <TouchableOpacity onPress={goBack}>
           <AntDesign name="left" size={24} color="#FFF" />
         </TouchableOpacity>
       ) : (
-        <View></View>
+        <View />
       )}
       <View style={styles.titleLayout}>
         <Text style={styles.title}>{title}</Text>
@@ -40,23 +40,19 @@ export const ConfirmButton = (props: any) => {
     <TouchableOpacity
       onPress={onClick}
       style={[
-        buttonStyle
-          ? buttonStyle
-          : {
-              backgroundColor: theme.primary,
-              borderColor: theme.borderColor,
-              ...styles.buttonStyle,
-            },
+        buttonStyle || {
+          backgroundColor: theme.primary,
+          borderColor: theme.borderColor,
+          ...styles.buttonStyle,
+        },
       ]}
     >
       <Text
         style={[
-          fontStyle
-            ? fontStyle
-            : {
-                fontSize: theme.fontSize,
-                color: theme.fontColor,
-              },
+          fontStyle || {
+            fontSize: theme.fontSize,
+            color: theme.fontColor,
+          },
         ]}
       >
         {title}
@@ -74,23 +70,19 @@ export const WarrningButton = (props: any) => {
     <TouchableOpacity
       onPress={onClick}
       style={[
-        buttonStyle
-          ? buttonStyle
-          : {
-              backgroundColor: theme.warrning,
-              borderColor: theme.borderColor,
-              ...styles.buttonStyle,
-            },
+        buttonStyle || {
+          backgroundColor: theme.warrning,
+          borderColor: theme.borderColor,
+          ...styles.buttonStyle,
+        },
       ]}
     >
       <Text
         style={[
-          fontStyle
-            ? fontStyle
-            : {
-                fontSize: theme.fontSize,
-                color: theme.fontColor,
-              },
+          fontStyle || {
+            fontSize: theme.fontSize,
+            color: theme.fontColor,
+          },
         ]}
       >
         {title}
@@ -108,23 +100,19 @@ export const ErrorButton = (props: any) => {
     <TouchableOpacity
       onPress={onClick}
       style={[
-        buttonStyle
-          ? buttonStyle
-          : {
-              backgroundColor: theme.error,
-              borderColor: theme.borderColor,
-              ...styles.buttonStyle,
-            },
+        buttonStyle || {
+          backgroundColor: theme.error,
+          borderColor: theme.borderColor,
+          ...styles.buttonStyle,
+        },
       ]}
     >
       <Text
         style={[
-          fontStyle
-            ? fontStyle
-            : {
-                fontSize: theme.fontSize,
-                color: theme.fontColor,
-              },
+          fontStyle || {
+            fontSize: theme.fontSize,
+            color: theme.fontColor,
+          },
         ]}
       >
         {title}
@@ -135,15 +123,15 @@ export const ErrorButton = (props: any) => {
 
 const styles = StyleSheet.create({
   navBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     height: 44,
   },
   titleLayout: {
-    alignItems: "center",
-    justifyContent: "center",
-    position: "absolute",
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
     left: 40,
     right: 40,
     top: 0,
@@ -151,16 +139,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: "#FFFFFF",
+    color: '#FFFFFF',
   },
   button: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     paddingRight: 15,
     fontSize: 16,
   },
   buttonStyle: {
     padding: 10,
-    alignItems: "center",
+    alignItems: 'center',
     borderWidth: 1,
     flex: 1,
     minHeight: 45,

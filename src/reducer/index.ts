@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import theme from './theme';
 /**
  * 合并reducer,通过combineReducers将多个reducer合并成一个根reducer

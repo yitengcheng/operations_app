@@ -5,7 +5,7 @@ import Test from '../pages/Test';
 import Login from '../pages/login/Login';
 import Detail from '../pages/Detail';
 
-//图标引入
+// 图标引入
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 // 底部导航
@@ -15,8 +15,8 @@ export const tabs = {
     navigationOptions: {
       tabBarLabel: '测试',
       headerShown: false,
-      tabBarIcon: ({color, focused}) => {
-        return <MaterialIcons name={'whatshot'} size={26} style={{color}} />;
+      tabBarIcon: ({ color, focused }) => {
+        return <MaterialIcons name={'whatshot'} size={26} style={{ color }} />;
       },
     },
   },
