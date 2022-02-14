@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, View, Modal, Alert } from 'react-native';
-import { ConfirmButton, NavBar } from '../common/Component';
+import { CustomButton, NavBar } from '../common/Component';
 import { useSelector } from 'react-redux';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { FormInput, FormSelect, FormInputField } from '../common/form/Index';
+import { FormInput, FormSelect, FormUpload } from '../common/form/Index';
 import { useValidation } from 'react-native-form-validator';
-import { validOption } from '../utils';
+import { validOption, randomId } from '../utils';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -16,17 +16,15 @@ export default (props: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [label, setLabel] = useState('');
-  const [value, setValue] = useState('');
   const [hasRequired, setHasRequired] = useState('');
   const [options, setOptions] = useState([{ label: '选项1', value: '' }]);
   const [maxLength, setMaxLength] = useState('');
 
   const { validate, ...other } = useValidation({
-    state: { type, label, value, maxLength, hasRequired },
+    state: { type, label, maxLength, hasRequired },
     labels: {
       type: '类型',
       label: '框名',
-      value: '字段名',
       maxLength: '最大长度',
       hasRequired: '是否为必选项',
     },
@@ -60,7 +58,6 @@ export default (props: any) => {
     const res = validate({
       type: { required: true },
       label: { required: true },
-      value: { required: true },
       maxLength: { numbers: true },
       hasRequired: { required: true },
     });
@@ -75,31 +72,30 @@ export default (props: any) => {
         compontentsOption.push({
           type,
           label,
-          value,
           maxLength,
           rule: { required: hasRequired },
         });
-        compontents.push(<FormInput label={label} key={value} maxLength={length * 1} required={hasRequired} />);
+        compontents.push(<FormInput label={label} key={randomId()} maxLength={length * 1} required={hasRequired} />);
         break;
       case '数字输入框':
         compontentsOption.push({
           type,
           label,
-          value,
           maxLength,
           rule: { required: hasRequired, numbers: true },
         });
-        compontents.push(<FormInput label={label} key={value} maxLength={length * 1} required={hasRequired} />);
+        compontents.push(<FormInput label={label} key={randomId()} maxLength={length * 1} required={hasRequired} />);
         break;
       case '多行文字输入框':
         compontentsOption.push({
           type,
           label,
-          value,
           maxLength,
           rule: { required: hasRequired },
         });
-        compontents.push(<FormInput multiline={true} label={label} key={value} maxLength={length * 1} required={hasRequired} />);
+        compontents.push(
+          <FormInput multiline label={label} key={randomId()} maxLength={length * 1} required={hasRequired} />,
+        );
         break;
       case '选择器':
         const tmp = [];
@@ -107,13 +103,18 @@ export default (props: any) => {
         compontentsOption.push({
           type,
           label,
-          value,
           maxLength,
           rule: { required: hasRequired },
           options: tmp,
         });
         compontents.push(
-          <FormSelect label={label} key={value} options={tmp} required={hasRequired} onChange={() => console.log()} />,
+          <FormSelect
+            label={label}
+            key={randomId()}
+            options={tmp}
+            required={hasRequired}
+            onChange={() => console.log()}
+          />,
         );
         break;
       default:
@@ -127,7 +128,6 @@ export default (props: any) => {
   const reset = () => {
     setLabel('');
     setType('');
-    setValue('');
     setMaxLength('');
     setOptions([{ label: '选项1', value: '' }]);
     setHasRequired('');
@@ -138,6 +138,8 @@ export default (props: any) => {
       <NavBar title="详情" {...props} />
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         {compontents}
+        <FormUpload label="图片" count={5} />
+
         <AntDesign.Button
           name="pluscircleo"
           size={26}
@@ -176,7 +178,6 @@ export default (props: any) => {
             onChange={(value) => setHasRequired(value)}
           />
           <FormInput label="框名" value={label} onChangeText={setLabel} {...validOption('label', other)} />
-          <FormInput label="字段名" value={value} onChangeText={setValue} {...validOption('value', other)} />
           {type !== '选择器' && (
             <FormInput
               label="最大长度"
@@ -188,8 +189,8 @@ export default (props: any) => {
           )}
           {type === '选择器' && selectOptions()}
           <View style={{ flexDirection: 'row' }}>
-            <ConfirmButton title="保存" onClick={confirmCompontent} />
-            <ConfirmButton title="取消" onClick={() => setModalVisible(false)} />
+            <CustomButton title="保存" onClick={confirmCompontent} />
+            <CustomButton title="取消" onClick={() => setModalVisible(false)} />
           </View>
         </SafeAreaView>
       </Modal>

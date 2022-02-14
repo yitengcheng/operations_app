@@ -14,7 +14,7 @@ export const NavBar = (props: any) => {
   });
   return (
     <View style={[{ backgroundColor: theme.primary }, styles.navBar]}>
-      {Object.hasOwn(props, 'navigation') ? (
+      {props.hasOwnProperty('navigation') ? (
         <TouchableOpacity onPress={goBack}>
           <AntDesign name="left" size={24} color="#FFF" />
         </TouchableOpacity>
@@ -31,8 +31,8 @@ export const NavBar = (props: any) => {
   );
 };
 
-export const ConfirmButton = (props: any) => {
-  const { title, onClick, buttonStyle, fontStyle } = props;
+export const CustomButton = (props: any) => {
+  const { title, onClick, buttonStyle, fontStyle, type = 'primary' } = props;
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
@@ -41,67 +41,7 @@ export const ConfirmButton = (props: any) => {
       onPress={onClick}
       style={[
         buttonStyle || {
-          backgroundColor: theme.primary,
-          borderColor: theme.borderColor,
-          ...styles.buttonStyle,
-        },
-      ]}
-    >
-      <Text
-        style={[
-          fontStyle || {
-            fontSize: theme.fontSize,
-            color: theme.fontColor,
-          },
-        ]}
-      >
-        {title}
-      </Text>
-    </TouchableOpacity>
-  );
-};
-
-export const WarrningButton = (props: any) => {
-  const { title, onClick, buttonStyle, fontStyle } = props;
-  const theme = useSelector((state) => {
-    return state.theme.theme;
-  });
-  return (
-    <TouchableOpacity
-      onPress={onClick}
-      style={[
-        buttonStyle || {
-          backgroundColor: theme.warrning,
-          borderColor: theme.borderColor,
-          ...styles.buttonStyle,
-        },
-      ]}
-    >
-      <Text
-        style={[
-          fontStyle || {
-            fontSize: theme.fontSize,
-            color: theme.fontColor,
-          },
-        ]}
-      >
-        {title}
-      </Text>
-    </TouchableOpacity>
-  );
-};
-
-export const ErrorButton = (props: any) => {
-  const { title, onClick, buttonStyle, fontStyle } = props;
-  const theme = useSelector((state) => {
-    return state.theme.theme;
-  });
-  return (
-    <TouchableOpacity
-      onPress={onClick}
-      style={[
-        buttonStyle || {
-          backgroundColor: theme.error,
+          backgroundColor: theme[type],
           borderColor: theme.borderColor,
           ...styles.buttonStyle,
         },
@@ -152,5 +92,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flex: 1,
     minHeight: 45,
+    minWidth: 100,
   },
 });

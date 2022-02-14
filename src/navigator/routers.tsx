@@ -15,7 +15,7 @@ export const tabs = {
     navigationOptions: {
       tabBarLabel: '测试',
       headerShown: false,
-      tabBarIcon: ({ color, focused }) => {
+      tabBarIcon: ({ color }) => {
         return <MaterialIcons name={'whatshot'} size={26} style={{ color }} />;
       },
     },

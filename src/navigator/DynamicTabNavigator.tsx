@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
-export const DynamicTabNavigator = (props: any) => {
+export const DynamicTabNavigator = () => {
   const { Test } = tabs;
   const bottomNavigation = {
     Test,
