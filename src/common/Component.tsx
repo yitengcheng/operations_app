@@ -3,11 +3,17 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import NavigationUtil from '../navigator/NavigationUtil';
 
+/**
+ * 顶部导航
+ * @param props
+ * @returns
+ */
 export const NavBar = (props: any) => {
   const { title, rightTitle, onRightClick, navigation } = props;
   const goBack = () => {
-    navigation.goBack();
+    NavigationUtil.goBack(navigation);
   };
   const theme = useSelector((state) => {
     return state.theme.theme;
@@ -31,6 +37,12 @@ export const NavBar = (props: any) => {
   );
 };
 
+/**
+ * 自定义按钮
+ * @param props
+ * @param type
+ * @returns
+ */
 export const CustomButton = (props: any) => {
   const { title, onClick, buttonStyle, fontStyle, type = 'primary' } = props;
   const theme = useSelector((state) => {
@@ -39,13 +51,12 @@ export const CustomButton = (props: any) => {
   return (
     <TouchableOpacity
       onPress={onClick}
-      style={[
-        buttonStyle || {
-          backgroundColor: theme[type],
-          borderColor: theme.borderColor,
-          ...styles.buttonStyle,
-        },
-      ]}
+      style={{
+        backgroundColor: theme[type],
+        borderColor: theme.borderColor,
+        ...styles.buttonStyle,
+        ...buttonStyle,
+      }}
     >
       <Text
         style={[
@@ -89,6 +100,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     padding: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
     flex: 1,
     minHeight: 45,

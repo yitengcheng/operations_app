@@ -1,17 +1,14 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import NavigationUtil from '../../navigator/NavigationUtil';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default (props: any) => {
+  const dispatch = useDispatch();
   const toPage = () => {
-    const {
-      navigation: { navigate },
-    } = props;
-    navigate('Home', { msg: '跳转测试' });
+    const { navigation } = props;
+    dispatch({ type: 'BOTTOMNAVIGATION', bottomNavigation: ['Test'] });
+    NavigationUtil.goPage({ navigation }, 'Home');
   };
   return (
     <SafeAreaView style={styles.root}>

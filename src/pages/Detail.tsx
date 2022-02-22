@@ -3,7 +3,11 @@ import { SafeAreaView, StyleSheet, View, Modal, Alert } from 'react-native';
 import { CustomButton, NavBar } from '../common/Component';
 import { useSelector } from 'react-redux';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { FormInput, FormSelect, FormUpload } from '../common/form/Index';
+import FormDatePicker from '../common/form/FormDatePicker';
+import FormUpload from '../common/form/FormUpload';
+import FormSelect from '../common/form/FormSelect';
+import FormDateRange from '../common/form/FormDateRange';
+import FormInput from '../common/form/FormInput';
 import { useValidation } from 'react-native-form-validator';
 import { validOption, randomId } from '../utils';
 
@@ -19,14 +23,20 @@ export default (props: any) => {
   const [hasRequired, setHasRequired] = useState('');
   const [options, setOptions] = useState([{ label: '选项1', value: '' }]);
   const [maxLength, setMaxLength] = useState('');
+  const [count, setCount] = useState('');
+  const [minDate, setMinDate] = useState(undefined);
+  const [maxDate, setMaxDate] = useState(undefined);
 
   const { validate, ...other } = useValidation({
-    state: { type, label, maxLength, hasRequired },
+    state: { type, label, maxLength, hasRequired, count, minDate, maxDate },
     labels: {
       type: '类型',
       label: '框名',
       maxLength: '最大长度',
       hasRequired: '是否为必选项',
+      count: '可上传图片数',
+      minDate: '可选最小日期',
+      maxDate: '可选最大日期',
     },
   });
 
@@ -55,11 +65,15 @@ export default (props: any) => {
   };
 
   const confirmCompontent = () => {
+    const otherValidate = type === '图片选择' ? { count: { required: true, numbers: true } } : {};
     const res = validate({
       type: { required: true },
       label: { required: true },
       maxLength: { numbers: true },
       hasRequired: { required: true },
+      maxDate: { date: 'YYYY-MM-DD' },
+      minDate: { date: 'YYYY-MM-DD' },
+      ...otherValidate,
     });
     if (!res) {
       Alert.alert('错误', '表单填写尚未完成，请核查');
@@ -117,6 +131,45 @@ export default (props: any) => {
           />,
         );
         break;
+      case '图片选择':
+        compontentsOption.push({
+          type,
+          label,
+          count,
+          rule: { required: hasRequired },
+        });
+        compontents.push(<FormUpload label={label} count={count} key={randomId()} required={hasRequired} />);
+        break;
+      case '日期选择':
+        compontentsOption.push({
+          type,
+          label,
+          maxDate,
+          minDate,
+          rule: { required: hasRequired },
+        });
+        compontents.push(
+          <FormDatePicker
+            label={label}
+            maxDate={maxDate}
+            minDate={minDate ?? '2000-1-1'}
+            key={randomId()}
+            required={hasRequired}
+          />,
+        );
+        break;
+      case '日期范围选择':
+        compontentsOption.push({
+          type,
+          label,
+          maxDate,
+          minDate,
+          rule: { required: hasRequired },
+        });
+        compontents.push(
+          <FormDateRange label={label} maxDate={maxDate} minDate={minDate} key={randomId()} required={hasRequired} />,
+        );
+        break;
       default:
         break;
     }
@@ -128,9 +181,12 @@ export default (props: any) => {
   const reset = () => {
     setLabel('');
     setType('');
+    setCount('');
     setMaxLength('');
     setOptions([{ label: '选项1', value: '' }]);
     setHasRequired('');
+    setMinDate('');
+    setMaxDate('');
   };
 
   return (
@@ -138,8 +194,6 @@ export default (props: any) => {
       <NavBar title="详情" {...props} />
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         {compontents}
-        <FormUpload label="图片" count={5} />
-
         <AntDesign.Button
           name="pluscircleo"
           size={26}
@@ -164,6 +218,9 @@ export default (props: any) => {
               { label: '数字输入框', value: '数字输入框' },
               { label: '选择器', value: '选择器' },
               { label: '多行文字输入框', value: '多行文字输入框' },
+              { label: '图片选择', value: '图片选择' },
+              { label: '日期选择', value: '日期选择' },
+              { label: '日期范围选择', value: '日期范围选择' },
             ]}
             {...validOption('type', other)}
             onChange={(value) => setType(value)}
@@ -178,12 +235,39 @@ export default (props: any) => {
             onChange={(value) => setHasRequired(value)}
           />
           <FormInput label="框名" value={label} onChangeText={setLabel} {...validOption('label', other)} />
-          {type !== '选择器' && (
+          {(type === '文字输入框' || type === '多行文字输入框') && (
             <FormInput
               label="最大长度"
               value={maxLength}
               onChangeText={setMaxLength}
               {...validOption('maxLength', other)}
+              required={false}
+            />
+          )}
+          {type === '图片选择' && (
+            <FormInput
+              label="可上传图片数"
+              value={count}
+              onChangeText={setCount}
+              {...validOption('count', other)}
+              required
+            />
+          )}
+          {(type === '日期选择' || type === '日期范围选择') && (
+            <FormInput
+              label="可选最小日期"
+              value={minDate}
+              onChangeText={setMinDate}
+              {...validOption('minDate', other)}
+              required={false}
+            />
+          )}
+          {(type === '日期选择' || type === '日期范围选择') && (
+            <FormInput
+              label="可选最大日期"
+              value={maxDate}
+              onChangeText={setMaxDate}
+              {...validOption('maxDate', other)}
               required={false}
             />
           )}

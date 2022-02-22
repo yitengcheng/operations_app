@@ -1,4 +1,5 @@
 import config from '../config';
+import NavigationUtil from '../navigator/NavigationUtil';
 
 /**
  * 发送get请求
@@ -23,7 +24,8 @@ export function get(api: string) {
 export function post(api: string) {
   return (params?: {}) => {
     return async (queryParams?: {} | string) => {
-      let data, cType;
+      let data;
+      let cType;
       if (params instanceof FormData) {
         data = params;
         cType = 'multipart/form-data';
@@ -65,8 +67,9 @@ function handleData(doAction: Promise<any>) {
         if (typeof result === 'string') {
           throw new Error(result);
         }
-        const { code, msg, data } = result;
+        const { code } = result;
         if (code === 401) {
+          NavigationUtil.login();
           return;
         }
         resolve(result);
@@ -84,8 +87,8 @@ function handleData(doAction: Promise<any>) {
  * @returns
  */
 function buildParams(url: string, params?: {} | string): string {
-  let newUrl = new URL(url),
-    finalUrl;
+  const newUrl = new URL(url);
+  let finalUrl;
   if (typeof params === 'object') {
     for (const [key, value] of Object.entries(params)) {
       newUrl.searchParams.append(key, value as string);
@@ -93,7 +96,7 @@ function buildParams(url: string, params?: {} | string): string {
     finalUrl = newUrl.toString();
   } else if (typeof params === 'string') {
     // 适配path参数
-    finalUrl = url.endsWith('/') ? url + params : url + '/' + params;
+    finalUrl = url.endsWith('/') ? url + params : `${url}/${params}`;
   } else {
     finalUrl = newUrl.toString();
   }
