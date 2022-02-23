@@ -8,7 +8,7 @@ export default (props: any) => {
     return state.theme.theme;
   });
   return (
-    <SafeAreaView style={[{ backgroundColor: theme }, styles.root]}>
+    <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
       <NavBar title="排班" {...props} />
       <Agenda />
     </SafeAreaView>

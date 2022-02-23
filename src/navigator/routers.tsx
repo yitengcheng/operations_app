@@ -5,6 +5,7 @@ import Test from '../pages/Test';
 import Login from '../pages/login/Login';
 import Detail from '../pages/Detail';
 import Agenda from '../pages/Agenda';
+import Menus from '../pages/Menus';
 
 // 图标引入
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -44,5 +45,9 @@ export const pages = [
   {
     name: 'Agenda',
     component: Agenda,
+  },
+  {
+    name: 'Menus',
+    component: Menus,
   },
 ];

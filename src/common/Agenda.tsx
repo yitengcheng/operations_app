@@ -95,8 +95,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dayBox: {
+    flex: 1,
     padding: 10,
-    justifyContent: 'space-between',
+    backgroundColor: '#F3F3F3',
   },
   dateTitle: {
     fontSize: 18,

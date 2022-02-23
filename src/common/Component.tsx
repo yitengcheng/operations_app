@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, PixelRatio, Image, useWindowDimensions } from 'react-native';
 import { useSelector } from 'react-redux';
-
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import NavigationUtil from '../navigator/NavigationUtil';
 
@@ -96,11 +96,16 @@ export const LineProgress = (props: any) => {
   );
 };
 
+/**
+ * 菜单宫格
+ * @param props
+ * @returns
+ */
 export const MenuGrid = (props: any) => {
   const { menus = [], segmentation = 3 } = props;
   const windowWidth = useWindowDimensions().width - 20;
   return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 10 }}>
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 10, backgroundColor: '#F3F3F3' }}>
       {menus.map((item, index) => (
         <TouchableOpacity
           key={index}
@@ -117,6 +122,52 @@ export const MenuGrid = (props: any) => {
           <Text style={{ fontSize: 16 }}>{item?.text}</Text>
         </TouchableOpacity>
       ))}
+    </View>
+  );
+};
+
+export const SwiperImage = (props: any) => {
+  const { images, width, height, showPagination = true, autoplayDelay = 5, resizeMode = 'contain' } = props;
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
+  const theme = useSelector((state) => {
+    return state.theme.theme;
+  });
+  return (
+    <View>
+      {images?.length > 0 ? (
+        <SwiperFlatList
+          autoplay
+          autoplayDelay={autoplayDelay}
+          autoplayLoop
+          index={0}
+          showPagination={showPagination}
+          data={images}
+          renderItem={({ item }) => (
+            <Image
+              resizeMode={resizeMode}
+              source={item}
+              style={{ width: width ?? windowWidth, height: height ?? windowHeight / 4 }}
+            />
+          )}
+        />
+      ) : (
+        <Text
+          style={{
+            width: width ?? windowWidth - 10,
+            height: height ?? windowHeight / 4,
+            backgroundColor: '#FFFFFF',
+            borderColor: theme.borderColor,
+            borderWidth: 1,
+            textAlign: 'center',
+            fontSize: 28,
+            lineHeight: height ?? windowHeight / 4,
+            margin: 5,
+          }}
+        >
+          暂无图片
+        </Text>
+      )}
     </View>
   );
 };
