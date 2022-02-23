@@ -52,10 +52,10 @@ const FormRadio = (props: any) => {
         {options.map((item) => (
           <TouchableOpacity key={item.value} style={styles.optionItem} onPress={() => onChoose(item)}>
             {!_.includes(onSelect, item.value) && (
-              <Image source={require('../../assets/image/radio_empty.png')} style={styles.img} />
+              <Image source={require('./image/radio_empty.png')} style={styles.img} />
             )}
             {_.includes(onSelect, item.value) && (
-              <Image style={styles.img} source={require('../../assets/image/radio_choose.png')} />
+              <Image style={styles.img} source={require('./image/radio_choose.png')} />
             )}
             <Text style={{ fontSize: 16 }}>{item.label}</Text>
           </TouchableOpacity>

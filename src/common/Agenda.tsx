@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Agenda, LocaleConfig, Calendar } from 'react-native-calendars';
@@ -68,7 +68,7 @@ export default (props: any) => {
       />
       <View style={styles.dayBox}>
         <Text style={styles.dateTitle}>{selectDay}</Text>
-        <Text>
+        <Text style={styles.dateTitle}>
           {_.map(items?.[selectDay], 'value').length === 0
             ? '暂无值班人员'
             : _.map(items?.[selectDay], 'label').join(',')}
@@ -83,7 +83,7 @@ export default (props: any) => {
             result = res;
           }}
         />
-        <View style={{ marginBottom: 20 }}>
+        <View>
           <CustomButton title="保存" onClick={onSave} />
         </View>
       </View>
@@ -95,11 +95,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dayBox: {
-    flex: 1,
     padding: 10,
     justifyContent: 'space-between',
   },
   dateTitle: {
     fontSize: 18,
+    marginBottom: 10,
   },
 });

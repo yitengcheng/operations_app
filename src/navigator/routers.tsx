@@ -4,6 +4,7 @@ import Home from '../pages/Home';
 import Test from '../pages/Test';
 import Login from '../pages/login/Login';
 import Detail from '../pages/Detail';
+import Agenda from '../pages/Agenda';
 
 // 图标引入
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -39,5 +40,9 @@ export const pages = [
   {
     name: 'Detail',
     component: Detail,
+  },
+  {
+    name: 'Agenda',
+    component: Agenda,
   },
 ];

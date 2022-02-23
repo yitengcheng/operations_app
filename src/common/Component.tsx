@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, PixelRatio, Image, useWindowDimensions } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import NavigationUtil from '../navigator/NavigationUtil';
+
+const Px2dp = (px) => PixelRatio.roundToNearestPixel(px);
 
 /**
  * 顶部导航
@@ -72,6 +74,53 @@ export const CustomButton = (props: any) => {
   );
 };
 
+/**
+ * 进度条
+ * @param props
+ * @returns
+ */
+export const LineProgress = (props: any) => {
+  const { value } = props;
+  const theme = useSelector((state) => {
+    return state.theme.theme;
+  });
+  return (
+    <View style={{ flex: 1, backgroundColor: theme.primary, paddingLeft: 1 }}>
+      <View style={[styles.pre, { borderColor: theme.primary }]}>
+        <View style={[styles.preOisn, { width: Px2dp(213) * (value / 100), backgroundColor: theme.primary }]}></View>
+        <View style={[styles.preMain, { justifyContent: 'flex-end' }]}>
+          <Text style={{ color: theme.fontColor, fontSize: Px2dp(14) }}>{value}%</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export const MenuGrid = (props: any) => {
+  const { menus = [], segmentation = 3 } = props;
+  const windowWidth = useWindowDimensions().width - 20;
+  return (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 10 }}>
+      {menus.map((item, index) => (
+        <TouchableOpacity
+          key={index}
+          style={{
+            width: windowWidth / segmentation,
+            height: 80,
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={item?.func}
+        >
+          <Image source={item?.icon} style={{ width: 25, height: 25 }} />
+          <Text style={{ fontSize: 16 }}>{item?.text}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   navBar: {
     flexDirection: 'row',
@@ -105,5 +154,36 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 45,
     minWidth: 100,
+  },
+  pre: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 1,
+    width: Px2dp(213),
+    height: Px2dp(20),
+    borderRadius: Px2dp(20),
+    paddingLeft: Px2dp(10),
+    paddingRight: Px2dp(10),
+    marginBottom: Px2dp(10),
+    marginTop: Px2dp(10),
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  preMain: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: Px2dp(20),
+    position: 'relative',
+    flex: 1,
+    zIndex: 9,
+  },
+  preOisn: {
+    position: 'absolute',
+    height: Px2dp(20),
+    borderBottomLeftRadius: Px2dp(2000),
+    borderTopLeftRadius: Px2dp(2000),
+    zIndex: 8,
   },
 });
