@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { MenuGrid, NavBar } from '../common/Component';
+
 export default (props: any) => {
   const theme = useSelector((state) => {
     return state.theme.theme;

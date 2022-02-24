@@ -37,10 +37,10 @@ export const dayFormat = (day: any, format?: string) => {
   return dayjs(day).format(format ?? 'YYYY-MM-DD');
 };
 
-export const bottomNavigation = (bottomNavigation: []) => {
+export const bottomNavigation = (bottomNav: []) => {
   let result;
-  Object.entries(tabs).map((item) => {
-    if (_.includes(bottomNavigation, item[0])) {
+  _.toPairs(tabs).forEach((item) => {
+    if (_.includes(bottomNav, item[0])) {
       result = {
         [item[0]]: item[1],
         ...result,

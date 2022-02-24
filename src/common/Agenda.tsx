@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Agenda, LocaleConfig, Calendar } from 'react-native-calendars';
+import { LocaleConfig, Calendar } from 'react-native-calendars';
 import { dayFormat } from '../utils';
 import _ from 'lodash';
 import FormRadio from './form/FormRadio';
 import { CustomButton } from './Component';
 
-export default (props: any) => {
+export default () => {
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
-  LocaleConfig.locales['cn'] = {
+  LocaleConfig.locales.cn = {
     monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
     monthNamesShort: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     dayNames: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'],
@@ -32,7 +32,7 @@ export default (props: any) => {
   const [selectDay, setSelectDay] = useState(dayFormat());
   let result;
   const onSave = () => {
-    let res = [];
+    const res = [];
     _.find(options, (item) => {
       if (_.includes(result, item.value)) {
         res.push(item);
@@ -50,19 +50,19 @@ export default (props: any) => {
   return (
     <View style={[{ backgroundColor: theme }, styles.root]}>
       <Calendar
-        horizontal={true}
-        pagingEnabled={true}
+        horizontal
+        pagingEnabled
         calendarWidth={windowWidth}
         markedDates={marksDate}
         onDayPress={(day) => {
           setSelectDay(day.dateString);
-          let result = {};
+          let markerRes = {};
           _.map(marksDate, (item, key) => {
             if (item.marked) {
-              result = { [key]: item, ...result };
+              markerRes = { [key]: item, ...markerRes };
             }
           });
-          setMarksDate({ [day.dateString]: { selected: true }, ...result });
+          setMarksDate({ [day.dateString]: { selected: true }, ...markerRes });
         }}
         hideArrows={false}
       />
@@ -78,7 +78,7 @@ export default (props: any) => {
           options={options}
           defaultValue={_.map(items?.[selectDay], 'value')}
           required={false}
-          multiple={true}
+          multiple
           onChange={(res) => {
             result = res;
           }}

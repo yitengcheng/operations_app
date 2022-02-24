@@ -1,5 +1,6 @@
 import config from '../config';
 import NavigationUtil from '../navigator/NavigationUtil';
+import _ from 'lodash';
 
 /**
  * 发送get请求
@@ -90,15 +91,15 @@ function buildParams(url: string, params?: {} | string): string {
   const newUrl = new URL(url);
   let finalUrl;
   if (typeof params === 'object') {
-    for (const [key, value] of Object.entries(params)) {
+    for (const [key, value] of _.toPairs(params)) {
       newUrl.searchParams.append(key, value as string);
     }
-    finalUrl = newUrl.toString();
+    finalUrl = newUrl?.toString();
   } else if (typeof params === 'string') {
     // 适配path参数
     finalUrl = url.endsWith('/') ? url + params : `${url}/${params}`;
   } else {
-    finalUrl = newUrl.toString();
+    finalUrl = newUrl?.toString();
   }
   console.log('buildParams:', finalUrl);
   return finalUrl;

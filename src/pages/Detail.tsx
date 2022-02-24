@@ -43,13 +43,13 @@ export default (props: any) => {
   const selectOptions = () => {
     return (
       <View>
-        {Object.entries(options).map((item) => (
+        {options.map((item, key) => (
           <FormInput
-            label={item[1].label}
-            value={item[1].value}
-            key={item[0]}
+            label={item.label}
+            value={item.value}
+            key={item.value}
             onChangeText={(value) => {
-              options[item[0]] = { label: item[1].label, value };
+              options[key] = { label: item.label, value };
               setOptions([...options]);
             }}
           />
@@ -111,7 +111,7 @@ export default (props: any) => {
           <FormInput multiline label={label} key={randomId()} maxLength={length * 1} required={hasRequired} />,
         );
         break;
-      case '选择器':
+      case '选择器': {
         const tmp = [];
         options.map((item) => item.value && tmp.push({ label: item.value, value: item.value }));
         compontentsOption.push({
@@ -122,15 +122,10 @@ export default (props: any) => {
           options: tmp,
         });
         compontents.push(
-          <FormSelect
-            label={label}
-            key={randomId()}
-            options={tmp}
-            required={hasRequired}
-            onChange={() => console.log()}
-          />,
+          <FormSelect label={label} key={randomId()} options={tmp} required={hasRequired} onChange={() => {}} />,
         );
         break;
+      }
       case '图片选择':
         compontentsOption.push({
           type,

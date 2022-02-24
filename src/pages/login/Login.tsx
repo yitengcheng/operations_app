@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import NavigationUtil from '../../navigator/NavigationUtil';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 export default (props: any) => {
   const dispatch = useDispatch();

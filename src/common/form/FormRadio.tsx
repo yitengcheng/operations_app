@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
 import ErrorMessage from './ErrorMessage';
 import Label from './Label';
 import _ from 'lodash';
@@ -12,7 +11,6 @@ import _ from 'lodash';
  */
 const FormRadio = (props: any) => {
   const {
-    label,
     defaultValue,
     editable = true,
     onChange,
@@ -21,12 +19,11 @@ const FormRadio = (props: any) => {
       { label: '是', value: 1 },
       { label: '否', value: 0 },
     ],
-    ...other
   } = props;
-  const theme = useSelector((state) => {
-    return state.theme.theme;
-  });
   const onChoose = (item) => {
+    if (!editable) {
+      return;
+    }
     if (multiple) {
       if (_.includes(onSelect, item.value)) {
         _.remove(onSelect, (n) => n === item.value);

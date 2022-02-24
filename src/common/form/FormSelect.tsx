@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux';
 import RNPickerSelect from 'react-native-picker-select';
 import ErrorMessage from './ErrorMessage';
 import Label from './Label';

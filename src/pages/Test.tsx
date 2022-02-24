@@ -1,6 +1,6 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, View, TouchableOpacity, Alert } from 'react-native';
-import { CustomButton, LineProgress, MenuGrid, NavBar, SwiperImage } from '../common/Component';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { CustomButton, NavBar, SwiperImage } from '../common/Component';
 import NavigationUtil from '../navigator/NavigationUtil';
 
 export default (props: any) => {

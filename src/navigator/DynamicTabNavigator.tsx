@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import _ from 'lodash';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,7 +20,7 @@ export const DynamicTabNavigator = (props: any) => {
         },
       }}
     >
-      {Object.entries(bottomNavigation).map((item) => {
+      {_.toPairs(bottomNavigation).map((item) => {
         return (
           <Tab.Screen key={item[0]} name={item[0]} component={item[1].screen} options={item[1].navigationOptions} />
         );

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import NavigationUtil from '../navigator/NavigationUtil';
+import _ from 'lodash';
 
 const Px2dp = (px) => PixelRatio.roundToNearestPixel(px);
 
@@ -22,7 +23,7 @@ export const NavBar = (props: any) => {
   });
   return (
     <View style={[{ backgroundColor: theme.primary }, styles.navBar]}>
-      {props.hasOwnProperty('navigation') ? (
+      {_.has(props, 'navigation') ? (
         <TouchableOpacity onPress={goBack}>
           <AntDesign name="left" size={24} color="#FFF" />
         </TouchableOpacity>
@@ -87,7 +88,7 @@ export const LineProgress = (props: any) => {
   return (
     <View style={{ flex: 1, backgroundColor: theme.primary, paddingLeft: 1 }}>
       <View style={[styles.pre, { borderColor: theme.primary }]}>
-        <View style={[styles.preOisn, { width: Px2dp(213) * (value / 100), backgroundColor: theme.primary }]}></View>
+        <View style={[styles.preOisn, { width: Px2dp(213) * (value / 100), backgroundColor: theme.primary }]} />
         <View style={[styles.preMain, { justifyContent: 'flex-end' }]}>
           <Text style={{ color: theme.fontColor, fontSize: Px2dp(14) }}>{value}%</Text>
         </View>
@@ -106,9 +107,9 @@ export const MenuGrid = (props: any) => {
   const windowWidth = useWindowDimensions().width - 20;
   return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 10, backgroundColor: '#F3F3F3' }}>
-      {menus.map((item, index) => (
+      {menus.map((item) => (
         <TouchableOpacity
-          key={index}
+          key={item.text}
           style={{
             width: windowWidth / segmentation,
             height: 80,
