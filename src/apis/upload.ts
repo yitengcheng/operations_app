@@ -1,4 +1,4 @@
 export default {
   uploadImg: '/oss/upload',
-  test: '/test',
+  test: '/complany/list',
 };

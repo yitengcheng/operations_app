@@ -73,7 +73,7 @@ function handleData(doAction: Promise<any>) {
           NavigationUtil.login();
           return;
         }
-        resolve(result);
+        resolve(result.data);
       })
       .catch((err) => {
         console.log('error:', err);
@@ -97,7 +97,7 @@ function buildParams(url: string, params?: {} | string): string {
     finalUrl = newUrl?.toString();
   } else if (typeof params === 'string') {
     // 适配path参数
-    finalUrl = url.endsWith('/') ? url + params : `${url}/${params}`;
+    finalUrl = url.endsWith('/') ? url + params : `${url}${params}`;
   } else {
     finalUrl = newUrl?.toString();
   }

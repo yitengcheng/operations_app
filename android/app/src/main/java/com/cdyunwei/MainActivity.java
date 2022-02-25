@@ -1,4 +1,4 @@
-package com.react_native_template;
+package com.cdyunwei;
 
 import android.os.Bundle;
 

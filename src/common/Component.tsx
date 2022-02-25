@@ -1,10 +1,23 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, PixelRatio, Image, useWindowDimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  PixelRatio,
+  Image,
+  useWindowDimensions,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
+  Alert,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import NavigationUtil from '../navigator/NavigationUtil';
 import _ from 'lodash';
+import { get } from '../HiNet';
 
 const Px2dp = (px) => PixelRatio.roundToNearestPixel(px);
 
@@ -127,6 +140,11 @@ export const MenuGrid = (props: any) => {
   );
 };
 
+/**
+ * 轮播图
+ * @param props
+ * @returns
+ */
 export const SwiperImage = (props: any) => {
   const { images, width, height, showPagination = true, autoplayDelay = 5, resizeMode = 'contain' } = props;
   const windowWidth = useWindowDimensions().width;
@@ -169,6 +187,101 @@ export const SwiperImage = (props: any) => {
           暂无图片
         </Text>
       )}
+    </View>
+  );
+};
+
+/**
+ * 列表组件
+ * @param props
+ * @returns
+ */
+export const ListData = (props: any) => {
+  const { url, renderItem, params } = props;
+  const [data, setData] = useState([]);
+  const [noMore, setNoMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pageNo, setpageNo] = useState(1);
+  let total = 0;
+  const theme = useSelector((state) => {
+    return state.theme.theme;
+  });
+  useEffect(() => {
+    setpageNo(1);
+    setNoMore(false);
+    getData(pageNo);
+  }, []);
+  const getData = (pageNo: number) => {
+    get(url)({ pageNum: pageNo, pageSize: 10, ...params })
+      .then((res) => {
+        setIsLoading(false);
+        if (res.total === 0) return;
+        total = res.total;
+        setData(_.uniqBy([...data, ...res.rows], 'id'));
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
+  };
+  const getIndicator = () => {
+    return (
+      <View style={{ alignItems: 'center' }}>
+        {noMore ? (
+          <Text>没有更多了</Text>
+        ) : (
+          <View>
+            <ActivityIndicator color={theme.primary} style={{ margin: 10, color: theme.primary }} animating />
+            <Text>正在加载更多</Text>
+          </View>
+        )}
+      </View>
+    );
+  };
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
+  useEffect(() => {
+    if (data.length < total) {
+      setpageNo(pageNo + 1);
+    } else {
+      setNoMore(true);
+    }
+  }, [data]);
+  return (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={data}
+        renderItem={(data) => renderItem(data)}
+        keyExtractor={(item, index) => {
+          return item?.id ?? index;
+        }}
+        onEndReached={() => getData(pageNo)}
+        refreshControl={
+          <RefreshControl
+            title="Loading"
+            titleColor={theme.fontColor}
+            colors={[theme.primary]}
+            refreshing={isLoading}
+            onRefresh={() => {
+              setpageNo(1);
+              getData(pageNo);
+            }}
+            tintColor={theme.primary}
+          />
+        }
+        ListEmptyComponent={() => (
+          <View style={{ alignItems: 'center' }}>
+            <Image
+              source={require('../assets/image/empty_data.png')}
+              style={{ width: windowWidth / 2, height: windowHeight / 4 }}
+              resizeMode="contain"
+            />
+            <Text style={{ fontSize: 20, color: theme.fontColor }}>暂无数据</Text>
+          </View>
+        )}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={() => data?.length > 0 && getIndicator()}
+      />
     </View>
   );
 };

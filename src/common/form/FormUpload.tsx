@@ -6,7 +6,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import apis from '../../apis';
 import { post } from '../../HiNet';
-import { randomId, to } from '../../utils';
+import { randomId, to, togetherUrl } from '../../utils';
 import config from '../../config';
 import _ from 'lodash';
 import ErrorMessage from './ErrorMessage';
@@ -85,7 +85,7 @@ const FormUpload = (props: any) => {
               <Image
                 style={styles.imageAdd}
                 source={{
-                  uri: config.IMG_URL + item,
+                  uri: togetherUrl(item),
                 }}
               />
             </TouchableOpacity>

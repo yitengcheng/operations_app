@@ -2,12 +2,13 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import NavigationUtil from '../../navigator/NavigationUtil';
 import { useDispatch } from 'react-redux';
+import { saveBottomNavigation } from '../../action/bottomnavigation';
 
 export default (props: any) => {
   const dispatch = useDispatch();
   const toPage = () => {
     const { navigation } = props;
-    dispatch({ type: 'BOTTOMNAVIGATION', bottomNavigation: ['Test'] });
+    dispatch(saveBottomNavigation(['Test']));
     NavigationUtil.goPage({ navigation }, 'Home');
   };
   return (

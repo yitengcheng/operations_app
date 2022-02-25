@@ -1,4 +1,4 @@
-const DEV_URL = 'https://192.168.2.5:8083';
+const DEV_URL = 'http://192.168.2.5:8083';
 // const DEV_URL = 'https://xd.qiantur.com/prod-api';
 
 const PRO_URL = 'https://xd.qiantur.com/prod-api';
