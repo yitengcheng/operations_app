@@ -1,6 +1,7 @@
 import config from '../config';
 import NavigationUtil from '../navigator/NavigationUtil';
 import _ from 'lodash';
+import { Alert } from 'react-native';
 
 /**
  * 发送get请求
@@ -68,12 +69,16 @@ function handleData(doAction: Promise<any>) {
         if (typeof result === 'string') {
           throw new Error(result);
         }
-        const { code } = result;
+        const { code, msg } = result;
         if (code === 401) {
-          NavigationUtil.login();
+          NavigationUtil?.login();
           return;
         }
-        resolve(result.data);
+        if (code === 500) {
+          let message = msg ?? '访问失败，请重试';
+          Alert.alert('失败', message);
+        }
+        resolve(result.data ?? result);
       })
       .catch((err) => {
         console.log('error:', err);

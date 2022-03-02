@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Modal, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Modal, Alert, Text } from 'react-native';
 import { CustomButton, NavBar } from '../common/Component';
 import { useSelector } from 'react-redux';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import FormDatePicker from '../common/form/FormDatePicker';
 import FormUpload from '../common/form/FormUpload';
 import FormSelect from '../common/form/FormSelect';
@@ -54,12 +53,7 @@ export default (props: any) => {
             }}
           />
         ))}
-        <AntDesign
-          name="pluscircleo"
-          style={{ color: theme.primary, alignSelf: 'center', margin: 5 }}
-          size={40}
-          onPress={() => setOptions(options.concat([{ label: `选项${options.length + 1}`, value: '' }]))}
-        />
+        <Text>加选项</Text>
       </View>
     );
   };
@@ -189,14 +183,7 @@ export default (props: any) => {
       <NavBar title="详情" {...props} />
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         {compontents}
-        <AntDesign.Button
-          name="pluscircleo"
-          size={26}
-          style={{ justifyContent: 'center' }}
-          onPress={() => setModalVisible(true)}
-        >
-          添加
-        </AntDesign.Button>
+        <Text>加</Text>
       </View>
       <Modal
         animationType="slide"

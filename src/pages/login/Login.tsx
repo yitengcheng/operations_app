@@ -1,26 +1,99 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, Image, View, useWindowDimensions, Alert, Platform } from 'react-native';
 import NavigationUtil from '../../navigator/NavigationUtil';
 import { useDispatch } from 'react-redux';
 import { saveBottomNavigation } from '../../action/bottomnavigation';
+import FormInput from '../../common/form/FormInput';
+import { CustomButton } from '../../common/Component';
+import { useValidation } from 'react-native-form-validator';
+import JPush from 'jpush-react-native';
+import apis from '../../apis';
+import { post } from '../../HiNet';
+import { validOption } from '../../utils';
+import { loadStorage, saveStorage } from '../../utils/localStorage';
 
 export default (props: any) => {
   const dispatch = useDispatch();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  loadStorage('loginRecord').then((res) => {
+    setPassword(res?.password);
+    setUsername(res?.username);
+  });
+
   const toPage = () => {
     const { navigation } = props;
-    dispatch(saveBottomNavigation(['Test']));
+    dispatch(saveBottomNavigation(['Repair', 'Inspection', 'Scheduling', 'Statistical', 'Personal']));
     NavigationUtil.goPage({ navigation }, 'Home');
   };
+  let registrationId;
+  if (Platform.OS === 'android') {
+    JPush.setLoggerEnable(true);
+    JPush.init({ appKey: '27282edcc5414ca852184e55', channel: 'dev', production: 1 });
+    //连接状态
+    JPush.addConnectEventListener((result) => {
+      result.connectEnable &&
+        JPush.getRegistrationID((res) => {
+          registrationId = res.registerID;
+        });
+    });
+  }
+  const { validate, ...other } = useValidation({
+    state: { username, password },
+    labels: {
+      username: '账号',
+      password: '密码',
+    },
+  });
+  const toLogin = () => {
+    const res = validate({
+      username: { required: true },
+      password: { required: true },
+    });
+    if (!res) {
+      Alert.alert('错误', '缺少账号或密码');
+      return;
+    }
+    saveStorage('loginRecord', { username, password });
+    return;
+    post(apis.login)({ username, password, registrationId, app: true })().then((res) => {
+      console.log('------', res);
+    });
+  };
+  const width = useWindowDimensions().width;
   return (
     <SafeAreaView style={styles.root}>
-      <TouchableOpacity onPress={toPage}>
-        <Text>登录</Text>
-      </TouchableOpacity>
+      <Image
+        source={require('../../assets/image/LOGO.png')}
+        style={{ width: 200, height: 200, alignSelf: 'center', marginTop: 80 }}
+      />
+      <View style={{ marginHorizontal: 30, marginBottom: 50 }}>
+        <FormInput
+          required={false}
+          placeholder="请输入账号"
+          value={username}
+          onChangeText={setUsername}
+          {...validOption('username', other)}
+        />
+        <FormInput
+          required={false}
+          placeholder="请输入密码"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+          {...validOption('password', other)}
+        />
+      </View>
+      <View>
+        <CustomButton title="登录" buttonStyle={{ width: 200, alignSelf: 'center' }} onClick={toLogin} />
+      </View>
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
 });

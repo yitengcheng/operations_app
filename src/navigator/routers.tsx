@@ -4,21 +4,82 @@ import Home from '../pages/Home';
 import Test from '../pages/Test';
 import Login from '../pages/login/Login';
 import Detail from '../pages/Detail';
-import Agenda from '../pages/Agenda';
-import Menus from '../pages/Menus';
-
-// 图标引入
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Personal from '../pages/personal';
+import Repair from '../pages/repair';
+import Inspection from '../pages/inspection';
+import Scheduling from '../pages/scheduling';
+import Statistical from '../pages/statistical';
+import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
 export const tabs = {
-  Test: {
-    screen: Test,
+  Personal: {
+    screen: Personal,
     navigationOptions: {
-      tabBarLabel: '测试',
+      tabBarLabel: '我的',
       headerShown: false,
-      tabBarIcon: ({ color }) => {
-        return <MaterialIcons name={'whatshot'} size={26} style={{ color }} />;
+      tabBarIcon: ({ focused, color }) => {
+        if (focused) {
+          return <Image source={require('../assets/image/my_active.png')} style={styles.tabIcon} />;
+        } else {
+          return <Image source={require('../assets/image/my.png')} style={styles.tabIcon} />;
+        }
+      },
+    },
+  },
+  Statistical: {
+    screen: Statistical,
+    navigationOptions: {
+      tabBarLabel: '统计',
+      headerShown: false,
+      tabBarIcon: ({ focused, color }) => {
+        if (focused) {
+          return <Image source={require('../assets/image/statistical_active.png')} style={styles.tabIcon} />;
+        } else {
+          return <Image source={require('../assets/image/statistical.png')} style={styles.tabIcon} />;
+        }
+      },
+    },
+  },
+  Scheduling: {
+    screen: Scheduling,
+    navigationOptions: {
+      tabBarLabel: '排班',
+      headerShown: false,
+      tabBarIcon: ({ focused, color }) => {
+        if (focused) {
+          return <Image source={require('../assets/image/scheduling_active.png')} style={styles.tabIcon} />;
+        } else {
+          return <Image source={require('../assets/image/scheduling.png')} style={styles.tabIcon} />;
+        }
+      },
+    },
+  },
+  Inspection: {
+    screen: Inspection,
+    navigationOptions: {
+      tabBarLabel: '巡检',
+      headerShown: false,
+      tabBarIcon: ({ focused, color }) => {
+        if (focused) {
+          return <Image source={require('../assets/image/inspection_active.png')} style={styles.tabIcon} />;
+        } else {
+          return <Image source={require('../assets/image/inspection.png')} style={styles.tabIcon} />;
+        }
+      },
+    },
+  },
+  Repair: {
+    screen: Repair,
+    navigationOptions: {
+      tabBarLabel: '工单',
+      headerShown: false,
+      tabBarIcon: ({ focused, color }) => {
+        if (focused) {
+          return <Image source={require('../assets/image/repair_active.png')} style={styles.tabIcon} />;
+        } else {
+          return <Image source={require('../assets/image/repair.png')} style={styles.tabIcon} />;
+        }
       },
     },
   },
@@ -43,11 +104,30 @@ export const pages = [
     component: Detail,
   },
   {
-    name: 'Agenda',
-    component: Agenda,
+    name: 'Personal',
+    component: Personal,
   },
   {
-    name: 'Menus',
-    component: Menus,
+    name: 'Repair',
+    component: Repair,
+  },
+  {
+    name: 'Inspection',
+    component: Inspection,
+  },
+  {
+    name: 'Scheduling',
+    component: Scheduling,
+  },
+  {
+    name: 'Statistical',
+    component: Statistical,
   },
 ];
+
+const styles = StyleSheet.create({
+  tabIcon: {
+    width: 25,
+    height: 25,
+  },
+});

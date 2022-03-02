@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import { DynamicTabNavigator } from '../navigator/DynamicTabNavigator';
 import NavigationUtil from '../navigator/NavigationUtil';

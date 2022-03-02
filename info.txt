@@ -1,1 +1,2 @@
-安卓报名：com.cdyunwei
+安卓包名：com.cdyunwei
+ios BundleID org.reactjs.native.example.react-native-template

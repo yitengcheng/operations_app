@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, View, StyleSheet } from 'react-native';
+import { TextInput, View, StyleSheet, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import ErrorMessage from './ErrorMessage';
 import Label from './Label';
@@ -10,15 +10,16 @@ import Label from './Label';
  * @returns
  */
 const FormInput = (props: any) => {
-  const { label, inputStyle, placeholder, multiline, ...other } = props;
+  const { label, inputStyle, placeholder, multiline = false, leftIcon, ...other } = props;
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
   const placeholderText = placeholder ?? `请输入${label}`;
   const heightNum = multiline ? 90 : 35;
+
   return (
     <View style={[styles.column, multiline && { height: 150 }]}>
-      <Label {...props} />
+      {label && <Label {...props} />}
       <TextInput
         style={[
           inputStyle ?? {
@@ -30,7 +31,7 @@ const FormInput = (props: any) => {
           },
         ]}
         placeholder={placeholderText}
-        multiline
+        multiline={multiline}
         {...other}
       />
       {props.isFieldInError && ErrorMessage(props.isFieldInError, props.getErrorsInField, props.name)}
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
   column: {
     flexDirection: 'column',
     padding: 5,
-    minHeight: 90,
+    marginBottom: 5,
   },
 });
 

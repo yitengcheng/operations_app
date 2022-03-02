@@ -4,7 +4,7 @@ import Types from '../../action/types';
 const defaultState = {
   theme: {
     backgroundColor: '#F3F3F3',
-    primary: '#1890ff',
+    primary: '#364ddb',
     fontColor: 'rgba(0, 0, 0, 0.65)',
     error: '#f5222d',
     warrning: '#faad14',

@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import NavigationUtil from '../navigator/NavigationUtil';
 import _ from 'lodash';
 import { get } from '../HiNet';
@@ -38,7 +37,7 @@ export const NavBar = (props: any) => {
     <View style={[{ backgroundColor: theme.primary }, styles.navBar]}>
       {_.has(props, 'navigation') ? (
         <TouchableOpacity onPress={goBack}>
-          <AntDesign name="left" size={24} color="#FFF" />
+          <Text>返回</Text>
         </TouchableOpacity>
       ) : (
         <View />

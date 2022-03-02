@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { View, Image, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Image, TouchableOpacity, Alert, StyleSheet, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import ActionSheet from 'react-native-actionsheet';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import apis from '../../apis';
 import { post } from '../../HiNet';
@@ -101,7 +100,7 @@ const FormUpload = (props: any) => {
               editable && action.current.show();
             }}
           >
-            <AntDesign name="plus" size={40} />
+            <Text>+</Text>
           </TouchableOpacity>
         ) : (
           <View />
