@@ -35,7 +35,7 @@ export const to = (promise: any, errorExt: any) => {
  * @returns
  */
 export const dayFormat = (day: any, format?: string) => {
-  return dayjs(day).format(format ?? 'YYYY-MM-DD');
+  return day ? dayjs(day).format(format ?? 'YYYY-MM-DD') : '暂无';
 };
 
 /**
@@ -73,4 +73,36 @@ export const togetherUrl = (url: string) => {
  */
 export const toFixed = (number: number, fixed?: number = 2): number => {
   return ~~(Math.pow(10, fixed) * number) / Math.pow(10, fixed);
+};
+
+/**
+ * 判断字符串是否为json字符串
+ * @param str
+ * @returns
+ */
+export const isJsonString = (str: string): boolean => {
+  try {
+    if (typeof JSON.parse(str) === 'object') {
+      return true;
+    }
+  } catch (error) {}
+  return false;
+};
+
+/**
+ * 性别
+ * @param sex
+ * @returns
+ */
+export const gender = (sex: number): string => {
+  return sex == 0 ? '男' : '女';
+};
+
+/**
+ * 状态
+ * @param sex
+ * @returns
+ */
+export const hasStatus = (status: number): string => {
+  return status == 0 ? '启用' : '未启用';
 };

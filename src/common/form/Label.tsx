@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 
 /**
@@ -14,7 +14,9 @@ const Label = (props: any) => {
   });
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 35, padding: 5 }}>
-      {required && <Text>星</Text>}
+      {required && (
+        <Image source={require('../../assets/image/required.png')} style={{ width: 10, height: 10, marginRight: 5 }} />
+      )}
       <Text style={[labelStyle ?? { color: theme.fontColor, fontSize: theme.fontSize }]}>{`${label}：`}</Text>
     </View>
   );

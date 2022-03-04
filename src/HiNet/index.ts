@@ -2,6 +2,7 @@ import config from '../config';
 import NavigationUtil from '../navigator/NavigationUtil';
 import _ from 'lodash';
 import { Alert } from 'react-native';
+import { loadStorage } from '../utils/localStorage';
 
 /**
  * 发送get请求
@@ -9,9 +10,11 @@ import { Alert } from 'react-native';
  */
 export function get(api: string) {
   return async (params?: {}) => {
+    const token = await loadStorage('token');
     return handleData(
       fetch(buildParams(config.API_URL + api, params), {
         headers: {
+          Authorization: 'Bearer ' + token,
           ...config.headers,
         },
       }),
@@ -35,6 +38,7 @@ export function post(api: string) {
         data = JSON.stringify(params);
         cType = 'application/json';
       }
+      const token = await loadStorage('token');
       console.log('params:', data);
       return handleData(
         fetch(buildParams(config.API_URL + api, queryParams), {
@@ -42,6 +46,7 @@ export function post(api: string) {
           body: data,
           headers: {
             'content-type': cType,
+            Authorization: 'Bearer ' + token,
             ...config.headers,
           },
         }),
@@ -74,15 +79,16 @@ function handleData(doAction: Promise<any>) {
           NavigationUtil?.login();
           return;
         }
-        if (code === 500) {
+        if (code !== 200) {
           let message = msg ?? '访问失败，请重试';
           Alert.alert('失败', message);
+          return;
         }
         resolve(result.data ?? result);
       })
       .catch((err) => {
         console.log('error:', err);
-        reject(err);
+        reject(undefined);
       });
   });
 }
@@ -102,9 +108,9 @@ function buildParams(url: string, params?: {} | string): string {
     finalUrl = newUrl?.toString();
   } else if (typeof params === 'string') {
     // 适配path参数
-    finalUrl = url.endsWith('/') ? url + params : `${url}${params}`;
+    finalUrl = `${url}${params}`;
   } else {
-    finalUrl = newUrl?.toString();
+    finalUrl = url;
   }
   console.log('buildParams:', finalUrl);
   return finalUrl;

@@ -1,4 +1,6 @@
 import { StackActions } from '@react-navigation/native';
+import _ from 'lodash';
+import { Alert } from 'react-native';
 /**
  * 全局导航跳转
  */
@@ -10,20 +12,26 @@ export default class NavigationUtil {
    */
   static goPage(params: {}, page: string) {
     const navigation = NavigationUtil.navigation || (params || {}).navigation;
+    const pages = NavigationUtil.pages || ['Home'];
     if (!navigation) {
       console.log('navigation不能为空');
       return;
     }
-    navigation.navigate(page, {
-      ...params,
-      navigation: undefined,
-    });
+    if (_.includes(pages, page)) {
+      navigation.navigate(page, {
+        ...params,
+        navigation: undefined,
+      });
+      return;
+    }
+    Alert.alert('权限不足', '您的权限不足，无法查看此功能');
   }
   /**
    * 返回上一页
-   * @param {*} navigation
+   * @param {*} params
    */
-  static goBack(navigation: {}) {
+  static goBack(params: {}) {
+    const navigation = NavigationUtil.navigation || (params || {}).navigation;
     navigation.goBack();
   }
   /**

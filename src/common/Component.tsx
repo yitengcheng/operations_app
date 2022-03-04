@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   Alert,
+  Modal,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
@@ -37,7 +38,11 @@ export const NavBar = (props: any) => {
     <View style={[{ backgroundColor: theme.primary }, styles.navBar]}>
       {_.has(props, 'navigation') ? (
         <TouchableOpacity onPress={goBack}>
-          <Text>返回</Text>
+          <Image
+            source={require('../assets/image/back.png')}
+            style={{ marginLeft: 10, width: 15, height: 15 }}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
       ) : (
         <View />
@@ -131,7 +136,7 @@ export const MenuGrid = (props: any) => {
           }}
           onPress={item?.func}
         >
-          <Image source={item?.icon} style={{ width: 25, height: 25 }} />
+          <Image source={item?.icon} style={{ width: 25, height: 25, margin: 5 }} />
           <Text style={{ fontSize: 16 }}>{item?.text}</Text>
         </TouchableOpacity>
       ))}
@@ -152,7 +157,7 @@ export const SwiperImage = (props: any) => {
     return state.theme.theme;
   });
   return (
-    <View>
+    <View style={{ borderWidth: 1, borderColor: theme.borderColor }}>
       {images?.length > 0 ? (
         <SwiperFlatList
           autoplay
@@ -196,7 +201,7 @@ export const SwiperImage = (props: any) => {
  * @returns
  */
 export const ListData = (props: any) => {
-  const { url, renderItem, params } = props;
+  const { url, renderItem, params, keyId } = props;
   const [data, setData] = useState([]);
   const [noMore, setNoMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -216,7 +221,7 @@ export const ListData = (props: any) => {
         setIsLoading(false);
         if (res.total === 0) return;
         total = res.total;
-        setData(_.uniqBy([...data, ...res.rows], 'id'));
+        setData(_.uniqBy([...data, ...res.rows], keyId ?? 'id'));
       })
       .catch((error) => {
         console.log(error);
@@ -230,7 +235,7 @@ export const ListData = (props: any) => {
           <Text>没有更多了</Text>
         ) : (
           <View>
-            <ActivityIndicator color={theme.primary} style={{ margin: 10, color: theme.primary }} animating />
+            <ActivityIndicator color={theme.primary} style={{ margin: 10, color: theme.backgroundColor }} animating />
             <Text>正在加载更多</Text>
           </View>
         )}
@@ -250,7 +255,7 @@ export const ListData = (props: any) => {
     <View style={{ flex: 1 }}>
       <FlatList
         data={data}
-        renderItem={(data) => renderItem(data)}
+        renderItem={(data) => renderItem(data.item)}
         keyExtractor={(item, index) => {
           return item?.id ?? index;
         }}
@@ -269,7 +274,7 @@ export const ListData = (props: any) => {
           />
         }
         ListEmptyComponent={() => (
-          <View style={{ alignItems: 'center' }}>
+          <View style={{ alignItems: 'center', backgroundColor: theme.backgroundColor }}>
             <Image
               source={require('../assets/image/empty_data.png')}
               style={{ width: windowWidth / 2, height: windowHeight / 4 }}
@@ -282,6 +287,47 @@ export const ListData = (props: any) => {
         ListFooterComponent={() => data?.length > 0 && getIndicator()}
       />
     </View>
+  );
+};
+
+/**
+ * 底部弹窗
+ * @param props
+ * @returns
+ */
+export const Popup = (props: any) => {
+  const { modalVisible, onClose, children } = props;
+  const theme = useSelector((state) => {
+    return state.theme.theme;
+  });
+  return (
+    <Modal
+      animationType="slide"
+      visible={modalVisible}
+      onRequestClose={() => {
+        onClose && onClose();
+      }}
+      transparent
+    >
+      <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0, 0, 0, 0.65)' }}>
+        <View style={{ backgroundColor: theme.backgroundColor }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              padding: 8,
+              borderBottomWidth: 1,
+              borderColor: theme.borderColor,
+              justifyContent: 'flex-end',
+            }}
+          >
+            <TouchableOpacity onPress={() => onClose && onClose()}>
+              <Text style={{ fontSize: theme.fontSize, color: theme.error }}>取消</Text>
+            </TouchableOpacity>
+          </View>
+          {children}
+        </View>
+      </View>
+    </Modal>
   );
 };
 

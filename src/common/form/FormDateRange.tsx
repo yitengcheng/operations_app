@@ -32,7 +32,14 @@ const FormDateRange = (props: any) => {
         )}
       </TouchableOpacity>
       {props.isFieldInError && ErrorMessage(props.isFieldInError, props.getErrorsInField, props.name)}
-      <Modal animationType={'slide'} visible={editable && visible} transparent>
+      <Modal
+        animationType={'slide'}
+        visible={editable && visible}
+        transparent
+        onRequestClose={() => {
+          setVisible(!visible);
+        }}
+      >
         <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0, 0, 0, 0.65)' }}>
           <CalendarList
             cancelText="取消"

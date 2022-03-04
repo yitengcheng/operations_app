@@ -9,6 +9,8 @@ import Repair from '../pages/repair';
 import Inspection from '../pages/inspection';
 import Scheduling from '../pages/scheduling';
 import Statistical from '../pages/statistical';
+import StaffManagement from '../pages/personal/StaffManagement';
+import AddStaff from '../pages/personal/AddStaff';
 import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
@@ -20,9 +22,11 @@ export const tabs = {
       headerShown: false,
       tabBarIcon: ({ focused, color }) => {
         if (focused) {
-          return <Image source={require('../assets/image/my_active.png')} style={styles.tabIcon} />;
+          return (
+            <Image source={require('../assets/image/my_active.png')} style={styles.tabIcon} resizeMode="contain" />
+          );
         } else {
-          return <Image source={require('../assets/image/my.png')} style={styles.tabIcon} />;
+          return <Image source={require('../assets/image/my.png')} style={styles.tabIcon} resizeMode="contain" />;
         }
       },
     },
@@ -34,9 +38,17 @@ export const tabs = {
       headerShown: false,
       tabBarIcon: ({ focused, color }) => {
         if (focused) {
-          return <Image source={require('../assets/image/statistical_active.png')} style={styles.tabIcon} />;
+          return (
+            <Image
+              source={require('../assets/image/statistical_active.png')}
+              style={styles.tabIcon}
+              resizeMode="contain"
+            />
+          );
         } else {
-          return <Image source={require('../assets/image/statistical.png')} style={styles.tabIcon} />;
+          return (
+            <Image source={require('../assets/image/statistical.png')} style={styles.tabIcon} resizeMode="contain" />
+          );
         }
       },
     },
@@ -48,9 +60,17 @@ export const tabs = {
       headerShown: false,
       tabBarIcon: ({ focused, color }) => {
         if (focused) {
-          return <Image source={require('../assets/image/scheduling_active.png')} style={styles.tabIcon} />;
+          return (
+            <Image
+              source={require('../assets/image/scheduling_active.png')}
+              style={styles.tabIcon}
+              resizeMode="contain"
+            />
+          );
         } else {
-          return <Image source={require('../assets/image/scheduling.png')} style={styles.tabIcon} />;
+          return (
+            <Image source={require('../assets/image/scheduling.png')} style={styles.tabIcon} resizeMode="contain" />
+          );
         }
       },
     },
@@ -62,9 +82,17 @@ export const tabs = {
       headerShown: false,
       tabBarIcon: ({ focused, color }) => {
         if (focused) {
-          return <Image source={require('../assets/image/inspection_active.png')} style={styles.tabIcon} />;
+          return (
+            <Image
+              source={require('../assets/image/inspection_active.png')}
+              style={styles.tabIcon}
+              resizeMode="contain"
+            />
+          );
         } else {
-          return <Image source={require('../assets/image/inspection.png')} style={styles.tabIcon} />;
+          return (
+            <Image source={require('../assets/image/inspection.png')} style={styles.tabIcon} resizeMode="contain" />
+          );
         }
       },
     },
@@ -76,9 +104,11 @@ export const tabs = {
       headerShown: false,
       tabBarIcon: ({ focused, color }) => {
         if (focused) {
-          return <Image source={require('../assets/image/repair_active.png')} style={styles.tabIcon} />;
+          return (
+            <Image source={require('../assets/image/repair_active.png')} style={styles.tabIcon} resizeMode="contain" />
+          );
         } else {
-          return <Image source={require('../assets/image/repair.png')} style={styles.tabIcon} />;
+          return <Image source={require('../assets/image/repair.png')} style={styles.tabIcon} resizeMode="contain" />;
         }
       },
     },
@@ -94,14 +124,6 @@ export const pages = [
   {
     name: 'Home',
     component: Home,
-  },
-  {
-    name: 'Test',
-    component: Test,
-  },
-  {
-    name: 'Detail',
-    component: Detail,
   },
   {
     name: 'Personal',
@@ -122,6 +144,14 @@ export const pages = [
   {
     name: 'Statistical',
     component: Statistical,
+  },
+  {
+    name: 'StaffManagement',
+    component: StaffManagement,
+  },
+  {
+    name: 'AddStaff',
+    component: AddStaff,
   },
 ];
 

@@ -8,25 +8,25 @@ import { CustomButton } from '../../common/Component';
 import { useValidation } from 'react-native-form-validator';
 import JPush from 'jpush-react-native';
 import apis from '../../apis';
-import { post } from '../../HiNet';
+import { post, get } from '../../HiNet';
 import { validOption } from '../../utils';
 import { loadStorage, saveStorage } from '../../utils/localStorage';
+import { saveUserInfo } from '../../action/userInfo';
+import _ from 'lodash';
+import { savePages } from '../../action/pages';
 
 export default (props: any) => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  useEffect(() => {
+    loadStorage('loginRecord').then((res) => {
+      setPassword(res?.password);
+      setUsername(res?.username);
+    });
+    saveStorage('token', '');
+  }, []);
 
-  loadStorage('loginRecord').then((res) => {
-    setPassword(res?.password);
-    setUsername(res?.username);
-  });
-
-  const toPage = () => {
-    const { navigation } = props;
-    dispatch(saveBottomNavigation(['Repair', 'Inspection', 'Scheduling', 'Statistical', 'Personal']));
-    NavigationUtil.goPage({ navigation }, 'Home');
-  };
   let registrationId;
   if (Platform.OS === 'android') {
     JPush.setLoggerEnable(true);
@@ -39,6 +39,7 @@ export default (props: any) => {
         });
     });
   }
+
   const { validate, ...other } = useValidation({
     state: { username, password },
     labels: {
@@ -46,7 +47,7 @@ export default (props: any) => {
       password: '密码',
     },
   });
-  const toLogin = () => {
+  const toLogin = async () => {
     const res = validate({
       username: { required: true },
       password: { required: true },
@@ -55,13 +56,32 @@ export default (props: any) => {
       Alert.alert('错误', '缺少账号或密码');
       return;
     }
+    const loginRes = await post(apis.login)({ username, password, registrationId, app: true })();
+    if (loginRes.code !== 200) {
+      return;
+    }
     saveStorage('loginRecord', { username, password });
-    return;
-    post(apis.login)({ username, password, registrationId, app: true })().then((res) => {
-      console.log('------', res);
+    saveStorage('token', loginRes?.token ?? '');
+    const userInfo = await get(apis.getInfo)();
+    dispatch(saveUserInfo(userInfo?.user ?? {}));
+    const routers = await get(apis.getRouters)();
+    let bottomNavigation = [];
+    let pages = [];
+    _.map(routers, (item) => {
+      if (item.menuType === 'M') {
+        bottomNavigation.push(item.name);
+      } else if (item.menuType === 'C') {
+        pages.push(item?.children?.[0]?.name);
+      }
     });
+    dispatch(saveBottomNavigation(bottomNavigation));
+    dispatch(savePages(pages));
+    const { navigation } = props;
+    NavigationUtil.goPage({ navigation }, 'Home');
   };
+
   const width = useWindowDimensions().width;
+
   return (
     <SafeAreaView style={styles.root}>
       <Image

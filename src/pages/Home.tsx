@@ -2,16 +2,20 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import { DynamicTabNavigator } from '../navigator/DynamicTabNavigator';
-import NavigationUtil from '../navigator/NavigationUtil';
 import { bottomNavigation } from '../utils';
+import NavigationUtil from '../navigator/NavigationUtil';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
-  const bn = useSelector((store) => {
-    return store.bottomNavigation.bottomNavigation;
+  const bn = useSelector((state) => {
+    return state.bottomNavigation.bottomNavigation;
   });
+  const pages = useSelector((state) => {
+    return state.pages.pages;
+  });
+  NavigationUtil.pages = pages;
   NavigationUtil.navigation = props.navigation;
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
