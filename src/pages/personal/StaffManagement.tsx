@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Modal, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import apis from '../../apis';
-import { ListData, NavBar, Popup } from '../../common/Component';
+import { CustomButton, ListData, NavBar, Popup } from '../../common/Component';
 import FormDatePicker from '../../common/form/FormDatePicker';
+import { get } from '../../HiNet';
 import NavigationUtil from '../../navigator/NavigationUtil';
 import { dayFormat, gender, hasStatus } from '../../utils';
 export default (props: any) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectItem, setSelectItem] = useState({});
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
@@ -15,18 +17,14 @@ export default (props: any) => {
     return state.userInfo.userInfo;
   });
   const renderItem = (item) => {
-    const {
-      userName = 'admin',
-      sex = 0,
-      nickName = '测试',
-      status = 0,
-      phonenumber = '13984387205',
-      loginDate = '2022-03-03',
-    } = item;
+    const { userName, sex, nickName, status, phonenumber, loginDate } = item;
     return (
       <TouchableOpacity
         style={{ borderBottomWidth: 1, borderColor: theme.borderColor, padding: 10 }}
-        onLongPress={() => setModalVisible(true)}
+        onLongPress={() => {
+          setModalVisible(true);
+          setSelectItem(item);
+        }}
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={{ fontSize: theme.fontSize, color: theme.fontColor }}>姓名：{nickName}</Text>
@@ -53,12 +51,36 @@ export default (props: any) => {
         <ListData url={apis.staffList} params={{ gsId: userInfo.gsId }} keyId="userId" renderItem={renderItem} />
       </View>
       <Popup modalVisible={modalVisible} onClose={() => setModalVisible(false)}>
-        <TouchableOpacity>
-          <Text>123</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text>123</Text>
-        </TouchableOpacity>
+        <View style={{ height: 45 }}>
+          <CustomButton
+            title="编辑"
+            onClick={() => {
+              setModalVisible(false);
+              NavigationUtil.goPage({ title: '编辑员工', ...selectItem }, 'AddStaff');
+            }}
+            buttonStyle={{ backgroundColor: theme.backgroundColor }}
+            fontStyle={{ color: theme.primary }}
+          />
+        </View>
+        <View style={{ height: 45 }}>
+          <CustomButton
+            title="删除"
+            onClick={() => {
+              get(`${apis.deleteStaff}/${selectItem?.userId}`)().then(() => {
+                Alert.alert('提示', '删除成功', [
+                  {
+                    text: '确定',
+                    onPress: () => {
+                      NavigationUtil.goBack();
+                    },
+                  },
+                ]);
+              });
+            }}
+            buttonStyle={{ backgroundColor: theme.backgroundColor }}
+            fontStyle={{ color: theme.error }}
+          />
+        </View>
       </Popup>
     </SafeAreaView>
   );

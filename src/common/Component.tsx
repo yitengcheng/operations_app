@@ -64,7 +64,7 @@ export const NavBar = (props: any) => {
  * @returns
  */
 export const CustomButton = (props: any) => {
-  const { title, onClick, buttonStyle, fontStyle, type = 'primary' } = props;
+  const { title, onClick, buttonStyle, fontStyle, type = 'primary', source } = props;
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
@@ -78,13 +78,13 @@ export const CustomButton = (props: any) => {
         ...buttonStyle,
       }}
     >
+      {source && <Image source={source} style={{ width: 15, height: 15, marginRight: 5 }} />}
       <Text
-        style={[
-          fontStyle || {
-            fontSize: theme.fontSize,
-            color: theme.fontColor,
-          },
-        ]}
+        style={{
+          fontSize: theme.fontSize,
+          color: theme.fontColor,
+          ...fontStyle,
+        }}
       >
         {title}
       </Text>
@@ -364,6 +364,7 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 45,
     minWidth: 100,
+    flexDirection: 'row',
   },
   pre: {
     flexDirection: 'row',

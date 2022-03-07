@@ -11,6 +11,7 @@ import Scheduling from '../pages/scheduling';
 import Statistical from '../pages/statistical';
 import StaffManagement from '../pages/personal/StaffManagement';
 import AddStaff from '../pages/personal/AddStaff';
+import Template from '../pages/personal/Template';
 import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
@@ -152,6 +153,10 @@ export const pages = [
   {
     name: 'AddStaff',
     component: AddStaff,
+  },
+  {
+    name: 'Template',
+    component: Template,
   },
 ];
 

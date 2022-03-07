@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, View, Image, Text } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Image, Text, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import { MenuGrid, NavBar, SwiperImage } from '../../common/Component';
 import _ from 'lodash';
@@ -61,17 +61,17 @@ export default (props: any) => {
               },
             },
             {
-              text: '测试2',
-              icon: require('../../assets/image/shopping.png'),
+              text: '资产模板',
+              icon: require('../../assets/image/putIn.png'),
               func: () => {
-                Alert.alert('点击按钮2');
+                NavigationUtil.goPage({ title: '资产模板', type: 1 }, 'Template');
               },
             },
             {
-              text: '测试3',
-              icon: require('../../assets/image/shopping.png'),
+              text: '故障模板',
+              icon: require('../../assets/image/fault.png'),
               func: () => {
-                Alert.alert('点击按钮3');
+                NavigationUtil.goPage({ title: '故障模板', type: 2 }, 'Template');
               },
             },
             {

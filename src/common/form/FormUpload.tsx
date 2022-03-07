@@ -10,6 +10,7 @@ import config from '../../config';
 import _ from 'lodash';
 import ErrorMessage from './ErrorMessage';
 import Label from './Label';
+import { CustomButton, Popup } from '../Component';
 
 /**
  * 图片选择器
@@ -18,8 +19,8 @@ import Label from './Label';
  */
 const FormUpload = (props: any) => {
   const { count = 1, defaultValue, editable = true } = props;
-  const action = useRef();
-  const imgAction = useRef();
+  const [action, setAction] = useState(false);
+  const [imgAction, setImgAction] = useState(false);
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
@@ -78,7 +79,7 @@ const FormUpload = (props: any) => {
               key={randomId()}
               onPress={() => {
                 currentImage = item;
-                imgAction.current.show();
+                setImgAction(true);
               }}
             >
               <Image
@@ -97,31 +98,52 @@ const FormUpload = (props: any) => {
               ...styles.imageAdd,
             }}
             onPress={() => {
-              editable && action.current.show();
+              editable && setAction(true);
             }}
           >
-            <Text>+</Text>
+            <Image source={require('../../assets/image/imgAdd.png')} style={{ width: 50, height: 50 }} />
           </TouchableOpacity>
         ) : (
           <View />
         )}
       </View>
-      <ActionSheet
-        ref={action}
-        title={'选择'}
-        options={['相册', '相机', '取消']}
-        cancelButtonIndex={2}
-        destructiveButtonIndex={1}
-        onPress={choosePhoto}
-      />
-      <ActionSheet
-        ref={imgAction}
-        title={'操作'}
-        options={['删除', '取消']}
-        cancelButtonIndex={1}
-        destructiveButtonIndex={1}
-        onPress={operationImage}
-      />
+      <Popup modalVisible={action} onClose={() => setAction(false)}>
+        <View style={{ height: 45 }}>
+          <CustomButton
+            title="相册"
+            onClick={() => {
+              setAction(false);
+              choosePhoto(0);
+            }}
+            buttonStyle={{ backgroundColor: theme.backgroundColor }}
+            fontStyle={{ color: theme.primary }}
+          />
+        </View>
+        <View style={{ height: 45 }}>
+          <CustomButton
+            title="相机"
+            onClick={() => {
+              setAction(false);
+              choosePhoto(1);
+            }}
+            buttonStyle={{ backgroundColor: theme.backgroundColor }}
+            fontStyle={{ color: theme.primary }}
+          />
+        </View>
+      </Popup>
+      <Popup modalVisible={imgAction} onClose={() => setImgAction(false)}>
+        <View style={{ height: 45 }}>
+          <CustomButton
+            title="删除"
+            onClick={() => {
+              setImgAction(false);
+              operationImage(0);
+            }}
+            buttonStyle={{ backgroundColor: theme.backgroundColor }}
+            fontStyle={{ color: theme.primary }}
+          />
+        </View>
+      </Popup>
       {props.isFieldInError && ErrorMessage(props.isFieldInError, props.getErrorsInField, props.name)}
     </View>
   );
