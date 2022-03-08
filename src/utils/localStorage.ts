@@ -21,3 +21,11 @@ export const loadStorage = async (name: string) => {
     console.log(`-----load ${name} fail-----`, error);
   }
 };
+
+export const clearStorage = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (error) {
+    console.log(`-----clear fail-----`, error);
+  }
+};

@@ -25,11 +25,7 @@ export default (props: any) => {
       setUsername(res?.username);
     });
     saveStorage('token', '');
-    if (username && password) {
-      toLogin();
-    }
   }, []);
-
   let registrationId;
   if (Platform.OS === 'android') {
     JPush.setLoggerEnable(true);

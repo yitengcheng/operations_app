@@ -4,6 +4,10 @@ import { useSelector } from 'react-redux';
 import { MenuGrid, NavBar, SwiperImage } from '../../common/Component';
 import _ from 'lodash';
 import NavigationUtil from '../../navigator/NavigationUtil';
+import { post } from '../../HiNet';
+import apis from '../../apis';
+import { clearStorage } from '../../utils/localStorage';
+import { togetherUrl } from '../../utils';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -12,6 +16,18 @@ export default (props: any) => {
   const userInfo = useSelector((state) => {
     return state.userInfo.userInfo;
   });
+  const logout = () => {
+    post(apis.logout)()().then((res) => {
+      Alert.alert('提示', '退出成功', [
+        {
+          text: '确定',
+          onPress: () => {
+            NavigationUtil.login();
+          },
+        },
+      ]);
+    });
+  };
 
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
@@ -19,7 +35,9 @@ export default (props: any) => {
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         <View style={styles.topInfo}>
           <Image
-            source={require('../../assets/image/default_head.png')}
+            source={
+              userInfo?.avatar ? { uri: togetherUrl(userInfo.avatar) } : require('../../assets/image/default_head.png')
+            }
             style={{ width: 100, height: 100, borderRadius: 50, margin: 10 }}
             resizeMode="contain"
           />
@@ -75,38 +93,34 @@ export default (props: any) => {
               },
             },
             {
-              text: '测试4',
-              icon: require('../../assets/image/shopping.png'),
+              text: '修改密码',
+              icon: require('../../assets/image/modfiy_password.png'),
               func: () => {
-                Alert.alert('点击按钮4');
+                NavigationUtil.goPage({}, 'ModfiyPassword');
+              },
+            },
+
+            {
+              text: '清理缓存',
+              icon: require('../../assets/image/clear_cache.png'),
+              func: () => {
+                clearStorage();
+                Alert.alert('提示', '清理完成');
+              },
+            },
+
+            {
+              text: '个人信息',
+              icon: require('../../assets/image/userInfo.png'),
+              func: () => {
+                NavigationUtil.goPage({}, 'UserInfo');
               },
             },
             {
-              text: '测试5',
-              icon: require('../../assets/image/shopping.png'),
+              text: '退出登录',
+              icon: require('../../assets/image/logout.png'),
               func: () => {
-                Alert.alert('点击按钮5');
-              },
-            },
-            {
-              text: '测试6',
-              icon: require('../../assets/image/shopping.png'),
-              func: () => {
-                Alert.alert('点击按钮6');
-              },
-            },
-            {
-              text: '测试7',
-              icon: require('../../assets/image/shopping.png'),
-              func: () => {
-                Alert.alert('点击按钮7');
-              },
-            },
-            {
-              text: '测试8',
-              icon: require('../../assets/image/shopping.png'),
-              func: () => {
-                Alert.alert('点击按钮8');
+                logout();
               },
             },
           ]}

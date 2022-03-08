@@ -12,6 +12,8 @@ import Statistical from '../pages/statistical';
 import StaffManagement from '../pages/personal/StaffManagement';
 import AddStaff from '../pages/personal/AddStaff';
 import Template from '../pages/personal/Template';
+import ModfiyPassword from '../pages/personal/ModfiyPassword';
+import UserInfo from '../pages/personal/UserInfo';
 import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
@@ -157,6 +159,14 @@ export const pages = [
   {
     name: 'Template',
     component: Template,
+  },
+  {
+    name: 'ModfiyPassword',
+    component: ModfiyPassword,
+  },
+  {
+    name: 'UserInfo',
+    component: UserInfo,
   },
 ];
 

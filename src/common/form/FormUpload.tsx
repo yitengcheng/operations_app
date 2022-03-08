@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Image, TouchableOpacity, Alert, StyleSheet, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import ActionSheet from 'react-native-actionsheet';
@@ -18,14 +18,17 @@ import { CustomButton, Popup } from '../Component';
  * @returns
  */
 const FormUpload = (props: any) => {
-  const { count = 1, defaultValue, editable = true } = props;
+  const { count = 1, defaultValue, editable = true, onChange } = props;
   const [action, setAction] = useState(false);
   const [imgAction, setImgAction] = useState(false);
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
   const [fileList, setFileList] = useState(defaultValue ?? []);
-  let currentImage = '';
+  const [currentImage, setCurrentImage] = useState('');
+  useEffect(() => {
+    onChange && onChange(fileList);
+  }, [fileList]);
   const operationImage = (index) => {
     if (index === 0) {
       _.remove(fileList, (item) => item === currentImage);
@@ -65,7 +68,7 @@ const FormUpload = (props: any) => {
     const file = { uri: asset.uri, name: asset.fileName, size: asset.fileSize, type: 'multipart/form-data' };
     formData.append('file', file);
     post(apis.uploadImg)(formData)().then((result) => {
-      fileList.push(result.data);
+      fileList.push(result);
       setFileList([...fileList]);
     });
   };
@@ -78,7 +81,7 @@ const FormUpload = (props: any) => {
             <TouchableOpacity
               key={randomId()}
               onPress={() => {
-                currentImage = item;
+                setCurrentImage(item);
                 setImgAction(true);
               }}
             >
