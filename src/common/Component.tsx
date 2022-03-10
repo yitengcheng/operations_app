@@ -291,15 +291,21 @@ export const ListData = (props: any) => {
 };
 
 /**
- * 底部弹窗
+ * 自定义弹窗
  * @param props
  * @returns
  */
 export const Popup = (props: any) => {
-  const { modalVisible, onClose, children } = props;
+  const { modalVisible, onClose, children, type = 'bottom' } = props;
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
+  let posit = 'flex-end';
+  if (type === 'top') {
+    posit = 'flex-start';
+  } else if (type === 'center') {
+    posit = 'center';
+  }
   return (
     <Modal
       animationType="slide"
@@ -309,7 +315,7 @@ export const Popup = (props: any) => {
       }}
       transparent
     >
-      <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0, 0, 0, 0.65)' }}>
+      <View style={{ flex: 1, justifyContent: posit, backgroundColor: 'rgba(0, 0, 0, 0.65)' }}>
         <View style={{ backgroundColor: theme.backgroundColor }}>
           <View
             style={{
@@ -317,11 +323,11 @@ export const Popup = (props: any) => {
               padding: 8,
               borderBottomWidth: 1,
               borderColor: theme.borderColor,
-              justifyContent: 'flex-end',
+              justifyContent: posit,
             }}
           >
             <TouchableOpacity onPress={() => onClose && onClose()}>
-              <Text style={{ fontSize: theme.fontSize, color: theme.error }}>取消</Text>
+              <Image source={require('../assets/image/close.png')} style={{ width: 15, height: 15 }} />
             </TouchableOpacity>
           </View>
           {children}

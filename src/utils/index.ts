@@ -35,7 +35,7 @@ export const to = (promise: any, errorExt: any) => {
  * @returns
  */
 export const dayFormat = (day: any, format?: string) => {
-  return day ? dayjs(day).format(format ?? 'YYYY-MM-DD') : '暂无';
+  return dayjs(day ?? new Date()).format(format ?? 'YYYY-MM-DD');
 };
 
 /**

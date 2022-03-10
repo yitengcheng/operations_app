@@ -12,6 +12,9 @@ import Label from './Label';
 const FormSelect = (props: any) => {
   const { label, placeholder, options, onChange, defaultValue, editable = true, ...other } = props;
   const placeholderText = placeholder ?? `请选择${label}`;
+  console.log(defaultValue);
+
+  let items = options.length === 0 ? [{ label: defaultValue + '', value: defaultValue }] : options;
   return (
     <View style={styles.column}>
       <Label {...props} />
@@ -21,7 +24,7 @@ const FormSelect = (props: any) => {
         }}
         placeholder={{ label: placeholderText, value: null, color: '#9EA0A4' }}
         style={pickerSelectStyles}
-        items={options}
+        items={items}
         value={defaultValue}
         disabled={!editable}
         {...other}

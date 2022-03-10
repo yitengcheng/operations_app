@@ -14,6 +14,8 @@ import AddStaff from '../pages/personal/AddStaff';
 import Template from '../pages/personal/Template';
 import ModfiyPassword from '../pages/personal/ModfiyPassword';
 import UserInfo from '../pages/personal/UserInfo';
+import ChangeShiftDetail from '../pages/scheduling/ChangeShiftDetail';
+import ChangeShiftList from '../pages/scheduling/ChangeShiftList';
 import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
@@ -167,6 +169,14 @@ export const pages = [
   {
     name: 'UserInfo',
     component: UserInfo,
+  },
+  {
+    name: 'ChangeShiftDetail',
+    component: ChangeShiftDetail,
+  },
+  {
+    name: 'ChangeShiftList',
+    component: ChangeShiftList,
   },
 ];
 

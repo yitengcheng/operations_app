@@ -29,7 +29,7 @@ export default (props: any) => {
       newPassword: { required: true },
     });
     if (!res) {
-      Alert.alert('错误', '缺少账号或密码');
+      Alert.alert('错误', '表单尚未填写完毕');
       return;
     }
     post(apis.modifyPassword)()({ oldPassword, newPassword }).then((res) => {

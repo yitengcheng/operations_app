@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, useWindowDimensions, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import { LocaleConfig, Calendar } from 'react-native-calendars';
 import { dayFormat } from '../utils';
 import _ from 'lodash';
 import FormRadio from './form/FormRadio';
 import { CustomButton } from './Component';
+import { get } from '../HiNet';
+import apis from '../apis';
+import dayjs from 'dayjs';
 
-export default () => {
+export default (props: any) => {
+  const { saveDuty } = props;
   const theme = useSelector((state) => {
     return state.theme.theme;
+  });
+  const userInfo = useSelector((state) => {
+    return state.userInfo.userInfo;
   });
   LocaleConfig.locales.cn = {
     monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
@@ -22,17 +29,21 @@ export default () => {
   const windowWidth = useWindowDimensions().width;
   const [marksDate, setMarksDate] = useState();
   const [items, setItems] = useState();
-  const [options, setOptions] = useState([
-    { label: '张三', value: 1, duty: '值班领导' },
-    { label: '李四', value: 2 },
-    { label: '王五', value: 3 },
-    { label: '贺六', value: 4 },
-    { label: '范七', value: 5 },
-  ]);
+  const [options, setOptions] = useState([]);
   const [selectDay, setSelectDay] = useState(dayFormat());
+
+  useEffect(() => {
+    getDutyUserList();
+    initDuty();
+  }, []);
+
   let result;
   const onSave = () => {
-    const res = [];
+    let res = [];
+    if (dayjs().isAfter(dayjs(selectDay))) {
+      Alert.alert('提示', '不能修改今天之前的排班');
+      return;
+    }
     _.find(options, (item) => {
       if (_.includes(result, item.value)) {
         res.push(item);
@@ -46,7 +57,35 @@ export default () => {
       ...items,
       [selectDay]: res,
     });
+    saveDuty && saveDuty(_.map(res, 'value'), selectDay);
   };
+
+  const getDutyUserList = () => {
+    get(apis.getDutyUser)().then((res) => {
+      res.map((item) => {
+        options.push({ label: item.nick_name, value: item.user_id });
+      });
+      setOptions([...options]);
+    });
+  };
+
+  const initDuty = (month?: string) => {
+    get(apis.dutyList)({ gsId: userInfo.gsId, dutyTime: dayjs(month).format('YYYY-MM') }).then((res) => {
+      let data = {};
+      let marks = {};
+      res.map((item) => {
+        marks = { ...marks, [item.dutyTime]: { marked: true } };
+        let old = data?.[item.dutyTime] ?? [];
+        data = {
+          ...data,
+          [item.dutyTime]: _.uniqBy([...old, { label: item.username, value: item.dutyUser }], 'value'),
+        };
+      });
+      setItems(data);
+      setMarksDate(marks);
+    });
+  };
+
   return (
     <View style={[{ backgroundColor: theme }, styles.root]}>
       <Calendar
@@ -63,6 +102,9 @@ export default () => {
             }
           });
           setMarksDate({ [day.dateString]: { selected: true }, ...markerRes });
+        }}
+        onMonthChange={(month) => {
+          initDuty(`${month.year}-${month.month}`);
         }}
         hideArrows={false}
       />
