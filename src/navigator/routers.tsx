@@ -16,6 +16,10 @@ import ModfiyPassword from '../pages/personal/ModfiyPassword';
 import UserInfo from '../pages/personal/UserInfo';
 import ChangeShiftDetail from '../pages/scheduling/ChangeShiftDetail';
 import ChangeShiftList from '../pages/scheduling/ChangeShiftList';
+import InspectionAddress from '../pages/inspection/InspectionAddress';
+import InspectionPoint from '../pages/inspection/InspectionPoint';
+import InspectionReport from '../pages/inspection/InspectionReport';
+import InspectionHistory from '../pages/inspection/InspectionHistory';
 import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
@@ -177,6 +181,22 @@ export const pages = [
   {
     name: 'ChangeShiftList',
     component: ChangeShiftList,
+  },
+  {
+    name: 'InspectionAddress',
+    component: InspectionAddress,
+  },
+  {
+    name: 'InspectionPoint',
+    component: InspectionPoint,
+  },
+  {
+    name: 'InspectionReport',
+    component: InspectionReport,
+  },
+  {
+    name: 'InspectionHistory',
+    component: InspectionHistory,
   },
 ];
 

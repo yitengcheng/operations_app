@@ -13,7 +13,8 @@ const FormSelect = (props: any) => {
   const { label, placeholder, options, onChange, defaultValue, editable = true, ...other } = props;
   const placeholderText = placeholder ?? `请选择${label}`;
 
-  let items = options.length === 0 ? [{ label: defaultValue + '', value: defaultValue }] : options;
+  let items = options.length === 0 && !!defaultValue ? [{ label: defaultValue + '', value: defaultValue }] : options;
+
   return (
     <View style={styles.column}>
       <Label {...props} />

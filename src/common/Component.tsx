@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -200,7 +200,7 @@ export const SwiperImage = (props: any) => {
  * @param props
  * @returns
  */
-export const ListData = (props: any) => {
+const List = (props: any, ref: any) => {
   const { url, renderItem, params, keyId } = props;
   const [data, setData] = useState([]);
   const [noMore, setNoMore] = useState(false);
@@ -210,6 +210,17 @@ export const ListData = (props: any) => {
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
+  const listRef = useRef();
+  useImperativeHandle(ref, () => ({
+    refresh: () => {
+      refresh();
+    },
+  }));
+  const refresh = () => {
+    setpageNo(1);
+    setNoMore(false);
+    getData(pageNo);
+  };
   useEffect(() => {
     setpageNo(1);
     setNoMore(false);
@@ -254,6 +265,7 @@ export const ListData = (props: any) => {
   return (
     <View style={{ flex: 1 }}>
       <FlatList
+        ref={listRef}
         data={data}
         renderItem={(data) => renderItem(data.item)}
         keyExtractor={(item, index) => {
@@ -289,6 +301,7 @@ export const ListData = (props: any) => {
     </View>
   );
 };
+export const ListData = forwardRef(List);
 
 /**
  * 自定义弹窗
@@ -323,7 +336,7 @@ export const Popup = (props: any) => {
               padding: 8,
               borderBottomWidth: 1,
               borderColor: theme.borderColor,
-              justifyContent: posit,
+              justifyContent: 'flex-end',
             }}
           >
             <TouchableOpacity onPress={() => onClose && onClose()}>
