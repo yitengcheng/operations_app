@@ -13,7 +13,7 @@ import {
 import { useSelector } from 'react-redux';
 import apis from '../../apis';
 import Agenda from '../../common/Agenda';
-import { CustomButton, NavBar } from '../../common/Component';
+import { CustomButton, NavBar, Popup } from '../../common/Component';
 import { get, post } from '../../HiNet';
 import NavigationUtil from '../../navigator/NavigationUtil';
 

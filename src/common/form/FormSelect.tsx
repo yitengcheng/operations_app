@@ -12,7 +12,6 @@ import Label from './Label';
 const FormSelect = (props: any) => {
   const { label, placeholder, options, onChange, defaultValue, editable = true, ...other } = props;
   const placeholderText = placeholder ?? `请选择${label}`;
-  console.log(defaultValue);
 
   let items = options.length === 0 ? [{ label: defaultValue + '', value: defaultValue }] : options;
   return (

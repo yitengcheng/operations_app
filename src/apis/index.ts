@@ -3,6 +3,7 @@ import login from './login';
 import staff from './staff';
 import template from './template';
 import duty from './duty';
+import assets from './assets';
 
 export default {
   ...upload,
@@ -10,4 +11,5 @@ export default {
   ...staff,
   ...template,
   ...duty,
+  ...assets,
 };
