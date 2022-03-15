@@ -5,6 +5,7 @@ import template from './template';
 import duty from './duty';
 import assets from './assets';
 import inspection from './inspection';
+import fault from './fault';
 
 export default {
   ...upload,
@@ -14,4 +15,5 @@ export default {
   ...duty,
   ...assets,
   ...inspection,
+  ...fault,
 };

@@ -49,8 +49,6 @@ export default (props: any) => {
         result.push({ label: item, value: item });
       });
     });
-    console.log(result);
-
     setDutyDate(result);
   };
   const initDutyUser = async () => {

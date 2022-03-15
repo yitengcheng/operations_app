@@ -5,9 +5,11 @@ const defaultState = {
   theme: {
     backgroundColor: '#FFFFFF',
     primary: '#364ddb',
+    // primary: '#1890ff',
     fontColor: 'rgba(0, 0, 0, 0.65)',
     error: '#f5222d',
     warrning: '#faad14',
+    success: '#52c41a',
     fontSize: 16,
     borderRadius: 2,
     borderColor: '#d9d9d9',

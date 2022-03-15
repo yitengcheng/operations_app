@@ -20,6 +20,8 @@ import InspectionAddress from '../pages/inspection/InspectionAddress';
 import InspectionPoint from '../pages/inspection/InspectionPoint';
 import InspectionReport from '../pages/inspection/InspectionReport';
 import InspectionHistory from '../pages/inspection/InspectionHistory';
+import RepairList from '../pages/repair/RepairList';
+import RepairDetail from '../pages/repair/RepairDetail';
 import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
@@ -197,6 +199,14 @@ export const pages = [
   {
     name: 'InspectionHistory',
     component: InspectionHistory,
+  },
+  {
+    name: 'RepairList',
+    component: RepairList,
+  },
+  {
+    name: 'RepairDetail',
+    component: RepairDetail,
   },
 ];
 

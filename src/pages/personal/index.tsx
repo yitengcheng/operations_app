@@ -45,7 +45,7 @@ export default (props: any) => {
           <View style={styles.userInfo}>
             <Text style={{ fontSize: 18, fontWeight: '700', color: theme.fontColor }}>姓名:{userInfo.nickName}</Text>
             <Text style={{ color: theme.fontColor }}>ID:{`${_.random(1000000, 999999)}`}</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View style={{ alignItems: 'center' }}>
                 <Text style={{ color: theme.fontColor }}>今日故障</Text>
                 <Text style={{ color: theme.fontColor }}>5</Text>
@@ -58,7 +58,7 @@ export default (props: any) => {
                 <Text style={{ color: theme.fontColor }}>未处理</Text>
                 <Text style={{ color: theme.fontColor }}>5</Text>
               </View>
-            </View>
+            </View> */}
           </View>
         </View>
         <SwiperImage

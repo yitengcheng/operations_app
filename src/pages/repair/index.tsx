@@ -1,18 +1,140 @@
-import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, StyleSheet, View, Text, Image, TouchableOpacity, Modal, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
+import apis from '../../apis';
+import { NavBar, SwiperImage } from '../../common/Component';
+import { get } from '../../HiNet';
+import NavigationUtil from '../../navigator/NavigationUtil';
+import ScanCode from '../../common/ScanCode';
 export default (props: any) => {
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
+  const [cc, setCc] = useState(0);
+  const [create, setCreate] = useState(0);
+  const [handle, setHandle] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    getMyCount();
+  }, []);
+
+  const getMyCount = () => {
+    get(apis.getMyReportCount)().then((res) => {
+      setCc(res.cc);
+      setCreate(res.create);
+      setHandle(res.handle);
+    });
+  };
+  const toListPage = (title: string, type: number) => {
+    NavigationUtil.goPage({ title, type }, 'RepairList');
+  };
+  const onBarCodeRead = (e) => {
+    setModalVisible(false);
+    if (e.data) {
+      NavigationUtil.goPage({ title: '故障上报', id: e.data }, 'RepairDetail');
+    } else {
+      Alert.alert('提示', '识别失败，请重试');
+    }
+  };
+
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
-      <Text>工单</Text>
+      <NavBar title="故障" />
+      <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
+        <SwiperImage
+          images={[
+            require('../../assets/image/banner_7.png'),
+            require('../../assets/image/banner_8.png'),
+            require('../../assets/image/banner_9.png'),
+          ]}
+        />
+        <View style={{ height: 5, backgroundColor: theme.borderColor }} />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10 }}>
+          <TouchableOpacity style={styles.iconBox} onPress={() => toListPage('待我处理', 2)}>
+            <Image source={require('../../assets/image/todo.png')} style={styles.imageIcon} />
+            <Text style={styles.iconText}>待我处理</Text>
+            <Text style={styles.iconCount}>{handle}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconBox} onPress={() => toListPage('我创建的', 1)}>
+            <Image source={require('../../assets/image/my_create.png')} style={styles.imageIcon} />
+            <Text style={styles.iconText}>我创建的</Text>
+            <Text style={styles.iconCount}>{create}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconBox} onPress={() => toListPage('抄送我的', 3)}>
+            <Image source={require('../../assets/image/cc.png')} style={styles.imageIcon} />
+            <Text style={styles.iconText}>抄送我的</Text>
+            <Text style={styles.iconCount}>{cc}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ backgroundColor: theme.borderColor, flex: 1, padding: 10 }}>
+          <Text style={{ fontSize: theme.fontSize, color: '#000000' }}>服务工单</Text>
+          <TouchableOpacity
+            style={styles.option_box}
+            onPress={() => {
+              setModalVisible(true);
+            }}
+          >
+            <Text>创建工单</Text>
+            <Image
+              source={require('../../assets/image/repair_create.png')}
+              style={styles.option_icon}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.option_box} onPress={() => toListPage('工单历史', 0)}>
+            <Text>工单历史</Text>
+            <Image
+              source={require('../../assets/image/repair_history.png')}
+              style={styles.option_icon}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Modal
+        animationType="slide"
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+        transparent
+      >
+        <ScanCode onBarCodeRead={onBarCodeRead} />
+      </Modal>
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+  iconBox: {
+    alignItems: 'center',
+  },
+  imageIcon: {
+    width: 55,
+    height: 55,
+  },
+  iconText: {
+    fontSize: 18,
+    padding: 5,
+    color: '#000000',
+  },
+  iconCount: {
+    fontSize: 16,
+    color: '#000000',
+  },
+  option_box: {
+    backgroundColor: '#FFFFFF',
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    marginVertical: 5,
+  },
+  option_icon: {
+    width: 25,
+    height: 25,
   },
 });

@@ -3,6 +3,12 @@ import dayjs from 'dayjs';
 import { tabs } from '../navigator/routers';
 import config from '../config';
 
+/**
+ * 表单验证
+ * @param name 字段名
+ * @param obj 参数
+ * @returns
+ */
 export const validOption = (name: string, obj: {}) => {
   const { isFieldInError, getErrorsInField } = obj;
   return {
@@ -12,10 +18,20 @@ export const validOption = (name: string, obj: {}) => {
   };
 };
 
-export const randomId = () => {
+/**
+ * 随机生成ID
+ * @returns
+ */
+export const randomId = (): string => {
   return _.random(0, 9999999, false);
 };
 
+/**
+ * 优化promise
+ * @param promise
+ * @param errorExt
+ * @returns
+ */
 export const to = (promise: any, errorExt: any) => {
   return promise
     .then((data) => [null, data])
@@ -105,4 +121,22 @@ export const gender = (sex: number): string => {
  */
 export const hasStatus = (status: number): string => {
   return status == 0 ? '启用' : '未启用';
+};
+
+/**
+ * 工单状态
+ * @param status
+ * @returns
+ */
+export const repairStatus = (status: number): string => {
+  return status === 0 ? '待处理' : status === 1 ? '已处理' : '已拒绝';
+};
+
+/**
+ * 电话号码加星
+ * @param phoneNumber
+ * @returns
+ */
+export const phoneNumberEncryption = (phoneNumber: string): string => {
+  return phoneNumber?.replace(phoneNumber.substring(3, 7), '****');
 };
