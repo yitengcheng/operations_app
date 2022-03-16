@@ -8,8 +8,8 @@
 	<string>该应用需要你的相机，以便你拍摄上传信息</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>该应用需要读取你的相册，以便为你编辑信息</string>
-  <key>NSPhotoLibraryAddUsageDescription</key>
-  <string>该应用可以为你将图片保存到手机，方便你随时查看</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>该应用可以为你将图片保存到手机，方便你随时查看</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -61,5 +61,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array/>
 </dict>
 </plist>

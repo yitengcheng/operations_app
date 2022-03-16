@@ -27,17 +27,16 @@ export default (props: any) => {
     saveStorage('token', '');
   }, []);
   let registrationId;
-  if (Platform.OS === 'android') {
-    JPush.setLoggerEnable(true);
-    JPush.init({ appKey: '27282edcc5414ca852184e55', channel: 'dev', production: 1 });
-    //连接状态
-    JPush.addConnectEventListener((result) => {
-      result.connectEnable &&
-        JPush.getRegistrationID((res) => {
-          registrationId = res.registerID;
-        });
-    });
-  }
+  JPush.setLoggerEnable(true);
+  JPush.init({ appKey: '27282edcc5414ca852184e55', channel: 'dev', production: 1 });
+  //连接状态
+  JPush.addConnectEventListener((result) => {
+    result.connectEnable &&
+      JPush.getRegistrationID((res) => {
+        console.log(res.registerID);
+        registrationId = res.registerID;
+      });
+  });
 
   const { validate, ...other } = useValidation({
     state: { username, password },
