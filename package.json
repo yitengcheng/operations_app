@@ -29,6 +29,7 @@
     "react-native-actionsheet": "^2.4.2",
     "react-native-calendars": "^1.1278.0",
     "react-native-camera": "^4.2.1",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-common-date-picker": "^2.3.6",
     "react-native-form-validator": "^0.5.1",
     "react-native-gesture-handler": "^2.2.0",
@@ -37,6 +38,7 @@
     "react-native-picker-select": "^8.0.4",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.2",
+    "react-native-svg": "^12.3.0",
     "react-native-swiper-flatlist": "^3.0.16",
     "react-native-tab-view": "^3.1.1"
   },

@@ -6,6 +6,7 @@ import duty from './duty';
 import assets from './assets';
 import inspection from './inspection';
 import fault from './fault';
+import statistical from './statistical';
 
 export default {
   ...upload,
@@ -16,4 +17,5 @@ export default {
   ...assets,
   ...inspection,
   ...fault,
+  ...statistical,
 };
