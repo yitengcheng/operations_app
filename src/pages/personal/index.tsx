@@ -17,16 +17,14 @@ export default (props: any) => {
     return state.userInfo.userInfo;
   });
   const logout = () => {
-    post(apis.logout)()().then((res) => {
-      Alert.alert('提示', '退出成功', [
-        {
-          text: '确定',
-          onPress: () => {
-            NavigationUtil.login();
-          },
+    Alert.alert('提示', '退出成功', [
+      {
+        text: '确定',
+        onPress: () => {
+          NavigationUtil.login();
         },
-      ]);
-    });
+      },
+    ]);
   };
 
   return (

@@ -38,11 +38,10 @@ export default (props: any) => {
     !!inspection && listRef.current?.refresh();
   }, [inspection]);
   const initOptions = () => {
-    get(`${apis.getInspectionAddress}/${userInfo.gsId}`)({ pageSize: 10000, pageNum: 1 }).then((res) => {
-      const { rows } = res;
+    post(`${apis.getInspectionAddressPage}`)()().then((res) => {
       let result = [];
-      rows.map((item) => {
-        result.push({ label: item.office, value: item.id });
+      res.map((item) => {
+        result.push({ label: item.office, value: item._id });
       });
       setOptions(result);
     });
@@ -56,8 +55,7 @@ export default (props: any) => {
       Alert.alert('错误', '请仔细检查表单');
       return;
     }
-    let url = type === 1 ? apis.addInspection : apis.updateInspection;
-    post(url)({ gsId: userInfo.gsId, office, parentId, id })().then((res) => {
+    post(apis.addInspection)({ office, parentId, id })().then((res) => {
       Alert.alert('提示', '成功', [
         {
           text: '确定',
@@ -67,6 +65,7 @@ export default (props: any) => {
             setId(undefined);
             setOffice('');
             setParentId('');
+            listRef.current?.refresh();
           },
         },
       ]);
@@ -97,11 +96,11 @@ export default (props: any) => {
             defaultValue={inspection}
           />
         </View>
-
         {inspection && (
           <ListData
             ref={listRef}
-            url={`${apis.getInspectionPoint}/${inspection}`}
+            url={`${apis.getInspectionAddressList}`}
+            params={{ parentId: inspection }}
             renderItem={(data) => (
               <TouchableOpacity
                 onLongPress={() => {
@@ -112,14 +111,14 @@ export default (props: any) => {
                         setOffice(data.office);
                         setParentId(inspection);
                         setType(2);
-                        setId(data.id);
+                        setId(data._id);
                         setModalVisible(true);
                       },
                     },
                     {
                       text: '删除',
                       onPress: () => {
-                        get(`${apis.delInspection}/${data.id}`)().then((res) => {
+                        post(`${apis.delInspection}`)({ id: data._id })().then((res) => {
                           Alert.alert('提示', '删除成功', [
                             {
                               text: '确定',

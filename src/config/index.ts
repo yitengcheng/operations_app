@@ -1,10 +1,11 @@
-const DEV_URL = 'http://192.168.2.4:8083';
+// const DEV_URL = 'http://192.168.2.4:8083';
 // const DEV_URL = 'https://xd.qiantur.com/prod-api';
-// const DEV_URL = 'http://192.168.31.253:3000/api';
+const DEV_URL = 'http://192.168.31.253:3000/api';
 
 const PRO_URL = 'https://xd.qiantur.com/prod-api';
 
-const DEFAULT_IMG_URL = 'http://192.168.2.4:9000';
+// const DEFAULT_IMG_URL = 'http://192.168.2.4:9000';
+const DEFAULT_IMG_URL = 'http://r8ufbc7n0.hn-bkt.clouddn.com/';
 const PRODUCT_IMG_URL = 'https://xd.qiantur.com/minio';
 
 let API_URL = '';

@@ -33,7 +33,6 @@ export default (props: any) => {
   JPush.addConnectEventListener((result) => {
     result.connectEnable &&
       JPush.getRegistrationID((res) => {
-        console.log(res.registerID);
         registrationId = res.registerID;
       });
   });
@@ -55,21 +54,17 @@ export default (props: any) => {
       return;
     }
     const loginRes = await post(apis.login)({ username, password, registrationId, app: true })();
-    if (loginRes.code !== 200) {
-      return;
-    }
     saveStorage('loginRecord', { username, password });
     saveStorage('token', loginRes?.token ?? '');
-    const userInfo = await get(apis.getInfo)();
-    dispatch(saveUserInfo(userInfo?.user ?? {}));
-    const routers = await get(apis.getRouters)();
+    dispatch(saveUserInfo(loginRes?.userInfo ?? {}));
+    const routers = await post(apis.getRouters)()();
     let bottomNavigation = [];
     let pages = [];
     _.map(routers, (item) => {
       if (item.menuType === 'M') {
         bottomNavigation.push(item.name);
       } else if (item.menuType === 'C') {
-        pages.push(item?.children?.[0]?.name);
+        pages.push(item?.name);
       }
     });
     dispatch(saveBottomNavigation(bottomNavigation));

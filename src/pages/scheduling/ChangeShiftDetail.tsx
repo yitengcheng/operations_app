@@ -27,13 +27,14 @@ export default (props: any) => {
   const [visible, setVisible] = useState(false);
 
   const { title, editable, type, data } = props.route.params; // type 1 新增 2 修改 3 领导 4 查看
+
   useEffect(() => {
     initDutyDate();
     initDutyUser();
-    setMixUser(data.mixUser);
-    setDutyTime(data.dutyTime);
-    setMixRemark(data.mixRemark);
-    setUsername(data.username);
+    setMixUser(data?.mixUser?._id);
+    setDutyTime(data?.dutyTime);
+    setMixRemark(data?.mixRemark);
+    setUsername(data?.applyUser?.nickName);
   }, []);
   const { validate, ...other } = useValidation({
     state: { dutyTime, mixUser },
@@ -44,18 +45,18 @@ export default (props: any) => {
   });
   const initDutyDate = () => {
     let result = [];
-    get(apis.dutyReport)().then((res) => {
-      res.times.map((item) => {
-        result.push({ label: item, value: item });
+    post(apis.getDutyDates)()().then((res) => {
+      res.map((item) => {
+        result.push({ label: item.dateOnDuty, value: item.dateOnDuty });
       });
     });
     setDutyDate(result);
   };
   const initDutyUser = async () => {
     let result = [];
-    const res = await get(apis.getDutyUser)();
-    res.map((item) => {
-      result.push({ label: item.nick_name, value: item.user_id });
+    const res = await post(apis.getDutyUser)()();
+    res?.map((item) => {
+      result.push({ label: item.nickName, value: item._id });
     });
     setDutyUser(result);
   };
@@ -68,7 +69,7 @@ export default (props: any) => {
       Alert.alert('错误', '表单尚未填写完毕');
       return;
     }
-    post(apis.applyChangeDuty)({ id: userInfo.userId, dutyTime, mixUser, mixRemark })().then((res) => {
+    post(apis.applyChangeDuty)({ dutyTime, mixUser, mixRemark })().then((res) => {
       Alert.alert('提示', '申请成功，请等待上级审核', [
         {
           text: '确定',
@@ -80,7 +81,17 @@ export default (props: any) => {
     });
   };
   const toAudit = (mixStatus: number) => {
-    post(apis.auditChangeDuty)({ mixStatus, id: data.id, reason })();
+    let url = mixStatus === 1 ? apis.agreeChangeDuty : apis.refuseChangeDuty;
+    post(url)({ id: data._id, reason })().then((res) => {
+      Alert.alert('成功', res.msg, [
+        {
+          text: '确定',
+          onPress: () => {
+            NavigationUtil.goBack();
+          },
+        },
+      ]);
+    });
   };
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
@@ -107,7 +118,7 @@ export default (props: any) => {
           label="备注"
           required={false}
           defaultValue={mixRemark}
-          onChange={setMixRemark}
+          onChangeText={setMixRemark}
           multiline={true}
           editable={editable}
         />

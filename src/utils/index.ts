@@ -116,7 +116,7 @@ export const gender = (sex: number): string => {
 
 /**
  * 状态
- * @param sex
+ * @param status
  * @returns
  */
 export const hasStatus = (status: number): string => {

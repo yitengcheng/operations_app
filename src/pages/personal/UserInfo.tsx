@@ -23,16 +23,16 @@ export default (props: any) => {
   const [nickName, setNickName] = useState(userInfo.nickName);
   const [phonenumber, setPhonenumber] = useState(userInfo.phonenumber);
   const [sex, setSex] = useState(userInfo.sex);
-  const [userName, setUserName] = useState(userInfo.userName);
+  const [username, setUsername] = useState(userInfo.username);
   const [avatar, setAvatar] = useState(userInfo.avatar);
 
   const { validate, ...other } = useValidation({
-    state: { nickName, phonenumber, sex, userName, avatar },
+    state: { nickName, phonenumber, sex, username, avatar },
     labels: {
       nickName: '姓名',
       phonenumber: '电话',
       sex: '性别',
-      userName: '登录账号',
+      username: '登录账号',
       avatar: '头像',
     },
   });
@@ -40,7 +40,7 @@ export default (props: any) => {
     const res = validate({
       nickName: { required: true },
       sex: { required: true },
-      userName: { required: true },
+      username: { required: true },
       phonenumber: { required: true, phone: true },
       avatar: { required: true },
     });
@@ -48,12 +48,12 @@ export default (props: any) => {
       Alert.alert('错误', '表单还未填写完毕');
       return;
     }
-    post(apis.modifyUserInfo)({ nickName, sex, userName, phonenumber, avatar, userId: userInfo.userId })().then(() => {
+    post(apis.modifyUserInfo)({ nickName, sex, username, phonenumber, avatar })().then(() => {
       Alert.alert('提示', '修改成功', [
         {
           text: '确定',
           onPress: () => {
-            dispatch(saveUserInfo({ ...userInfo, nickName, sex, userName, phonenumber, avatar }));
+            dispatch(saveUserInfo({ ...userInfo, nickName, sex, username, phonenumber, avatar }));
             NavigationUtil.goBack();
           },
         },
@@ -99,9 +99,9 @@ export default (props: any) => {
         <FormInput
           label="登录账号"
           placeholder="请输入登录账号"
-          value={userName}
-          onChangeText={setUserName}
-          {...validOption('userName', other)}
+          value={username}
+          onChangeText={setUsername}
+          {...validOption('username', other)}
         />
         <View>
           <CustomButton title="保存" onClick={tosave} />

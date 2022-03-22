@@ -5,15 +5,12 @@ import { CustomButton, ListData, NavBar, Popup } from '../../common/Component';
 import FormInput from '../../common/form/FormInput';
 import { validOption } from '../../utils';
 import { useValidation } from 'react-native-form-validator';
-import { get, post } from '../../HiNet';
+import { post } from '../../HiNet';
 import apis from '../../apis';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
     return state.theme.theme;
-  });
-  const userInfo = useSelector((state) => {
-    return state.userInfo.userInfo;
   });
   const listRef = useRef();
   const [modalVisible, setModalVisible] = useState(false);
@@ -34,8 +31,7 @@ export default (props: any) => {
       Alert.alert('错误', '请仔细检查表单');
       return;
     }
-    let url = type === 1 ? apis.addInspection : apis.updateInspection;
-    post(url)({ gsId: userInfo.gsId, office, id })().then((res) => {
+    post(apis.addInspection)({ office, id })().then((res) => {
       Alert.alert('提示', '成功', [
         {
           text: '确定',
@@ -65,7 +61,7 @@ export default (props: any) => {
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         <ListData
           ref={listRef}
-          url={`${apis.getInspectionAddress}/${userInfo.gsId}`}
+          url={`${apis.getInspectionAddressList}`}
           renderItem={(data) => (
             <TouchableOpacity
               onLongPress={() => {
@@ -76,13 +72,13 @@ export default (props: any) => {
                       setModalVisible(true);
                       setOffice(data.office);
                       setType(2);
-                      setId(data.id);
+                      setId(data._id);
                     },
                   },
                   {
                     text: '删除',
                     onPress: () => {
-                      get(`${apis.delInspection}/${data.id}`)().then((res) => {
+                      post(`${apis.delInspection}`)({ id: data._id })().then((res) => {
                         Alert.alert('提示', '删除成功', [
                           {
                             text: '确定',

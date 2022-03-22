@@ -6,7 +6,7 @@ import { dayFormat } from '../utils';
 import _ from 'lodash';
 import FormRadio from './form/FormRadio';
 import { CustomButton } from './Component';
-import { get } from '../HiNet';
+import { get, post } from '../HiNet';
 import apis from '../apis';
 import dayjs from 'dayjs';
 
@@ -49,10 +49,7 @@ export default (props: any) => {
         res.push(item);
       }
     });
-    if (res.length === 0) {
-      return;
-    }
-    setMarksDate({ ...marksDate, [selectDay]: { marked: true } });
+    setMarksDate({ ...marksDate, [selectDay]: { marked: res.length > 0 } });
     setItems({
       ...items,
       [selectDay]: res,
@@ -61,24 +58,27 @@ export default (props: any) => {
   };
 
   const getDutyUserList = () => {
-    get(apis.getDutyUser)().then((res) => {
+    post(apis.getDutyUser)()().then((res) => {
       res.map((item) => {
-        options.push({ label: item.nick_name, value: item.user_id });
+        options.push({ label: item.nickName, value: item._id });
       });
       setOptions([...options]);
     });
   };
 
   const initDuty = (month?: string) => {
-    get(apis.dutyList)({ gsId: userInfo.gsId, dutyTime: dayjs(month).format('YYYY-MM') }).then((res) => {
+    post(apis.dutyList)({ dutyTime: dayjs(month).format('YYYY-MM') })().then((res) => {
       let data = {};
       let marks = {};
       res.map((item) => {
-        marks = { ...marks, [item.dutyTime]: { marked: true } };
-        let old = data?.[item.dutyTime] ?? [];
+        marks = { ...marks, [item.dateOnDuty]: { marked: item.staffIds.length > 0 } };
+        let staffs = [];
+        item.staffIds.map((staff) => {
+          staffs.push({ label: staff.nickName, value: staff._id });
+        });
         data = {
           ...data,
-          [item.dutyTime]: _.uniqBy([...old, { label: item.username, value: item.dutyUser }], 'value'),
+          [item.dateOnDuty]: staffs,
         };
       });
       setItems(data);
@@ -98,10 +98,13 @@ export default (props: any) => {
           let markerRes = {};
           _.map(marksDate, (item, key) => {
             if (item.marked) {
-              markerRes = { [key]: item, ...markerRes };
+              markerRes = { [key]: { marked: item.marked }, ...markerRes };
             }
           });
-          setMarksDate({ [day.dateString]: { selected: true }, ...markerRes });
+          setMarksDate({
+            ...markerRes,
+            [day.dateString]: { selected: true, marked: marksDate[day.dateString]?.marked },
+          });
         }}
         onMonthChange={(month) => {
           initDuty(`${month.year}-${month.month}`);
@@ -115,19 +118,23 @@ export default (props: any) => {
             ? '暂无值班人员'
             : _.map(items?.[selectDay], 'label').join(',')}
         </Text>
-        <FormRadio
-          label="值班人员"
-          options={options}
-          defaultValue={_.map(items?.[selectDay], 'value')}
-          required={false}
-          multiple
-          onChange={(res) => {
-            result = res;
-          }}
-        />
-        <View>
-          <CustomButton title="保存" onClick={onSave} />
-        </View>
+        {userInfo.roleId.name === '运维公司' && (
+          <View>
+            <FormRadio
+              label="值班人员"
+              options={options}
+              defaultValue={_.map(items?.[selectDay], 'value')}
+              required={false}
+              multiple
+              onChange={(res) => {
+                result = res;
+              }}
+            />
+            <View>
+              <CustomButton title="保存" onClick={onSave} />
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );

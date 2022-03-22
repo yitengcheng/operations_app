@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import NavigationUtil from '../navigator/NavigationUtil';
 import _ from 'lodash';
-import { get } from '../HiNet';
+import { get, post } from '../HiNet';
 
 const Px2dp = (px) => PixelRatio.roundToNearestPixel(px);
 
@@ -201,7 +201,7 @@ export const SwiperImage = (props: any) => {
  * @returns
  */
 const List = (props: any, ref: any) => {
-  const { url, renderItem, params, keyId } = props;
+  const { url, renderItem, params = {}, keyId } = props;
   const [data, setData] = useState([]);
   const [noMore, setNoMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -227,12 +227,19 @@ const List = (props: any, ref: any) => {
     getData(pageNo);
   }, []);
   const getData = (pageNo: number) => {
-    get(url)({ pageNum: pageNo, pageSize: 10, ...params })
+    post(url)({ pageNum: pageNo, pageSize: 10, ...params })()
       .then((res) => {
         setIsLoading(false);
-        if (res.total === 0) return;
+        if (res.total === 0) {
+          setData([]);
+          return;
+        }
         total = res.total;
-        setData(_.uniqBy([...data, ...res.rows], keyId ?? 'id'));
+        if (pageNo === 1) {
+          setData(_.uniqBy([...res.list], keyId ?? '_id'));
+        } else {
+          setData(_.uniqBy([...res.list, ...data], keyId ?? '_id'));
+        }
       })
       .catch((error) => {
         console.log(error);

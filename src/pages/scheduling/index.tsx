@@ -33,13 +33,13 @@ export default (props: any) => {
   }, []);
 
   const _getReportCount = () => {
-    get(apis.dutyReport)().then((res) => {
-      setPendingCount(res?.total ?? 0);
+    post(apis.dutyReport)()().then((res) => {
+      setPendingCount(res ?? 0);
     });
   };
 
   const saveDuty = (userIds: [], day: string) => {
-    post(apis.saveDuty)({ userIds, dutyTime: day, gsId: userInfo.gsId })().then((res) => {
+    post(apis.saveDuty)({ userIds, dutyTime: day })().then((res) => {
       Alert.alert('提示', '排班成功');
     });
   };

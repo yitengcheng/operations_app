@@ -4,5 +4,7 @@ export default {
   dutyReport: '/distribute/report ', // 获取待处理事件数
   applyChangeDuty: '/distribute/mix ', // 申请调班
   getChangeDutyList: '/distribute/apply/list', // 获取调班申请列表
-  auditChangeDuty: '/distribute/mix/handle', // 上级审核
+  agreeChangeDuty: '/distribute/mix/agree', // 上级同意调班申请
+  refuseChangeDuty: '/distribute/mix/refuse', // 上级拒绝调班申请
+  getDutyDates: '/distribute/getDutyDates', // 获取可调班日期
 };

@@ -19,9 +19,9 @@ export default (props: any) => {
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: '0', title: '待处理' },
-    { key: '1', title: '已同意' },
-    { key: '2', title: '已拒绝' },
+    { key: 1, title: '待处理' },
+    { key: 2, title: '已同意' },
+    { key: 3, title: '已拒绝' },
   ]);
   const ListRoute = (props: any) => {
     const { key } = props.route;
@@ -37,8 +37,8 @@ export default (props: any) => {
                 NavigationUtil.goPage(
                   {
                     title: '调班详情',
-                    type: key == 0 ? (userInfo.userId === data.dutyUser ? 2 : 3) : 4,
-                    editable: key == 0 && userInfo.userId === data.dutyUser,
+                    type: key == 1 ? (userInfo._id === data.applyUser._id ? 2 : 3) : 4,
+                    editable: key == 1 && userInfo._id === data.applyUser._id,
                     data,
                   },
                   'ChangeShiftDetail',
@@ -46,14 +46,19 @@ export default (props: any) => {
               }}
             >
               <View style={styles.listItemRow}>
-                <Text>申请人：{data.username}</Text>
+                <Text>申请人：{data.applyUser.nickName}</Text>
                 <Text>申请时间：{dayFormat(data.createTime)}</Text>
               </View>
               <View style={styles.listItemRow}>
                 <Text>调班日期：{dayFormat(data.dutyTime)}</Text>
-                <Text>调换的值班人员：{data.mixUsername}</Text>
+                <Text>调换的值班人员：{data.mixUser.nickName}</Text>
               </View>
-              <Text>备注：{data.mixRemark}</Text>
+              <View style={styles.listItemRow}>
+                <Text>备注：{data.mixRemark}</Text>
+              </View>
+              <View style={styles.listItemRow}>
+                <Text>上级备注：{data.reason}</Text>
+              </View>
             </TouchableOpacity>
           );
         }}
@@ -67,9 +72,9 @@ export default (props: any) => {
         <TabView
           navigationState={{ index, routes }}
           renderScene={SceneMap({
-            0: ListRoute,
             1: ListRoute,
             2: ListRoute,
+            3: ListRoute,
           })}
           renderTabBar={(props) => (
             <TabBar

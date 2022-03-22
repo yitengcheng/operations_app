@@ -43,9 +43,9 @@ export default (props: any) => {
   }, []);
   const initDutyUser = async () => {
     let result = [];
-    const res = await get(apis.getDutyUser)();
+    const res = await post(apis.getDutyUser)()();
     res.map((item) => {
-      result.push({ label: item.nick_name, value: item.user_id });
+      result.push({ label: item.nickName, value: item._id });
     });
     setDutyUser(result);
   };

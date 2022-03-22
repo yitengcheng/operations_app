@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import apis from '../../apis';
 import { CustomButton, ListData, NavBar, Popup } from '../../common/Component';
 import FormDatePicker from '../../common/form/FormDatePicker';
-import { get } from '../../HiNet';
+import { get, post } from '../../HiNet';
 import NavigationUtil from '../../navigator/NavigationUtil';
 import { dayFormat, gender, hasStatus } from '../../utils';
 export default (props: any) => {
@@ -17,7 +17,7 @@ export default (props: any) => {
     return state.userInfo.userInfo;
   });
   const renderItem = (item) => {
-    const { userName, sex, nickName, status, phonenumber, loginDate } = item;
+    const { username, sex, nickName, status, phonenumber, loginDate } = item;
     return (
       <TouchableOpacity
         style={{ borderBottomWidth: 1, borderColor: theme.borderColor, padding: 10 }}
@@ -35,8 +35,10 @@ export default (props: any) => {
           <Text style={{ fontSize: theme.fontSize, color: theme.fontColor }}>电话：{phonenumber}</Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: theme.fontSize, color: theme.fontColor }}>账号：{userName}</Text>
-          <Text style={{ fontSize: theme.fontSize, color: theme.fontColor }}>上次登录时间：{dayFormat(loginDate)}</Text>
+          <Text style={{ fontSize: theme.fontSize, color: theme.fontColor }}>账号：{username}</Text>
+          <Text style={{ fontSize: theme.fontSize, color: theme.fontColor }}>
+            上次登录时间：{loginDate ? dayFormat(loginDate) : '暂无'}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -48,7 +50,7 @@ export default (props: any) => {
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
       <NavBar title="员工管理" rightTitle="添加员工" onRightClick={addStaff} {...props} />
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
-        <ListData url={apis.staffList} params={{ gsId: userInfo.gsId }} keyId="userId" renderItem={renderItem} />
+        <ListData url={apis.staffList} renderItem={renderItem} />
       </View>
       <Popup modalVisible={modalVisible} onClose={() => setModalVisible(false)}>
         <View style={{ height: 45 }}>
@@ -66,12 +68,12 @@ export default (props: any) => {
           <CustomButton
             title="删除"
             onClick={() => {
-              get(`${apis.deleteStaff}/${selectItem?.userId}`)().then(() => {
+              post(apis.deleteStaff)({ id: selectItem?._id })().then(() => {
                 Alert.alert('提示', '删除成功', [
                   {
                     text: '确定',
                     onPress: () => {
-                      NavigationUtil.goBack();
+                      listRef.current?.refresh();
                     },
                   },
                 ]);

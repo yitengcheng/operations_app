@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, View, Text, Image, TouchableOpacity, Modal, A
 import { useSelector } from 'react-redux';
 import apis from '../../apis';
 import { NavBar, SwiperImage } from '../../common/Component';
-import { get } from '../../HiNet';
+import { get, post } from '../../HiNet';
 import NavigationUtil from '../../navigator/NavigationUtil';
 import ScanCode from '../../common/ScanCode';
 export default (props: any) => {
@@ -20,7 +20,7 @@ export default (props: any) => {
   }, []);
 
   const getMyCount = () => {
-    get(apis.getMyReportCount)().then((res) => {
+    post(apis.getMyReportCount)()().then((res) => {
       setCc(res.cc);
       setCreate(res.create);
       setHandle(res.handle);

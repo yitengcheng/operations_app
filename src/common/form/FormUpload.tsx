@@ -68,7 +68,7 @@ const FormUpload = (props: any) => {
     const file = { uri: asset.uri, name: asset.fileName, size: asset.fileSize, type: 'multipart/form-data' };
     formData.append('file', file);
     post(apis.uploadImg)(formData)().then((result) => {
-      fileList.push(result);
+      fileList.push(result.url);
       setFileList([...fileList]);
     });
   };

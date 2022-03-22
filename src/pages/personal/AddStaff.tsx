@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, View, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import { CustomButton, NavBar } from '../../common/Component';
@@ -15,21 +15,19 @@ export default (props: any) => {
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
-  const userInfo = useSelector((state) => {
-    return state.userInfo.userInfo;
-  });
   const [nickName, setNickName] = useState(params?.nickName ?? '');
   const [sex, setSex] = useState(params?.sex ?? '');
-  const [userName, setUserName] = useState(params?.userName ?? '');
+  const [username, setUserName] = useState(params?.username ?? '');
   const [phonenumber, setPhonenumber] = useState(params?.phonenumber ?? '');
   const [status, setStatus] = useState(params?.status ?? '');
+  const [id, setId] = useState(params?._id ?? '');
 
   const { validate, ...other } = useValidation({
-    state: { nickName, sex, userName, phonenumber, status },
+    state: { nickName, sex, username, phonenumber, status },
     labels: {
       nickName: '姓名',
       sex: '性别',
-      userName: '账号',
+      username: '账号',
       phonenumber: '电话',
       status: '状态',
     },
@@ -39,7 +37,7 @@ export default (props: any) => {
     const res = validate({
       nickName: { required: true },
       sex: { required: true },
-      userName: { required: true },
+      username: { required: true },
       phonenumber: { required: true, phone: true },
       status: { required: true },
     });
@@ -47,8 +45,9 @@ export default (props: any) => {
       Alert.alert('错误', '表单还未填写完毕');
       return;
     }
-    post(apis.addStaff)({ nickName, sex, userName, phonenumber, status, gsId: userInfo.gsId })().then((res) => {
-      Alert.alert('成功', '注册成功', [
+    let url = title === '添加员工' ? apis.addStaff : apis.updateStaff;
+    post(url)({ nickName, sex, username, phonenumber, status, id })().then((res) => {
+      Alert.alert('成功', res.msg, [
         {
           text: '确定',
           onPress: () => {
@@ -74,7 +73,7 @@ export default (props: any) => {
           onChange={setSex}
           {...validOption('sex', other)}
         />
-        <FormInput label="账号" value={userName} onChangeText={setUserName} {...validOption('userName', other)} />
+        <FormInput label="账号" value={username} onChangeText={setUserName} {...validOption('username', other)} />
         <FormInput
           label="电话"
           value={phonenumber}

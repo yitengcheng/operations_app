@@ -39,35 +39,34 @@ export default (props: any) => {
     !!parentId && initChildrenOptions();
   }, [parentId]);
   const initParentOptions = () => {
-    get(`${apis.getInspectionAddress}/${userInfo.gsId}`)({ pageSize: 10000, pageNum: 1 }).then((res) => {
-      const { rows } = res;
+    post(`${apis.getInspectionAddressPage}`)()().then((res) => {
       let result = [];
-      rows.map((item) => {
-        result.push({ label: item.office, value: item.id });
+      res.map((item) => {
+        result.push({ label: item.office, value: item._id });
       });
       setParentOptions(result);
     });
   };
   const initChildrenOptions = () => {
-    get(`${apis.getInspectionPoint}/${parentId}`)({ pageSize: 10000, pageNum: 1 }).then((res) => {
-      const { rows } = res;
+    post(`${apis.getInspectionAddressPage}`)({ parentId })().then((res) => {
       let result = [];
-      rows.map((item) => {
-        result.push({ label: item.office, value: item.id });
+      res.map((item) => {
+        result.push({ label: item.office, value: item._id });
       });
       setChildrenOptions(result);
     });
   };
   const report = () => {
     const res = validate({
-      office: { required: true },
+      childrenId: { required: true },
       parentId: { required: true },
+      remark: { required: true },
     });
     if (!res) {
       Alert.alert('错误', '请仔细检查表单');
       return;
     }
-    post(apis.reportInspection)({ childrenId, gsId: userInfo.gsId, parentId, remark })().then((res) => {
+    post(apis.reportInspection)({ childrenId, parentId, remark })().then((res) => {
       Alert.alert('提示', '提交成功', [
         {
           text: '确定',

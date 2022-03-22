@@ -32,7 +32,7 @@ export default (props: any) => {
       Alert.alert('错误', '表单尚未填写完毕');
       return;
     }
-    post(apis.modifyPassword)()({ oldPassword, newPassword }).then((res) => {
+    post(apis.modifyPassword)({ oldPassword, newPassword })().then((res) => {
       Alert.alert('提示', '修改成功', [
         {
           text: '确定',
