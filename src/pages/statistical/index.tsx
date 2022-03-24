@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, Text, View, useWindowDimensions } from 'react
 import { useSelector } from 'react-redux';
 import { NavBar } from '../../common/Component';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import Assets from './Assets';
+import AssetsList from './AssetsList';
 import Statistical from './Statistical';
 
 export default (props: any) => {
@@ -23,7 +23,7 @@ export default (props: any) => {
         <TabView
           navigationState={{ index, routes }}
           renderScene={SceneMap({
-            0: Assets,
+            0: AssetsList,
             1: Statistical,
           })}
           renderTabBar={(props) => (

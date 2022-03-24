@@ -14,6 +14,7 @@ import { get, post } from '../../HiNet';
 import NavigationUtil from '../../navigator/NavigationUtil';
 import apis from '../../apis';
 import _ from 'lodash';
+import dayjs from 'dayjs';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -36,13 +37,14 @@ export default (props: any) => {
   const [minDate, setMinDate] = useState(undefined);
   const [maxDate, setMaxDate] = useState(undefined);
   const [index, setIndex] = useState('');
+  const [templateId, setTemplateId] = useState('');
 
   useEffect(() => {
     initTemplate();
   }, []);
 
   const initTemplate = () => {
-    get(`${apis.templateInfo}/${userInfo.gsId}/${params.type}`)().then((res) => {
+    post(`${apis.templateInfo}`)({ type: params.type })().then((res) => {
       let content = isJsonString(res.content) ? JSON.parse(res.content) : undefined;
       if (content) {
         setComponentsOption(content);
@@ -50,6 +52,7 @@ export default (props: any) => {
           item?.[1] && pushComponent(item?.[1]);
         });
         setComponents([...components]);
+        setTemplateId(res._id);
       }
     });
   };
@@ -158,7 +161,7 @@ export default (props: any) => {
         com = (
           <FormDatePicker
             label={label}
-            maxDate={maxDate}
+            maxDate={maxDate ?? dayjs().format('YYYY-MM-DD')}
             minDate={minDate ?? '2000-1-1'}
             key={randomId()}
             required={hasRequired}
@@ -167,7 +170,13 @@ export default (props: any) => {
         break;
       case '日期范围选择':
         com = (
-          <FormDateRange label={label} maxDate={maxDate} minDate={minDate} key={randomId()} required={hasRequired} />
+          <FormDateRange
+            label={label}
+            maxDate={maxDate ?? dayjs().format('YYYY-MM-DD')}
+            minDate={minDate ?? '2000-1-1'}
+            key={randomId()}
+            required={hasRequired}
+          />
         );
         break;
       default:
@@ -222,10 +231,9 @@ export default (props: any) => {
 
   const saveTemplate = () => {
     post(apis.saveTemplate)({
-      gsId: userInfo.gsId,
       type: params.type,
-      title: params.type == 1 ? '资产模板' : '故障模板',
       content: JSON.stringify(componentsOption),
+      id: templateId,
     })().then((res) => {
       Alert.alert('提示', '保存成功', [
         {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, View, ScrollView, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, View, ScrollView, Alert, RefreshControl } from 'react-native';
 import { useSelector } from 'react-redux';
 import apis from '../../apis';
 import FormDatePicker from '../../common/form/FormDatePicker';
@@ -11,39 +11,44 @@ import FormUpload from '../../common/form/FormUpload';
 import { get, post } from '../../HiNet';
 import { isJsonString, randomId } from '../../utils';
 import _ from 'lodash';
-import { CustomButton } from '../../common/Component';
+import { CustomButton, NavBar } from '../../common/Component';
+import dayjs from 'dayjs';
 
 export default (props: any) => {
+  const { params } = props.route;
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
   const userInfo = useSelector((state) => {
     return state.userInfo.userInfo;
   });
-  const [data, setData] = useState({});
+  const [data, setData] = useState(params ?? {});
   const [components, setComponents] = useState([]);
   const [componentsOption, setComponentsOption] = useState({});
-  const [name, setName] = useState('');
   const [refresh, setRefresh] = useState(true);
+  const [templateId, setTemplateId] = useState('');
+  const [id, setId] = useState(params?._id ?? '');
   useEffect(() => {
     initTemplate();
   }, []);
-
   const initTemplate = () => {
-    get(`${apis.templateInfo}/${userInfo.gsId}/1`)().then((res) => {
+    post(`${apis.templateInfo}`)({ type: 1 })().then((res) => {
       let content = isJsonString(res.content) ? JSON.parse(res.content) : undefined;
       if (content) {
         setComponentsOption(content);
         _.toPairs(content).map((item) => {
           item?.[1] && pushComponent(item?.[1]);
         });
-        setComponents([...components]);
+        setComponents(_.uniqBy(components, 'label'));
+        setTemplateId(res._id);
       }
     });
   };
 
   const pushComponent = (component: any, index?: number) => {
     const { type, label, count, maxLength, hasRequired, options, maxDate, minDate } = component;
+    console.log(maxLength ? maxLength * 1 : 255);
+
     let com;
     switch (type) {
       case '文字输入框':
@@ -51,7 +56,7 @@ export default (props: any) => {
           <FormInput
             label={label}
             key={randomId()}
-            maxLength={maxLength * 1}
+            maxLength={maxLength ? maxLength * 1 : 255}
             required={hasRequired}
             defaultValue={data[label]}
             onChangeText={(value) => {
@@ -65,7 +70,7 @@ export default (props: any) => {
           <FormInput
             label={label}
             key={randomId()}
-            maxLength={maxLength * 1}
+            maxLength={maxLength ? maxLength * 1 : 255}
             required={hasRequired}
             defaultValue={data[label]}
             onChangeText={(value) => {
@@ -80,7 +85,7 @@ export default (props: any) => {
             multiline
             label={label}
             key={randomId()}
-            maxLength={maxLength * 1}
+            maxLength={maxLength ? maxLength * 1 : 255}
             required={hasRequired}
             defaultValue={data[label]}
             onChangeText={(value) => {
@@ -151,7 +156,7 @@ export default (props: any) => {
         com = (
           <FormDatePicker
             label={label}
-            maxDate={maxDate}
+            maxDate={maxDate ?? dayjs().format('YYYY-MM-DD')}
             minDate={minDate ?? '2000-1-1'}
             key={randomId()}
             required={hasRequired}
@@ -166,8 +171,8 @@ export default (props: any) => {
         com = (
           <FormDateRange
             label={label}
-            maxDate={maxDate}
-            minDate={minDate}
+            maxDate={maxDate ?? dayjs().format('YYYY-MM-DD')}
+            minDate={minDate ?? '2000-1-1'}
             key={randomId()}
             required={hasRequired}
             defaultValue={data[label]}
@@ -180,21 +185,17 @@ export default (props: any) => {
       default:
         break;
     }
-    typeof index === 'number'
-      ? (components[index] = { label, com })
-      : components.push({
-          label,
-          com,
-        });
+    components.push({
+      label,
+      com,
+    });
   };
   const saveData = (label: string, value: any) => {
+    console.log(Object.assign(data, { [label]: value }));
+
     setData(Object.assign(data, { [label]: value }));
   };
   const putInStorage = () => {
-    if (!name) {
-      Alert.alert('提示', '资产名称不能为空');
-      return;
-    }
     let flag = false;
     _.toPairs(componentsOption).map((item) => {
       if (item[1].hasRequired && !data[item[0]]) {
@@ -210,14 +211,13 @@ export default (props: any) => {
       return;
     }
     setRefresh(false);
-    post(apis.addAssets)({ content: JSON.stringify(data), gsId: userInfo.gsId, name })().then((res) => {
+    post(apis.addAssets)({ data, templateId, id })().then((res) => {
+      setRefresh(true);
       Alert.alert('提示', '入库成功', [
         {
           text: '确定',
           onPress: () => {
             setData({});
-            setName('');
-            setRefresh(true);
           },
         },
       ]);
@@ -225,11 +225,25 @@ export default (props: any) => {
   };
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
-      <ScrollView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
-        <FormInput label="资产名称" onChangeText={setName} defaultValue={name} />
+      <NavBar title="资产" {...props} />
+      <ScrollView
+        style={{ flex: 1, backgroundColor: theme.backgroundColor }}
+        refreshControl={
+          <RefreshControl
+            title="Loading"
+            titleColor={theme.fontColor}
+            colors={[theme.primary]}
+            refreshing={!refresh}
+            onRefresh={() => {
+              initTemplate();
+            }}
+            tintColor={theme.primary}
+          />
+        }
+      >
         {refresh && components.map((item, key) => <View key={key}>{item?.com}</View>)}
         <View>
-          <CustomButton title="入库" onClick={putInStorage} />
+          <CustomButton title={params._id ? '保存' : '入库'} onClick={putInStorage} />
         </View>
       </ScrollView>
     </SafeAreaView>

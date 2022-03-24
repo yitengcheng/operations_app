@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, View, Text, useWindowDimensions } from 'react-native';
 import { useSelector } from 'react-redux';
 import { BarChart } from 'react-native-chart-kit';
-import { get } from '../../HiNet';
+import { get, post } from '../../HiNet';
 import apis from '../../apis';
 import _ from 'lodash';
 import RNPickerSelect from 'react-native-picker-select';
@@ -18,39 +18,44 @@ export default (props: any) => {
   const [faultTotal, setFaultTotal] = useState(0);
   const [faultCompleteTotal, setFaultCompleteTotal] = useState(0);
   const [faultPendingTotal, setFaultPendingTotal] = useState(0);
-  const [faultRefuseTotal, setFaultRefuseTotal] = useState(0);
+  const [assetCount, setAssetCount] = useState(0);
   const [addressId, setAddressId] = useState(undefined);
-  const [chartData, setChartData] = useState({ labels: [], datasets: [{ data: [] }] });
+  const [chartData, setChartData] = useState({ labels: ['测试1', '测试2'], datasets: [{ data: [1, 1] }] });
   const [items, setItems] = useState([]);
   useEffect(() => {
     initFaultCount();
     initOptions();
+    initAssetCount();
   }, []);
   useEffect(() => {
     initInspection();
   }, [addressId]);
+  const initAssetCount = () => {
+    post(apis.assetCount)()().then((res) => {
+      const { assetTotal } = res;
+      setAssetCount(assetTotal);
+    });
+  };
   const initFaultCount = () => {
     get(apis.faultStatistical)().then((res) => {
       const { count1, count2, count3, count4 } = res;
       setFaultCompleteTotal(count2);
       setFaultPendingTotal(count3);
       setFaultTotal(count1);
-      setFaultRefuseTotal(count4);
     });
   };
   const initInspection = () => {
-    get(apis.patrolStatistical)({ addressId }).then((res) => {
-      let labels = _.map(res, 'office');
-      let datasets = [{ data: _.map(res, 'num') }];
+    post(apis.patrolStatistical)({ addressId })().then((res) => {
+      let labels = _.map(_.flatten(_.map(res, 'address')), 'office');
+      let datasets = [{ data: _.map(res, 'count') }];
       setChartData({ labels, datasets });
     });
   };
   const initOptions = () => {
-    get(`${apis.getInspectionAddress}/${userInfo.gsId}`)({ pageSize: 10000, pageNum: 1 }).then((res) => {
-      const { rows } = res;
+    post(`${apis.getInspectionAddressPage}`)()().then((res) => {
       let result = [];
-      rows.map((item) => {
-        result.push({ label: item.office, value: item.id });
+      res.map((item) => {
+        result.push({ label: item.office, value: item._id });
       });
       setItems(result);
     });
@@ -84,8 +89,8 @@ export default (props: any) => {
               { width: (screenWidth - 2) / 2, borderColor: theme.borderColor },
             ]}
           >
-            <Text style={{ fontSize: 24, color: theme.fontColor }}>已拒绝故障</Text>
-            <Text style={[styles.countNum, { color: theme.error }]}>{faultRefuseTotal}</Text>
+            <Text style={{ fontSize: 24, color: theme.fontColor }}>资产总数</Text>
+            <Text style={[styles.countNum, { color: theme.error }]}>{assetCount}</Text>
           </View>
         </View>
         <RNPickerSelect
@@ -110,6 +115,7 @@ export default (props: any) => {
             barPercentage: 0.5,
             useShadowColorFromDataset: false,
           }}
+          fromZero={true}
           showBarTops={false}
         />
       </View>

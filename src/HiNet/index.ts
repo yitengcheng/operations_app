@@ -90,6 +90,7 @@ function handleData(doAction: Promise<any>) {
         resolve(result.data ?? result);
       })
       .catch((err) => {
+        hidenLoading();
         console.log('error:', err);
         reject(undefined);
       });

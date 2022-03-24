@@ -22,6 +22,7 @@ import InspectionReport from '../pages/inspection/InspectionReport';
 import InspectionHistory from '../pages/inspection/InspectionHistory';
 import RepairList from '../pages/repair/RepairList';
 import RepairDetail from '../pages/repair/RepairDetail';
+import Assets from '../pages/statistical/Assets';
 import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
@@ -207,6 +208,10 @@ export const pages = [
   {
     name: 'RepairDetail',
     component: RepairDetail,
+  },
+  {
+    name: 'Assets',
+    component: Assets,
   },
 ];
 
