@@ -47,8 +47,6 @@ export default (props: any) => {
 
   const pushComponent = (component: any, index?: number) => {
     const { type, label, count, maxLength, hasRequired, options, maxDate, minDate } = component;
-    console.log(maxLength ? maxLength * 1 : 255);
-
     let com;
     switch (type) {
       case '文字输入框':

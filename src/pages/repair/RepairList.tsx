@@ -9,6 +9,7 @@ import { get, post } from '../../HiNet';
 import { dayFormat, phoneNumberEncryption, repairStatus, validOption } from '../../utils';
 import { useValidation } from 'react-native-form-validator';
 import FormUpload from '../../common/form/FormUpload';
+import _ from 'lodash';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -26,8 +27,8 @@ export default (props: any) => {
   const [ccVisible, setCcVisible] = useState(false);
   const [completeVisible, setCompleteVisible] = useState(false);
   const [ccId, setCcId] = useState('');
-  const [problem, setProblem] = useState('');
-  const [problemUrl, setProblemUrl] = useState('');
+  const [conclusion, setConclusion] = useState('');
+  const [conclusionPhoto, setConclusionPhoto] = useState('');
   const [status, setStatus] = useState(1);
   const listRef = useRef();
   const { validate, ...other } = useValidation({
@@ -54,11 +55,26 @@ export default (props: any) => {
     setRemark('');
     setId('');
     setCcId('');
-    setProblem('');
-    setProblemUrl('');
+    setConclusion('');
+    setConclusionPhoto('');
   };
   const renderItem = (data) => {
-    const { createTime, status, phoneNumber } = data;
+    const {
+      createTime,
+      status,
+      phoneNumber,
+      assetsId,
+      cc,
+      oldDispose,
+      dispose,
+      designateTime,
+      _id,
+      __v,
+      reportUser,
+      remark,
+      ...obj
+    } = data;
+    let res = _.toPairs(obj);
     return (
       <View style={{ borderBottomWidth: 1, borderColor: theme.borderColor, padding: 10 }}>
         <View style={styles.itemBox}>
@@ -68,7 +84,21 @@ export default (props: any) => {
         <View style={styles.itemBox}>
           <Text style={styles.itemText}>联系方式：{phoneNumberEncryption(phoneNumber) ?? '暂无'}</Text>
         </View>
-        {type !== 3 && (
+        {remark && (
+          <View style={styles.itemBox}>
+            <Text style={styles.itemText}>转单备注：{remark}</Text>
+          </View>
+        )}
+        <View style={styles.itemBox}>
+          <Text style={styles.itemText}>故障详情：</Text>
+        </View>
+        {res.map((item, index) => (
+          <View style={{ flexDirection: 'row' }} key={index}>
+            <Text style={{ color: '#000000' }}>{item?.[0]}：</Text>
+            <Text style={{ color: '#000000' }}>{item?.[1]}</Text>
+          </View>
+        ))}
+        {type === 2 && (
           <View style={styles.itemBox}>
             <CustomButton
               title="抄送"
@@ -76,7 +106,7 @@ export default (props: any) => {
               fontStyle={{ color: theme.primary }}
               onClick={() => {
                 setCcVisible(true);
-                setId(data.id);
+                setId(data._id);
               }}
             />
             <CustomButton
@@ -85,7 +115,7 @@ export default (props: any) => {
               fontStyle={{ color: theme.warrning }}
               onClick={() => {
                 setCirculation(true);
-                setId(data.id);
+                setId(data._id);
               }}
             />
             <CustomButton
@@ -98,7 +128,7 @@ export default (props: any) => {
                     text: '处理完成',
                     onPress: () => {
                       setCompleteVisible(true);
-                      setId(data.id);
+                      setId(data._id);
                       setStatus(1);
                     },
                   },
@@ -106,9 +136,12 @@ export default (props: any) => {
                     text: '拒绝处理',
                     onPress: () => {
                       setCompleteVisible(true);
-                      setId(data.id);
+                      setId(data._id);
                       setStatus(2);
                     },
+                  },
+                  {
+                    text: '取消',
                   },
                 ]);
               }}
@@ -165,9 +198,11 @@ export default (props: any) => {
     });
   };
   const toComplete = () => {
-    post(apis.updateRepair)({ id, problem, problemUrl: problemUrl?.toString(','), status })().then((res) => {
+    let url = status === 1 ? apis.conclusionRepair : apis.refuseRepair;
+    post(url)({ id, conclusion, conclusionPhoto })().then((res) => {
       setCompleteVisible(false);
       reset();
+      listRef.current?.refresh();
       Alert.alert('提示', '操作成功');
     });
   };
@@ -175,7 +210,7 @@ export default (props: any) => {
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
       <NavBar title={title} {...props} />
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
-        <ListData ref={listRef} url={apis.getRepairs} renderItem={renderItem} params={{ type, gsId: userInfo.gsId }} />
+        <ListData ref={listRef} url={apis.getRepairs} renderItem={renderItem} params={{ type }} />
       </View>
       <Popup modalVisible={circulation} onClose={() => setCirculation(false)} type="center">
         <FormSelect
@@ -211,9 +246,9 @@ export default (props: any) => {
           />
         </View>
       </Popup>
-      <Popup modalVisible={completeVisible} onClose={() => setCcVisible(false)} type="center">
-        <FormInput required={false} multiline={true} label="处理情况" onChangeText={setProblem} />
-        <FormUpload required={false} label="现场图片" count={5} onChange={setProblemUrl} />
+      <Popup modalVisible={completeVisible} onClose={() => setCompleteVisible(false)} type="center">
+        <FormInput required={false} multiline={true} label="处理情况" onChangeText={setConclusion} />
+        <FormUpload required={false} label="现场图片" count={5} onChange={setConclusionPhoto} />
         <CustomButton title="确定" onClick={toComplete} />
       </Popup>
     </SafeAreaView>

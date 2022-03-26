@@ -37,11 +37,11 @@ export default (props: any) => {
     });
   };
   const initFaultCount = () => {
-    get(apis.faultStatistical)().then((res) => {
-      const { count1, count2, count3, count4 } = res;
-      setFaultCompleteTotal(count2);
-      setFaultPendingTotal(count3);
-      setFaultTotal(count1);
+    post(apis.faultStatistical)()().then((res) => {
+      const { faultTotal, faultCompleteTotal, faultPendingTotal } = res;
+      setFaultCompleteTotal(faultCompleteTotal);
+      setFaultPendingTotal(faultPendingTotal);
+      setFaultTotal(faultTotal);
     });
   };
   const initInspection = () => {

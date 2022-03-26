@@ -129,7 +129,7 @@ export const hasStatus = (status: number): string => {
  * @returns
  */
 export const repairStatus = (status: number): string => {
-  return status === 0 ? '待处理' : status === 1 ? '已处理' : '已拒绝';
+  return status === 1 ? '待处理' : status === 2 ? '已处理' : '已拒绝';
 };
 
 /**

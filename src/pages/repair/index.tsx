@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, View, Text, Image, TouchableOpacity, Modal, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import apis from '../../apis';
-import { NavBar, SwiperImage } from '../../common/Component';
+import { CustomButton, NavBar, SwiperImage } from '../../common/Component';
 import { get, post } from '../../HiNet';
 import NavigationUtil from '../../navigator/NavigationUtil';
 import ScanCode from '../../common/ScanCode';
@@ -32,7 +32,7 @@ export default (props: any) => {
   const onBarCodeRead = (e) => {
     setModalVisible(false);
     if (e.data) {
-      NavigationUtil.goPage({ title: '故障上报', id: e.data }, 'RepairDetail');
+      NavigationUtil.goPage({ title: '故障上报', assetsId: e.data }, 'RepairDetail');
     } else {
       Alert.alert('提示', '识别失败，请重试');
     }
@@ -82,7 +82,7 @@ export default (props: any) => {
               resizeMode="contain"
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.option_box} onPress={() => toListPage('工单历史', 0)}>
+          <TouchableOpacity style={styles.option_box} onPress={() => toListPage('工单历史', 4)}>
             <Text>工单历史</Text>
             <Image
               source={require('../../assets/image/repair_history.png')}
@@ -101,6 +101,12 @@ export default (props: any) => {
         transparent
       >
         <ScanCode onBarCodeRead={onBarCodeRead} />
+        <CustomButton
+          title="测试"
+          onClick={() => {
+            NavigationUtil.goPage({ title: '故障上报', assetsId: '623c11c628726cf72be3153e' }, 'RepairDetail');
+          }}
+        />
       </Modal>
     </SafeAreaView>
   );

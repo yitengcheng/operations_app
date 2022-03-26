@@ -23,6 +23,7 @@ export default (props: any) => {
   const [componentsOption, setComponentsOption] = useState({});
   const [components, setComponents] = useState([]);
   const [data, setData] = useState({});
+  const [templateId, setTemplateId] = useState('');
   const { title, assetsId } = props.route.params;
 
   useEffect(() => {
@@ -30,14 +31,15 @@ export default (props: any) => {
   }, []);
 
   const initTemplate = () => {
-    get(`${apis.templateInfo}/${userInfo.gsId}/2`)().then((res) => {
+    post(`${apis.templateInfo}`)({ type: 2 })().then((res) => {
       let content = isJsonString(res.content) ? JSON.parse(res.content) : undefined;
       if (content) {
         setComponentsOption(content);
         _.toPairs(content).map((item) => {
           item?.[1] && pushComponent(item?.[1]);
         });
-        setComponents([...components]);
+        setComponents(_.uniqBy(components, 'label'));
+        setTemplateId(res._id);
       }
     });
   };
@@ -51,7 +53,7 @@ export default (props: any) => {
           <FormInput
             label={label}
             key={randomId()}
-            maxLength={maxLength * 1}
+            maxLength={maxLength ? maxLength * 1 : 255}
             required={hasRequired}
             defaultValue={data[label]}
             onChangeText={(value) => {
@@ -65,7 +67,7 @@ export default (props: any) => {
           <FormInput
             label={label}
             key={randomId()}
-            maxLength={maxLength * 1}
+            maxLength={maxLength ? maxLength * 1 : 255}
             required={hasRequired}
             defaultValue={data[label]}
             onChangeText={(value) => {
@@ -80,7 +82,7 @@ export default (props: any) => {
             multiline
             label={label}
             key={randomId()}
-            maxLength={maxLength * 1}
+            maxLength={maxLength ? maxLength * 1 : 255}
             required={hasRequired}
             defaultValue={data[label]}
             onChangeText={(value) => {
@@ -151,7 +153,7 @@ export default (props: any) => {
         com = (
           <FormDatePicker
             label={label}
-            maxDate={maxDate}
+            maxDate={maxDate ?? dayjs().format('YYYY-MM-DD')}
             minDate={minDate ?? '2000-1-1'}
             key={randomId()}
             required={hasRequired}
@@ -166,8 +168,8 @@ export default (props: any) => {
         com = (
           <FormDateRange
             label={label}
-            maxDate={maxDate}
-            minDate={minDate}
+            maxDate={maxDate ?? dayjs().format('YYYY-MM-DD')}
+            minDate={minDate ?? '2000-1-1'}
             key={randomId()}
             required={hasRequired}
             defaultValue={data[label]}
@@ -180,12 +182,10 @@ export default (props: any) => {
       default:
         break;
     }
-    typeof index === 'number'
-      ? (components[index] = { label, com })
-      : components.push({
-          label,
-          com,
-        });
+    components.push({
+      label,
+      com,
+    });
   };
 
   const saveData = (label: string, value: any) => {
@@ -207,7 +207,7 @@ export default (props: any) => {
     if (flag) {
       return;
     }
-    post(apis.createRepair)({ assetsId, content: JSON.stringify(data), gsId: userInfo.gsId })().then((res) => {
+    post(apis.createRepair)({ assetsId, data, templateId })().then((res) => {
       Alert.alert('提示', '上报成功', [
         {
           text: '确定',

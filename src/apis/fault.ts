@@ -4,5 +4,6 @@ export default {
   createRepair: '/fault/create', // 创建故障工单
   turnRepair: '/fault/convert', // 转单
   ccRepair: '/fault/cc', // 抄送
-  updateRepair: '/fault/update', // 修改工单信息
+  conclusionRepair: '/fault/conclusion', // 处理完成
+  refuseRepair: '/fault/refuse', // 拒绝处理
 };
