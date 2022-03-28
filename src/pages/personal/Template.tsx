@@ -334,7 +334,7 @@ export default (props: any) => {
                 { label: '多行文字输入框', value: '多行文字输入框' },
                 { label: '图片选择', value: '图片选择' },
                 { label: '日期选择', value: '日期选择' },
-                { label: '日期范围选择', value: '日期范围选择' },
+                // { label: '日期范围选择', value: '日期范围选择' },
                 { label: '单选框', value: '单选框' },
                 { label: '多选框', value: '多选框' },
               ]}

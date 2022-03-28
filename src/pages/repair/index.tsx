@@ -101,12 +101,12 @@ export default (props: any) => {
         transparent
       >
         <ScanCode onBarCodeRead={onBarCodeRead} />
-        <CustomButton
+        {/* <CustomButton
           title="测试"
           onClick={() => {
             NavigationUtil.goPage({ title: '故障上报', assetsId: '623c11c628726cf72be3153e' }, 'RepairDetail');
           }}
-        />
+        /> */}
       </Modal>
     </SafeAreaView>
   );

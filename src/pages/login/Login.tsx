@@ -28,7 +28,7 @@ export default (props: any) => {
   }, []);
   let registrationId;
   JPush.setLoggerEnable(true);
-  JPush.init({ appKey: '27282edcc5414ca852184e55', channel: 'dev', production: 1 });
+  JPush.init({ appKey: '27282edcc5414ca852184e55', channel: 'default', production: 1 });
   //连接状态
   JPush.addConnectEventListener((result) => {
     result.connectEnable &&
@@ -53,7 +53,7 @@ export default (props: any) => {
       Alert.alert('错误', '缺少账号或密码');
       return;
     }
-    const loginRes = await post(apis.login)({ username, password, registrationId, app: true })();
+    const loginRes = await post(apis.login)({ username, password, registrationId })();
     saveStorage('loginRecord', { username, password });
     saveStorage('token', loginRes?.token ?? '');
     dispatch(saveUserInfo(loginRes?.userInfo ?? {}));
