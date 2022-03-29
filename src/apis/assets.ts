@@ -3,4 +3,5 @@ export default {
   assetCount: '/assets/count', // 资产总数
   assetList: '/assets/list', // 资产列表
   delAssets: '/assets/del', // 删除资产
+  downQr: '/assets/downOneQr', // 下载资产二维码
 };

@@ -2,11 +2,11 @@
 // const DEV_URL = 'https://xd.qiantur.com/prod-api';
 const DEV_URL = 'http://192.168.31.253:3000/api';
 
-const PRO_URL = 'https://xd.qiantur.com/prod-api';
+const PRO_URL = 'https://yyyw.qiantur.com/api';
 
 // const DEFAULT_IMG_URL = 'http://192.168.2.4:9000';
-const DEFAULT_IMG_URL = 'http://r8ufbc7n0.hn-bkt.clouddn.com/';
-const PRODUCT_IMG_URL = 'https://xd.qiantur.com/minio';
+const DEFAULT_IMG_URL = 'http://img.qiantur.com/';
+const PRODUCT_IMG_URL = 'http://img.qiantur.com/';
 
 let API_URL = '';
 let IMG_URL = '';

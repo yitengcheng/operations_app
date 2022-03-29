@@ -189,8 +189,6 @@ export default (props: any) => {
     });
   };
   const saveData = (label: string, value: any) => {
-    console.log(Object.assign(data, { [label]: value }));
-
     setData(Object.assign(data, { [label]: value }));
   };
   const putInStorage = () => {

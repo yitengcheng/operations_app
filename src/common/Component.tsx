@@ -316,7 +316,7 @@ export const ListData = forwardRef(List);
  * @returns
  */
 export const Popup = (props: any) => {
-  const { modalVisible, onClose, children, type = 'bottom' } = props;
+  const { modalVisible, onClose, children, title, type = 'bottom' } = props;
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
@@ -343,9 +343,11 @@ export const Popup = (props: any) => {
               padding: 8,
               borderBottomWidth: 1,
               borderColor: theme.borderColor,
-              justifyContent: 'flex-end',
             }}
           >
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Text>{title}</Text>
+            </View>
             <TouchableOpacity onPress={() => onClose && onClose()}>
               <Image source={require('../assets/image/close.png')} style={{ width: 15, height: 15 }} />
             </TouchableOpacity>

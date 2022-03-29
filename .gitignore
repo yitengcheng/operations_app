@@ -61,3 +61,5 @@ buck-out/
 /ios/Pods/
 
 app切片+标注+汇总图
+.update
+.pushy

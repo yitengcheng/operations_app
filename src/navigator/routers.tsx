@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Home from '../pages/Home';
-import Test from '../pages/Test';
 import Login from '../pages/login/Login';
 import Detail from '../pages/Detail';
 import Personal from '../pages/personal';

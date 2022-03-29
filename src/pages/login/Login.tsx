@@ -84,7 +84,7 @@ export default (props: any) => {
       <View style={{ marginHorizontal: 30, marginBottom: 50 }}>
         <FormInput
           required={false}
-          placeholder="请输入账号"
+          placeholder="请输入登录账号"
           value={username}
           onChangeText={setUsername}
           {...validOption('username', other)}

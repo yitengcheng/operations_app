@@ -61,7 +61,7 @@ export function post(api: string) {
  * @param doAction
  */
 function handleData(doAction: Promise<any>) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     doAction
       .then((res) => {
         // 解析Content-Type 防止将非json数据进行json转换
@@ -87,12 +87,11 @@ function handleData(doAction: Promise<any>) {
           Alert.alert('失败', message);
           return;
         }
-        resolve(result.data ?? result);
+        resolve(result?.data ?? result);
       })
       .catch((err) => {
         hidenLoading();
-        console.log('error:', err);
-        reject(undefined);
+        console.log(err);
       });
   });
 }
