@@ -22,6 +22,7 @@ import InspectionHistory from '../pages/inspection/InspectionHistory';
 import RepairList from '../pages/repair/RepairList';
 import RepairDetail from '../pages/repair/RepairDetail';
 import Assets from '../pages/statistical/Assets';
+import Schedule from '../pages/schedule';
 import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
@@ -66,6 +67,28 @@ export const tabs = {
   },
   Scheduling: {
     screen: Scheduling,
+    navigationOptions: {
+      tabBarLabel: '排班',
+      headerShown: false,
+      tabBarIcon: ({ focused, color }) => {
+        if (focused) {
+          return (
+            <Image
+              source={require('../assets/image/scheduling_active.png')}
+              style={styles.tabIcon}
+              resizeMode="contain"
+            />
+          );
+        } else {
+          return (
+            <Image source={require('../assets/image/scheduling.png')} style={styles.tabIcon} resizeMode="contain" />
+          );
+        }
+      },
+    },
+  },
+  Schedule: {
+    screen: Schedule,
     navigationOptions: {
       tabBarLabel: '排班',
       headerShown: false,
@@ -211,6 +234,10 @@ export const pages = [
   {
     name: 'Assets',
     component: Assets,
+  },
+  {
+    name: 'Schedule',
+    component: Schedule,
   },
 ];
 

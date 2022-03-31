@@ -31,8 +31,14 @@ export default (props: any) => {
   };
   const onBarCodeRead = (e) => {
     setModalVisible(false);
+    const strArray = e.data.split('/');
+    const urlParams = strArray?.[strArray.length - 1]?.split('&');
+    let params = {};
+    urlParams.map((item) => {
+      params[item.split('=')[0]] = item.split('=')[1];
+    });
     if (e.data) {
-      NavigationUtil.goPage({ title: '故障上报', assetsId: e.data }, 'RepairDetail');
+      NavigationUtil.goPage({ title: '故障上报', assetsId: params.assetsId }, 'RepairDetail');
     } else {
       Alert.alert('提示', '识别失败，请重试');
     }

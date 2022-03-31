@@ -2,6 +2,8 @@ import _ from 'lodash';
 import dayjs from 'dayjs';
 import { tabs } from '../navigator/routers';
 import config from '../config';
+import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
 
 /**
  * 表单验证
@@ -139,4 +141,19 @@ export const repairStatus = (status: number): string => {
  */
 export const phoneNumberEncryption = (phoneNumber: string): string => {
   return phoneNumber?.replace(phoneNumber.substring(3, 7), '****');
+};
+
+/**
+ * 返回两个日期之间的日期数组
+ * @param start 起始日期
+ * @param end 结束日期
+ */
+export const getDateList = (start: string, end: string): [string] => {
+  let result = [];
+  let cDay = dayjs(start).add(1, 'day').format('YYYY-MM-DD');
+  if (dayjs(cDay).isBetween(dayjs(start), dayjs(end))) {
+    const tmp = getDateList(cDay, end);
+    result = [cDay, ...tmp];
+  }
+  return result;
 };
