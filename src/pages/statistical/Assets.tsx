@@ -239,7 +239,7 @@ export default (props: any) => {
       >
         {refresh && components.map((item, key) => <View key={key}>{item?.com}</View>)}
         <View>
-          <CustomButton title={params._id ? '保存' : '入库'} onClick={putInStorage} />
+          <CustomButton title={params._id ? '保存' : '录入'} onClick={putInStorage} />
         </View>
       </ScrollView>
     </SafeAreaView>

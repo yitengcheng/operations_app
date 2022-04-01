@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, useWindowDimensions } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, useWindowDimensions, ScrollView, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 import { BarChart } from 'react-native-chart-kit';
 import { get, post } from '../../HiNet';
 import apis from '../../apis';
 import _ from 'lodash';
 import RNPickerSelect from 'react-native-picker-select';
+import NavigationUtil from '../../navigator/NavigationUtil';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -62,26 +63,39 @@ export default (props: any) => {
   };
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
-      <View style={{ flex: 1, backgroundColor: theme.backgroundColor, justifyContent: 'space-between' }}>
+      <ScrollView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', borderWidth: 1, borderColor: theme.borderColor }}>
-          <View
+          <TouchableOpacity
             style={[
               styles.countBox,
               styles.rightBottomBorder,
               { width: (screenWidth - 2) / 2, borderColor: theme.borderColor },
             ]}
+            onPress={() => {
+              NavigationUtil.goPage({ title: '全部故障', type: 5 }, 'RepairList');
+            }}
           >
             <Text style={{ fontSize: 24, color: theme.fontColor }}>故障总数</Text>
             <Text style={[styles.countNum, { color: '#000000' }]}>{faultTotal}</Text>
-          </View>
-          <View style={[styles.countBox, { width: (screenWidth - 2) / 2 }]}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.countBox, { width: (screenWidth - 2) / 2 }]}
+            onPress={() => {
+              NavigationUtil.goPage({ title: '全部已解决故障', type: 7 }, 'RepairList');
+            }}
+          >
             <Text style={{ fontSize: 24, color: theme.fontColor }}>已解决故障</Text>
             <Text style={[styles.countNum, { color: theme.success }]}>{faultCompleteTotal}</Text>
-          </View>
-          <View style={[styles.countBox, { width: (screenWidth - 2) / 2 }]}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.countBox, { width: (screenWidth - 2) / 2 }]}
+            onPress={() => {
+              NavigationUtil.goPage({ title: '全部待处理故障', type: 6 }, 'RepairList');
+            }}
+          >
             <Text style={{ fontSize: 24, color: theme.fontColor }}>待处理故障</Text>
             <Text style={[styles.countNum, { color: theme.warrning }]}>{faultPendingTotal}</Text>
-          </View>
+          </TouchableOpacity>
           <View
             style={[
               styles.countBox,
@@ -93,6 +107,7 @@ export default (props: any) => {
             <Text style={[styles.countNum, { color: theme.error }]}>{assetCount}</Text>
           </View>
         </View>
+        <Text style={{ fontSize: theme.fontSize, color: theme.fontColor, margin: 10 }}>各巡检点巡检次数统计</Text>
         <RNPickerSelect
           onValueChange={(obj) => {
             setAddressId(obj);
@@ -105,20 +120,23 @@ export default (props: any) => {
           data={chartData}
           width={screenWidth}
           height={220}
+          yAxisSuffix="次"
           chartConfig={{
+            decimalPlaces: 1,
             backgroundGradientFrom: '#FFFFFF',
             backgroundGradientFromOpacity: 0,
             backgroundGradientTo: '#FFFFFF',
             backgroundGradientToOpacity: 0.5,
             color: () => theme.primary,
-            strokeWidth: 2, // optional, default 3
             barPercentage: 0.5,
             useShadowColorFromDataset: false,
           }}
+          withHorizontalLabels={false}
           fromZero={true}
-          showBarTops={false}
+          showBarTops={true}
+          showValuesOnTopOfBars={true}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

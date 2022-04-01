@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Linking, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import apis from '../../apis';
 import { CustomButton, ListData, NavBar, Popup } from '../../common/Component';
 import FormInput from '../../common/form/FormInput';
 import FormSelect from '../../common/form/FormSelect';
 import { get, post } from '../../HiNet';
-import { dayFormat, phoneNumberEncryption, repairStatus, validOption } from '../../utils';
+import { dayFormat, phoneNumberEncryption, randomId, repairStatus, togetherUrl, validOption } from '../../utils';
 import { useValidation } from 'react-native-form-validator';
 import FormUpload from '../../common/form/FormUpload';
 import _ from 'lodash';
+import NavigationUtil from '../../navigator/NavigationUtil';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -72,32 +73,56 @@ export default (props: any) => {
       __v,
       reportUser,
       remark,
+      conclusion,
+      conclusionPhoto,
       ...obj
     } = data;
     let res = _.toPairs(obj);
     return (
       <View style={{ borderBottomWidth: 1, borderColor: theme.borderColor, padding: 10 }}>
-        <View style={styles.itemBox}>
-          <Text style={styles.itemText}>上报时间：{dayFormat(createTime)}</Text>
-          <Text style={styles.itemText}>状态：{repairStatus(status)}</Text>
-        </View>
-        <View style={styles.itemBox}>
-          <Text style={styles.itemText}>联系方式：{phoneNumberEncryption(phoneNumber) ?? '暂无'}</Text>
-        </View>
-        {remark && (
+        <TouchableOpacity onPress={() => NavigationUtil.goPage({ faultId: _id, flag: type === 2 }, 'RepairById')}>
           <View style={styles.itemBox}>
-            <Text style={styles.itemText}>转单备注：{remark}</Text>
+            <Text style={styles.itemText}>上报时间：{dayFormat(createTime)}</Text>
+            <Text style={styles.itemText}>状态：{repairStatus(status)}</Text>
           </View>
-        )}
-        <View style={styles.itemBox}>
-          <Text style={styles.itemText}>故障详情：</Text>
-        </View>
-        {res.map((item, index) => (
-          <View style={{ flexDirection: 'row' }} key={index}>
-            <Text style={{ color: '#000000' }}>{item?.[0]}：</Text>
-            <Text style={{ color: '#000000' }}>{item?.[1]}</Text>
+          <View style={styles.itemBox}>
+            <Text style={styles.itemText}>联系方式：{phoneNumberEncryption(phoneNumber) ?? '暂无'}</Text>
           </View>
-        ))}
+          {remark && (
+            <View style={styles.itemBox}>
+              <Text style={styles.itemText}>转单备注：{remark}</Text>
+            </View>
+          )}
+          <View style={styles.itemBox}>
+            <Text style={styles.itemText}>故障详情：</Text>
+          </View>
+          {res.map((item, index) => (
+            <View style={{ flexDirection: 'row' }} key={index}>
+              <Text style={{ color: '#000000' }}>{item?.[0]}：</Text>
+              <Text style={{ color: '#000000' }}>{item?.[1]}</Text>
+            </View>
+          ))}
+          {conclusion && (
+            <View style={styles.itemBox}>
+              <Text style={styles.itemText}>处理情况：{conclusion}</Text>
+            </View>
+          )}
+          {conclusionPhoto?.length > 0 && (
+            <View style={[styles.itemBox, { flexWrap: 'wrap', justifyContent: 'flex-start' }]}>
+              <Text style={styles.itemText}>现场处理图：</Text>
+              {conclusionPhoto?.map((imgUrl) => (
+                <Image
+                  source={{
+                    uri: togetherUrl(imgUrl),
+                  }}
+                  key={randomId()}
+                  style={{ width: 80, height: 80, margin: 5 }}
+                  resizeMode="contain"
+                />
+              ))}
+            </View>
+          )}
+        </TouchableOpacity>
         {type === 2 && (
           <View style={styles.itemBox}>
             <CustomButton

@@ -6,4 +6,5 @@ export default {
   ccRepair: '/fault/cc', // 抄送
   conclusionRepair: '/fault/conclusion', // 处理完成
   refuseRepair: '/fault/refuse', // 拒绝处理
+  repairDetail: '/fault/detail', // 故障详情
 };

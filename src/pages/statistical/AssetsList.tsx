@@ -82,7 +82,7 @@ export default (props: any) => {
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
       <View style={{ height: 45 }}>
-        <CustomButton title="入库" onClick={() => NavigationUtil.goPage({}, 'Assets')} />
+        <CustomButton title="录入资产" onClick={() => NavigationUtil.goPage({}, 'Assets')} />
       </View>
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         <ListData url={apis.assetList} renderItem={renderItem} ref={listRef} />

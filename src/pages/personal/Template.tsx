@@ -326,24 +326,23 @@ export default (props: any) => {
         <SafeAreaView style={[{ backgroundColor: theme.backgroundColor }, styles.root]}>
           <ScrollView>
             <FormSelect
-              label="类型"
+              label="模板项的类型"
               options={[
-                { label: '文字输入框', value: '文字输入框' },
-                { label: '数字输入框', value: '数字输入框' },
-                { label: '选择器', value: '选择器' },
-                { label: '多行文字输入框', value: '多行文字输入框' },
-                { label: '图片选择', value: '图片选择' },
-                { label: '日期选择', value: '日期选择' },
-                // { label: '日期范围选择', value: '日期范围选择' },
-                { label: '单选框', value: '单选框' },
-                { label: '多选框', value: '多选框' },
+                { label: '文字', value: '文字输入框' },
+                { label: '数字', value: '数字输入框' },
+                { label: '类目', value: '选择器' },
+                { label: '备注', value: '多行文字输入框' },
+                { label: '上传图片或照片', value: '图片选择' },
+                { label: '日期', value: '日期选择' },
+                { label: '单选', value: '单选框' },
+                { label: '多选', value: '多选框' },
               ]}
               {...validOption('type', other)}
               defaultValue={type}
               onChange={(value) => setType(value)}
             />
             <FormSelect
-              label="是否为必选"
+              label="模板项是否为必选"
               options={[
                 { label: '是', value: true },
                 { label: '否', value: false },
@@ -352,7 +351,7 @@ export default (props: any) => {
               defaultValue={hasRequired}
               onChange={(value) => setHasRequired(value)}
             />
-            <FormInput label="框名" value={label} onChangeText={setLabel} {...validOption('label', other)} />
+            <FormInput label="模板项名称" value={label} onChangeText={setLabel} {...validOption('label', other)} />
             {(type === '文字输入框' || type === '多行文字输入框') && (
               <FormInput
                 label="最大长度"

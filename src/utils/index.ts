@@ -157,3 +157,23 @@ export const getDateList = (start: string, end: string): [string] => {
   }
   return result;
 };
+
+/**
+ * 判断文件后缀是否是图片
+ * @param str
+ * @returns
+ */
+export const checkFileExt = (str: string): boolean => {
+  let flag = false;
+  const arr = ['jpg', 'jpeg', 'png', 'gif'];
+  const index = str?.lastIndexOf('.');
+  const ext = str?.substr(index + 1);
+  //循环比较
+  arr.forEach((item) => {
+    if (ext == item) {
+      flag = true;
+      return;
+    }
+  });
+  return flag;
+};

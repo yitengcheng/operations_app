@@ -23,6 +23,7 @@ import RepairList from '../pages/repair/RepairList';
 import RepairDetail from '../pages/repair/RepairDetail';
 import Assets from '../pages/statistical/Assets';
 import Schedule from '../pages/schedule';
+import RepairById from '../pages/repair/RepairById';
 import { Image, StyleSheet } from 'react-native';
 
 // 底部导航
@@ -238,6 +239,10 @@ export const pages = [
   {
     name: 'Schedule',
     component: Schedule,
+  },
+  {
+    name: 'RepairById',
+    component: RepairById,
   },
 ];
 
