@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, useWindowDimensions, Alert } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  useWindowDimensions,
+  Alert,
+  Modal,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import { CustomButton, NavBar } from '../../common/Component';
 import { LocaleConfig, Calendar } from 'react-native-calendars';
@@ -9,6 +19,7 @@ import apis from '../../apis';
 import { dayFormat, getDateList } from '../../utils';
 import _ from 'lodash';
 import dayjs from 'dayjs';
+import NavigationUtil from '../../navigator/NavigationUtil';
 export default (props: any) => {
   const theme = useSelector((state) => {
     return state.theme.theme;
@@ -25,15 +36,24 @@ export default (props: any) => {
   const [options, setOptions] = useState([]);
   const [workerId, setWorderId] = useState();
   const [dutyTime, setDutyTime] = useState(dayFormat());
+  const [modalVisible, setModalVisible] = useState(false);
+  const [pendingCount, setPendingCount] = useState('');
   const windowWidth = useWindowDimensions().width;
   useEffect(() => {
     initDutyUser();
+    _getReportCount();
   }, []);
+
   useEffect(() => {
     if (dutyTime && workerId) {
       getDutyListById();
     }
   }, [workerId, dutyTime]);
+  const _getReportCount = () => {
+    post(apis.dutyReport)()().then((res) => {
+      setPendingCount(res ?? 0);
+    });
+  };
   const undockSchedule = (day: string) => {
     post(apis.removeSchedule)({ workerId, dateOnDuty: day })().then((res) => {
       Alert.alert('提示', '移除成功');
@@ -124,7 +144,13 @@ export default (props: any) => {
   };
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
-      <NavBar title="排班" />
+      <NavBar
+        title="排班"
+        rightTitle="三"
+        onRightClick={() => {
+          setModalVisible(true);
+        }}
+      />
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         <FormSelect label="工作人员" required={false} options={options} onChange={setWorderId} />
         <Calendar
@@ -146,6 +172,41 @@ export default (props: any) => {
             <CustomButton title="保存排班" onClick={saveSchedule} />
           </View>
         )}
+        <Modal
+          animationType="fade"
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+          transparent
+        >
+          <View style={{ flex: 1, alignItems: 'flex-end', backgroundColor: 'rgba(0, 0, 0, 0.65)' }}>
+            <View style={{ width: windowWidth / 1.5, flex: 1, backgroundColor: theme.backgroundColor }}>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Text style={styles.closeText}>×</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ borderColor: theme.borderColor, ...styles.pendingBox }}
+                onPress={() => {
+                  NavigationUtil.goPage({}, 'ChangeShiftList');
+                }}
+              >
+                <Image source={require('../../assets/image/pending.png')} style={{ width: 45, height: 45 }} />
+                <Text style={{ fontSize: 18, color: '#000000' }}>待处理 {pendingCount}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ padding: 10, width: 65, alignItems: 'center' }}
+                onPress={() => {
+                  setModalVisible(false);
+                  NavigationUtil.goPage({ title: '调班申请', type: 1, editable: true }, 'ChangeShiftDetail');
+                }}
+              >
+                <Image source={require('../../assets/image/changeShift.png')} style={{ width: 45, height: 45 }} />
+                <Text style={{ color: '#000000' }}>调班</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -153,5 +214,19 @@ export default (props: any) => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+  closeText: {
+    fontSize: 18,
+    fontWeight: '700',
+    padding: 5,
+    textAlign: 'right',
+  },
+  pendingBox: {
+    flexDirection: 'row',
+    padding: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
   },
 });
