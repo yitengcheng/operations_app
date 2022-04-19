@@ -206,7 +206,7 @@ const List = (props: any, ref: any) => {
   const [noMore, setNoMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [pageNo, setpageNo] = useState(1);
-  let total = 0;
+  const [total, setTotal] = useState(0);
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
@@ -234,18 +234,24 @@ const List = (props: any, ref: any) => {
           setData([]);
           return;
         }
-        total = res.total;
+        setTotal(res.total);
         if (pageNo === 1) {
           setData(_.uniqBy([...res.list], keyId ?? '_id'));
         } else {
           setData(_.uniqBy([...res.list, ...data], keyId ?? '_id'));
         }
+        setpageNo(pageNo + 1);
       })
       .catch((error) => {
         console.log(error);
         setIsLoading(false);
       });
   };
+  useEffect(() => {
+    if (data.length === total) {
+      setNoMore(true);
+    }
+  }, [data]);
   const getIndicator = () => {
     return (
       <View style={{ alignItems: 'center' }}>
@@ -262,13 +268,6 @@ const List = (props: any, ref: any) => {
   };
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  useEffect(() => {
-    if (data.length < total) {
-      setpageNo(pageNo + 1);
-    } else {
-      setNoMore(true);
-    }
-  }, [data]);
   return (
     <View style={{ flex: 1 }}>
       <FlatList
@@ -278,7 +277,9 @@ const List = (props: any, ref: any) => {
         keyExtractor={(item, index) => {
           return item?.id ?? index;
         }}
-        onEndReached={() => getData(pageNo)}
+        onEndReached={() => {
+          data.length !== total && getData(pageNo);
+        }}
         refreshControl={
           <RefreshControl
             title="Loading"
