@@ -86,9 +86,9 @@ export default (props: any) => {
             <Text style={styles.itemText}>状态：{repairStatus(status)}</Text>
           </View>
           <View style={styles.itemBox}>
-            <Text style={styles.itemText}>联系方式：{phoneNumberEncryption(phoneNumber) ?? '暂无'}</Text>
+            <Text style={styles.itemText}>联系方式：{phoneNumberEncryption(phoneNumber)}</Text>
           </View>
-          {remark && (
+          {!!remark && (
             <View style={styles.itemBox}>
               <Text style={styles.itemText}>转单备注：{remark}</Text>
             </View>
@@ -104,7 +104,7 @@ export default (props: any) => {
           ))}
           {conclusion && (
             <View style={styles.itemBox}>
-              <Text style={styles.itemText}>处理情况：{conclusion}</Text>
+              <Text style={styles.itemText}>处理情况：{conclusion ?? ''}</Text>
             </View>
           )}
           {conclusionPhoto?.length > 0 && (
