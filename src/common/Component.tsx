@@ -12,6 +12,7 @@ import {
   RefreshControl,
   Alert,
   Modal,
+  TextInput,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
@@ -207,6 +208,7 @@ const List = (props: any, ref: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [pageNo, setpageNo] = useState(1);
   const [total, setTotal] = useState(0);
+  const [keyword, setKeyword] = useState('');
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
@@ -219,7 +221,7 @@ const List = (props: any, ref: any) => {
   const refresh = () => {
     setpageNo(1);
     setNoMore(false);
-    getData(pageNo);
+    getData(1);
   };
   useEffect(() => {
     setpageNo(1);
@@ -227,7 +229,7 @@ const List = (props: any, ref: any) => {
     getData(pageNo);
   }, []);
   const getData = (pageNo: number) => {
-    post(url)({ pageNum: pageNo, pageSize: 10, ...params })()
+    post(url)({ pageNum: pageNo, pageSize: 10, keyword, ...params })()
       .then((res) => {
         setIsLoading(false);
         if (res.total === 0) {
@@ -270,6 +272,39 @@ const List = (props: any, ref: any) => {
   const windowHeight = useWindowDimensions().height;
   return (
     <View style={{ flex: 1 }}>
+      <View
+        style={{
+          borderWidth: 1,
+          borderColor: theme.borderColor,
+          borderStyle: 'solid',
+          borderRadius: 8,
+          margin: 5,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <TextInput
+          placeholder="请输入关键词"
+          style={{ padding: 3 }}
+          onChangeText={setKeyword}
+          clearButtonMode="always"
+        />
+        <TouchableOpacity
+          style={{
+            justifyContent: 'center',
+            borderLeftWidth: 1,
+            borderLeftColor: theme.borderColor,
+            paddingHorizontal: 5,
+            backgroundColor: theme.primary,
+            borderBottomRightRadius: 8,
+            borderTopRightRadius: 8,
+          }}
+          onPress={refresh}
+        >
+          <Text style={{ color: '#FFFFFF' }}>搜索</Text>
+        </TouchableOpacity>
+      </View>
+
       <FlatList
         ref={listRef}
         data={data}
