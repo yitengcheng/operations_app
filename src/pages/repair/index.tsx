@@ -13,6 +13,7 @@ export default (props: any) => {
   const [cc, setCc] = useState(0);
   const [create, setCreate] = useState(0);
   const [handle, setHandle] = useState(0);
+  const [assist, setAssist] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -24,6 +25,7 @@ export default (props: any) => {
       setCc(res.cc);
       setCreate(res.create);
       setHandle(res.handle);
+      setAssist(res.assist);
     });
   };
   const toListPage = (title: string, type: number) => {
@@ -71,6 +73,11 @@ export default (props: any) => {
             <Image source={require('../../assets/image/cc.png')} style={styles.imageIcon} />
             <Text style={styles.iconText}>抄送我的</Text>
             <Text style={styles.iconCount}>{cc}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconBox} onPress={() => toListPage('分享我的', 8)}>
+            <Image source={require('../../assets/image/assist.png')} style={styles.imageIcon} />
+            <Text style={styles.iconText}>分享我的</Text>
+            <Text style={styles.iconCount}>{assist}</Text>
           </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: theme.borderColor, flex: 1, padding: 10 }}>
@@ -125,8 +132,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageIcon: {
-    width: 55,
-    height: 55,
+    width: 35,
+    height: 35,
   },
   iconText: {
     fontSize: 18,

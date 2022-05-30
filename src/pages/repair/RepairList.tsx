@@ -26,18 +26,21 @@ export default (props: any) => {
   const [remark, setRemark] = useState('');
   const [id, setId] = useState('');
   const [ccVisible, setCcVisible] = useState(false);
+  const [assistVisible, setAssistVisible] = useState(false);
   const [completeVisible, setCompleteVisible] = useState(false);
   const [ccId, setCcId] = useState('');
+  const [assistId, setAssistId] = useState('');
   const [conclusion, setConclusion] = useState('');
   const [conclusionPhoto, setConclusionPhoto] = useState('');
   const [status, setStatus] = useState(1);
   const listRef = useRef();
   const { validate, ...other } = useValidation({
-    state: { circulation, remark, ccId },
+    state: { circulation, remark, ccId, assistId },
     labels: {
       receiveUser: '转单接收人',
       remark: '转单备注',
       ccId: '抄送接收人',
+      assistId: '分享接收人',
     },
   });
   useEffect(() => {
@@ -75,6 +78,7 @@ export default (props: any) => {
       remark,
       conclusion,
       conclusionPhoto,
+      assistUser,
       ...obj
     } = data;
     let res = _.toPairs(obj);
@@ -131,6 +135,14 @@ export default (props: any) => {
               fontStyle={{ color: theme.primary }}
               onClick={() => {
                 setCcVisible(true);
+                setId(data._id);
+              }}
+            />
+            <CustomButton
+              title="分享"
+              buttonStyle={styles.buttonStyle}
+              onClick={() => {
+                setAssistVisible(true);
                 setId(data._id);
               }}
             />
@@ -215,11 +227,34 @@ export default (props: any) => {
       Alert.alert('错误', '表单尚未填写完毕');
       return;
     }
+    if (ccId === userInfo._id) {
+      Alert.alert('错误', '不能抄送给自己');
+      return;
+    }
     post(apis.ccRepair)({ ccId, id })().then(() => {
       listRef.current?.refresh();
       setCcVisible(false);
       reset();
       Alert.alert('提示', '抄送成功');
+    });
+  };
+  const assistRepair = () => {
+    const res = validate({
+      assistId: { required: true },
+    });
+    if (!res) {
+      Alert.alert('错误', '表单尚未填写完毕');
+      return;
+    }
+    if (assistId === userInfo._id) {
+      Alert.alert('错误', '不能分享给自己');
+      return;
+    }
+    post(apis.assistRepair)({ assistId, id })().then(() => {
+      listRef.current?.refresh();
+      setAssistVisible(false);
+      reset();
+      Alert.alert('提示', '分享成功');
     });
   };
   const toComplete = () => {
@@ -267,6 +302,17 @@ export default (props: any) => {
             title="确定"
             onClick={() => {
               ccRepair();
+            }}
+          />
+        </View>
+      </Popup>
+      <Popup modalVisible={assistVisible} onClose={() => setAssistVisible(false)} type="center">
+        <FormSelect label="分享给" options={dutyUser} onChange={setAssistId} {...validOption('assist', other)} />
+        <View>
+          <CustomButton
+            title="确定"
+            onClick={() => {
+              assistRepair();
             }}
           />
         </View>
