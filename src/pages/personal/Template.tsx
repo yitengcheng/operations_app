@@ -297,7 +297,6 @@ export default (props: any) => {
           }}
           onLongPress={drag}
           disabled={isActive}
-          style={[styles.rowItem, { backgroundColor: isActive ? 'red' : item.backgroundColor }]}
         >
           {item.com}
         </TouchableOpacity>
