@@ -15,6 +15,7 @@ import NavigationUtil from '../../navigator/NavigationUtil';
 import apis from '../../apis';
 import _ from 'lodash';
 import dayjs from 'dayjs';
+import { NestableScrollContainer, NestableDraggableFlatList, ScaleDecorator } from 'react-native-draggable-flatlist';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -230,9 +231,13 @@ export default (props: any) => {
   };
 
   const saveTemplate = () => {
+    let result = {};
+    components.map((item) => {
+      result[item?.label] = componentsOption[item?.label];
+    });
     post(apis.saveTemplate)({
       type: params.type,
-      content: JSON.stringify(componentsOption),
+      content: JSON.stringify(result),
       id: templateId,
     })().then((res) => {
       Alert.alert('提示', '保存成功', [
@@ -269,6 +274,36 @@ export default (props: any) => {
     setMaxDate(componentsOption[label]?.maxDate);
     setIndex(index);
   };
+  const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => {
+    return (
+      <ScaleDecorator>
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert('提示', '请选择操作', [
+              {
+                text: '删除',
+                onPress: () => {
+                  delComponent(key, item.label);
+                },
+              },
+              {
+                text: '编辑',
+                onPress: () => {
+                  editComponent(item.label, key);
+                },
+              },
+              { text: '取消', onPress: () => {} },
+            ]);
+          }}
+          onLongPress={drag}
+          disabled={isActive}
+          style={[styles.rowItem, { backgroundColor: isActive ? 'red' : item.backgroundColor }]}
+        >
+          {item.com}
+        </TouchableOpacity>
+      </ScaleDecorator>
+    );
+  };
 
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
@@ -281,31 +316,15 @@ export default (props: any) => {
         }}
       />
       <ScrollView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
-        {components.map((item, key) => (
-          <TouchableOpacity
-            onLongPress={() => {
-              Alert.alert('提示', '请选择操作', [
-                {
-                  text: '删除',
-                  onPress: () => {
-                    delComponent(key, item.label);
-                  },
-                },
-                {
-                  text: '编辑',
-                  onPress: () => {
-                    editComponent(item.label, key);
-                  },
-                },
-                { text: '取消', onPress: () => {} },
-              ]);
-            }}
-            key={key}
-          >
-            {item?.com}
-          </TouchableOpacity>
-        ))}
-        <View>
+        <NestableScrollContainer>
+          <NestableDraggableFlatList
+            data={components}
+            onDragEnd={({ data }) => setComponents(data)}
+            keyExtractor={(item) => item?.com?.key}
+            renderItem={renderItem}
+          />
+        </NestableScrollContainer>
+        <NestableScrollContainer>
           <CustomButton
             title="添加"
             source={require('../../assets/image/addOption.png')}
@@ -314,7 +333,7 @@ export default (props: any) => {
               setModalVisible(true);
             }}
           />
-        </View>
+        </NestableScrollContainer>
       </ScrollView>
       <Modal
         animationType="slide"

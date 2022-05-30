@@ -1,5 +1,5 @@
 // const DEV_URL = 'http://192.168.2.4:8083';
-const DEV_URL = 'http://192.168.2.1:3000/api';
+const DEV_URL = 'http://192.168.31.254:3000/api';
 // const DEV_URL = 'https://yyyw.qiantur.com/api';
 
 const PRO_URL = 'https://yyyw.qiantur.com/api';
