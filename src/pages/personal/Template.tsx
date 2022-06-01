@@ -15,7 +15,11 @@ import NavigationUtil from '../../navigator/NavigationUtil';
 import apis from '../../apis';
 import _ from 'lodash';
 import dayjs from 'dayjs';
-import { NestableScrollContainer, NestableDraggableFlatList, ScaleDecorator } from 'react-native-draggable-flatlist';
+import DraggableFlatList, {
+  NestableScrollContainer,
+  NestableDraggableFlatList,
+  ScaleDecorator,
+} from 'react-native-draggable-flatlist';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -316,7 +320,17 @@ export default (props: any) => {
           saveTemplate();
         }}
       />
-      <ScrollView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
+      <View style={{ height: 55 }}>
+        <CustomButton
+          title="添加"
+          source={require('../../assets/image/addOption.png')}
+          type="primary"
+          onClick={() => {
+            setModalVisible(true);
+          }}
+        />
+      </View>
+      <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         <NestableScrollContainer>
           <NestableDraggableFlatList
             data={components}
@@ -325,17 +339,7 @@ export default (props: any) => {
             renderItem={renderItem}
           />
         </NestableScrollContainer>
-        <NestableScrollContainer>
-          <CustomButton
-            title="添加"
-            source={require('../../assets/image/addOption.png')}
-            type="primary"
-            onClick={() => {
-              setModalVisible(true);
-            }}
-          />
-        </NestableScrollContainer>
-      </ScrollView>
+      </View>
       <Modal
         animationType="slide"
         visible={modalVisible}

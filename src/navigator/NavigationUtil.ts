@@ -44,4 +44,14 @@ export default class NavigationUtil {
     }
     navigation.dispatch(StackActions.replace('Login', {}));
   }
+  /**
+   * 重置到主页
+   */
+  static home(params: {} = {}) {
+    let { navigation } = params;
+    if (!navigation) {
+      navigation = NavigationUtil.navigation;
+    }
+    navigation.dispatch(StackActions.replace('Home', {}));
+  }
 }

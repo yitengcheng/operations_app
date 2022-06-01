@@ -113,7 +113,7 @@ export default (props: any) => {
         }}
         transparent
       >
-        <ScanCode onBarCodeRead={onBarCodeRead} />
+        <ScanCode onBarCodeRead={onBarCodeRead} onClose={() => setModalVisible(false)} />
         {/* <CustomButton
           title="测试"
           onClick={() => {

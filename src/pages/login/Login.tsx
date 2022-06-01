@@ -70,7 +70,7 @@ export default (props: any) => {
     dispatch(saveBottomNavigation(bottomNavigation));
     dispatch(savePages(pages));
     const { navigation } = props;
-    NavigationUtil.goPage({ navigation }, 'Home');
+    NavigationUtil.home({ navigation });
   };
 
   const width = useWindowDimensions().width;
