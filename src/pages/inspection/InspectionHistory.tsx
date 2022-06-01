@@ -14,14 +14,14 @@ export default (props: any) => {
     return (
       <View style={[styles.renderBox, { borderColor: theme.borderColor }]}>
         <View style={styles.boxRow}>
-          <Text>上报人：{data.reportUser.nickName}</Text>
-          <Text>上报时间：{data.createTime}</Text>
+          <Text>上报人：{data?.reportUser?.nickName}</Text>
+          <Text>上报时间：{data?.createTime}</Text>
         </View>
         <View style={styles.boxRow}>
-          <Text>巡检点：{data.parentId.office}</Text>
-          <Text>办公点：{data.childrenId.office}</Text>
+          <Text>巡检点：{data?.parentId?.office}</Text>
+          <Text>办公点：{data?.childrenId?.office}</Text>
         </View>
-        <Text>巡检情况：{data.remark}</Text>
+        <Text>巡检情况：{data?.remark}</Text>
       </View>
     );
   };
