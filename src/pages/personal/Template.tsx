@@ -251,15 +251,17 @@ export default (props: any) => {
     });
   };
 
-  const delComponent = (key: number, label: string) => {
+  const delComponent = (label: string) => {
+    let index = _.findIndex(components, (item) => item.label === label);
     delete componentsOption[label];
-    delete components[key];
+    delete components[index];
     setComponentsOption({ ...componentsOption });
     setComponents([...components]);
   };
 
-  const editComponent = (label: string, index: number) => {
+  const editComponent = (label: string) => {
     setModalVisible(true);
+    let index = _.findIndex(components, (item) => item.label === label);
     let tmp = [];
     componentsOption[label]?.options?.map((item, index) => {
       tmp.push({ label: `选项${index + 1}`, value: item.value });
@@ -283,13 +285,13 @@ export default (props: any) => {
               {
                 text: '删除',
                 onPress: () => {
-                  delComponent(key, item.label);
+                  delComponent(item.label);
                 },
               },
               {
                 text: '编辑',
                 onPress: () => {
-                  editComponent(item.label, key);
+                  editComponent(item.label);
                 },
               },
               { text: '取消', onPress: () => {} },
@@ -298,7 +300,7 @@ export default (props: any) => {
           onLongPress={drag}
           disabled={isActive}
         >
-          {item.com}
+          {item?.com}
         </TouchableOpacity>
       </ScaleDecorator>
     );

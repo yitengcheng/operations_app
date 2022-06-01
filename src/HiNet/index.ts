@@ -28,7 +28,7 @@ export function get(api: string) {
  * @returns
  */
 export function post(api: string) {
-  showLoading();
+  // showLoading();
   return (params?: {}) => {
     return async (queryParams?: {} | string) => {
       let data;
@@ -72,7 +72,7 @@ function handleData(doAction: Promise<any>) {
         return res.text();
       })
       .then((result) => {
-        hidenLoading();
+        // hidenLoading();
         console.log('response:', JSON.stringify(result));
         if (typeof result === 'string') {
           throw new Error(result);
