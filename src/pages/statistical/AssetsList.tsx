@@ -72,8 +72,8 @@ export default (props: any) => {
       >
         {res.map((item, index) => (
           <View style={{ flexDirection: 'row' }} key={index}>
-            <Text style={{ color: '#000000' }}>{item?.[0]}：</Text>
-            <Text style={{ color: '#000000' }}>{item?.[1]}</Text>
+            <Text style={{ fontSize: 16, color: '#000000' }}>{item?.[0]}：</Text>
+            <Text style={{ fontSize: 16, color: '#000000' }}>{item?.[1]}</Text>
           </View>
         ))}
       </TouchableOpacity>

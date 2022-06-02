@@ -6,6 +6,8 @@ import { CustomButton, NavBar, SwiperImage } from '../../common/Component';
 import { get, post } from '../../HiNet';
 import NavigationUtil from '../../navigator/NavigationUtil';
 import ScanCode from '../../common/ScanCode';
+import { boxShadow, divider } from '../../assets/style/styles';
+
 export default (props: any) => {
   const theme = useSelector((state) => {
     return state.theme.theme;
@@ -80,7 +82,8 @@ export default (props: any) => {
             <Text style={styles.iconCount}>{assist}</Text>
           </TouchableOpacity>
         </View>
-        <View style={{ backgroundColor: theme.borderColor, flex: 1, padding: 10 }}>
+        <View style={divider()} />
+        <View style={{ backgroundColor: theme.backgroundColor, flex: 1, padding: 10 }}>
           <Text style={{ fontSize: theme.fontSize, color: '#000000' }}>服务工单</Text>
           <TouchableOpacity
             style={styles.option_box}
@@ -88,7 +91,7 @@ export default (props: any) => {
               setModalVisible(true);
             }}
           >
-            <Text>创建工单</Text>
+            <Text style={styles.btnText}>创建工单</Text>
             <Image
               source={require('../../assets/image/repair_create.png')}
               style={styles.option_icon}
@@ -96,7 +99,7 @@ export default (props: any) => {
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.option_box} onPress={() => toListPage('工单历史', 4)}>
-            <Text>工单历史</Text>
+            <Text style={styles.btnText}>工单历史</Text>
             <Image
               source={require('../../assets/image/repair_history.png')}
               style={styles.option_icon}
@@ -114,12 +117,6 @@ export default (props: any) => {
         transparent
       >
         <ScanCode onBarCodeRead={onBarCodeRead} onClose={() => setModalVisible(false)} />
-        {/* <CustomButton
-          title="测试"
-          onClick={() => {
-            NavigationUtil.goPage({ title: '故障上报', assetsId: '623c11c628726cf72be3153e' }, 'RepairDetail');
-          }}
-        /> */}
       </Modal>
     </SafeAreaView>
   );
@@ -140,17 +137,23 @@ const styles = StyleSheet.create({
     padding: 5,
     color: '#000000',
   },
+  btnText: {
+    fontSize: 18,
+    color: '#000000',
+  },
   iconCount: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#000000',
   },
   option_box: {
     backgroundColor: '#FFFFFF',
-    height: 45,
+    height: 55,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 10,
     marginVertical: 5,
+    ...boxShadow,
   },
   option_icon: {
     width: 25,

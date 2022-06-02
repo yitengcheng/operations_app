@@ -258,11 +258,11 @@ const List = (props: any, ref: any) => {
     return (
       <View style={{ alignItems: 'center' }}>
         {noMore ? (
-          <Text>没有更多了</Text>
+          <Text style={styles.noMoreText}>没有更多了</Text>
         ) : (
           <View>
             <ActivityIndicator color={theme.primary} style={{ margin: 10, color: theme.backgroundColor }} animating />
-            <Text>正在加载更多</Text>
+            <Text style={styles.noMoreText}>正在加载更多</Text>
           </View>
         )}
       </View>
@@ -460,5 +460,9 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: Px2dp(2000),
     borderTopLeftRadius: Px2dp(2000),
     zIndex: 8,
+  },
+  noMoreText: {
+    fontSize: 16,
+    marginTop: 5,
   },
 });
