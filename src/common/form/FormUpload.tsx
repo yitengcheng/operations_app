@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Image, TouchableOpacity, Alert, StyleSheet, Text } from 'react-native';
+import { View, Image, TouchableOpacity, Alert, StyleSheet, Text, SafeAreaView, Modal } from 'react-native';
 import { useSelector } from 'react-redux';
 import ActionSheet from 'react-native-actionsheet';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
@@ -10,7 +10,8 @@ import config from '../../config';
 import _ from 'lodash';
 import ErrorMessage from './ErrorMessage';
 import Label from './Label';
-import { CustomButton, Popup } from '../Component';
+import { CustomButton, NavBar, Popup } from '../Component';
+import { RNCamera } from 'react-native-camera';
 
 /**
  * 图片选择器
@@ -21,6 +22,8 @@ const FormUpload = (props: any) => {
   const { count = 1, defaultValue, editable = true, onChange } = props;
   const [action, setAction] = useState(false);
   const [imgAction, setImgAction] = useState(false);
+  const [cameraModal, setCameraModal] = useState(false);
+  const camera = useRef();
   const theme = useSelector((state) => {
     return state.theme.theme;
   });
@@ -40,37 +43,52 @@ const FormUpload = (props: any) => {
     let resErr;
     if (index === 0) {
       [resErr, res] = await to(launchImageLibrary());
+      if (resErr) {
+        Alert.alert('未知错误');
+        return;
+      }
+      if (res?.errorCode) {
+        switch (res?.errorCode) {
+          case 'camera_unavailable':
+            Alert.alert('失败', '没有找到摄像头');
+            break;
+          case 'permission':
+            Alert.alert('失败', '没有相机权限');
+            break;
+          default:
+            Alert.alert('失败', '调用相机失败');
+            break;
+        }
+        return;
+      }
+      uploadImg(res?.assets?.[0] ?? {});
     } else if (index === 1) {
-      [resErr, res] = await to(launchCamera({ cameraType: 'back' }));
+      // [resErr, res] = await to(launchCamera({ cameraType: 'back' }));
+      setCameraModal(true);
     } else {
       return;
     }
-    if (resErr) {
-      Alert.alert('未知错误');
-      return;
-    }
-    if (res?.errorCode) {
-      switch (res?.errorCode) {
-        case 'camera_unavailable':
-          Alert.alert('失败', '没有找到摄像头');
-          break;
-        case 'permission':
-          Alert.alert('失败', '没有相机权限');
-          break;
-        default:
-          Alert.alert('失败', '调用相机失败');
-          break;
-      }
-      return;
-    }
-    const asset = res?.assets?.[0] ?? {};
+  };
+  const uploadImg = (asset: any) => {
     const formData = new FormData();
-    const file = { uri: asset.uri, name: asset.fileName, size: asset.fileSize, type: 'multipart/form-data' };
+    const file = { uri: asset?.uri, name: asset?.fileName, size: asset?.fileSize, type: 'multipart/form-data' };
     formData.append('file', file);
     post(apis.uploadImg)(formData)().then((result) => {
       fileList.push(result.url);
       setFileList([...fileList]);
     });
+  };
+  const takePicture = async () => {
+    if (camera) {
+      const option = { quality: 0.5 };
+      const file = await camera.current?.takePictureAsync(option);
+      if (file) {
+        uploadImg({ uri: file.uri, fileName: file.uri.substring(file.uri.lastIndexOf('/') + 1) });
+        setCameraModal(false);
+      } else {
+        Alert.alert('失败', '拍照失败，请重新拍照');
+      }
+    }
   };
   return (
     <View style={styles.column}>
@@ -104,7 +122,11 @@ const FormUpload = (props: any) => {
               editable && setAction(true);
             }}
           >
-            <Image source={require('../../assets/image/imgAdd.png')} style={{ width: 50, height: 50 }} />
+            <Image
+              source={require('../../assets/image/imgAdd.png')}
+              style={{ width: 50, height: 50 }}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
         ) : (
           <View />
@@ -147,6 +169,46 @@ const FormUpload = (props: any) => {
           />
         </View>
       </Popup>
+      <Modal
+        animationType="slide"
+        visible={cameraModal}
+        onRequestClose={() => {
+          setCameraModal(false);
+        }}
+        transparent
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+          <NavBar
+            title="拍照"
+            rightTitle="关闭"
+            onRightClick={() => {
+              setCameraModal(false);
+            }}
+          />
+          <RNCamera style={{ flex: 1 }} ref={camera}>
+            <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end' }}>
+              <TouchableOpacity
+                onPress={takePicture}
+                style={{
+                  width: 90,
+                  height: 90,
+                  backgroundColor: '#ffffff',
+                  borderRadius: 45,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 20,
+                }}
+              >
+                <Image
+                  source={require('../../assets/image/camera.png')}
+                  resizeMode="contain"
+                  style={{ width: 50, height: 50 }}
+                />
+              </TouchableOpacity>
+            </View>
+          </RNCamera>
+        </SafeAreaView>
+      </Modal>
       {props.isFieldInError && ErrorMessage(props.isFieldInError, props.getErrorsInField, props.name)}
     </View>
   );

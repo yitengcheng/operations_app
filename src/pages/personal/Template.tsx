@@ -213,11 +213,10 @@ export default (props: any) => {
         {options.map((item, key) => (
           <FormInput
             label={item.label}
-            value={item.value}
-            key={item.value}
+            defaultValue={item.value}
+            key={randomId()}
             onChangeText={(value) => {
               options[key] = { label: item.label, value };
-              setOptions([...options]);
             }}
           />
         ))}
@@ -415,7 +414,13 @@ export default (props: any) => {
             {(type === '选择器' || type === '单选框' || type === '多选框') && selectOptions()}
             <View style={{ flexDirection: 'row' }}>
               <CustomButton title="保存" onClick={confirmCompontent} />
-              <CustomButton title="取消" onClick={() => setModalVisible(false)} />
+              <CustomButton
+                title="取消"
+                onClick={() => {
+                  setModalVisible(false);
+                  reset();
+                }}
+              />
             </View>
           </ScrollView>
         </SafeAreaView>

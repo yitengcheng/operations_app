@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import ErrorMessage from './ErrorMessage';
@@ -11,21 +11,25 @@ import Label from './Label';
  */
 const FormSelect = (props: any) => {
   const { label, placeholder, options, onChange, defaultValue, editable = true, ...other } = props;
+  const [value, setValue] = useState(defaultValue);
   const placeholderText = placeholder ?? `请选择${label}`;
-
   let items = options.length === 0 && !!defaultValue ? [{ label: defaultValue + '', value: defaultValue }] : options;
 
   return (
     <View style={styles.column}>
       <Label {...props} />
       <RNPickerSelect
-        onValueChange={(obj) => {
-          onChange && onChange(obj);
+        onValueChange={(obj, index) => {
+          if (!!index) {
+            setValue(obj);
+            onChange && onChange(obj);
+          }
         }}
+        doneText="完成"
         placeholder={{ label: placeholderText, value: null, color: '#9EA0A4' }}
         style={pickerSelectStyles}
         items={items}
-        value={defaultValue}
+        value={value}
         disabled={!editable}
         {...other}
       />

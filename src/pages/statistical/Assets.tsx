@@ -13,6 +13,7 @@ import { isJsonString, randomId } from '../../utils';
 import _ from 'lodash';
 import { CustomButton, NavBar } from '../../common/Component';
 import dayjs from 'dayjs';
+import NavigationUtil from '../../navigator/NavigationUtil';
 
 export default (props: any) => {
   const { params } = props.route;
@@ -25,7 +26,6 @@ export default (props: any) => {
   const [data, setData] = useState(params ?? {});
   const [components, setComponents] = useState([]);
   const [componentsOption, setComponentsOption] = useState({});
-  const [refresh, setRefresh] = useState(true);
   const [templateId, setTemplateId] = useState('');
   const [id, setId] = useState(params?._id ?? '');
   useEffect(() => {
@@ -206,14 +206,14 @@ export default (props: any) => {
     if (flag) {
       return;
     }
-    setRefresh(false);
     post(apis.addAssets)({ data, templateId, id })().then((res) => {
-      setRefresh(true);
       Alert.alert('提示', '入库成功', [
         {
           text: '确定',
           onPress: () => {
             setData({});
+            params?.listRef?.current?.refresh();
+            NavigationUtil.goBack();
           },
         },
       ]);
@@ -229,7 +229,6 @@ export default (props: any) => {
             title="Loading"
             titleColor={theme.fontColor}
             colors={[theme.primary]}
-            refreshing={!refresh}
             onRefresh={() => {
               initTemplate();
             }}
@@ -237,7 +236,9 @@ export default (props: any) => {
           />
         }
       >
-        {refresh && components.map((item, key) => <View key={key}>{item?.com}</View>)}
+        {components.map((item, key) => (
+          <View key={key}>{item?.com}</View>
+        ))}
         <View>
           <CustomButton title={params._id ? '保存' : '录入'} onClick={putInStorage} />
         </View>

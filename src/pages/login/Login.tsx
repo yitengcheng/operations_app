@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, Image, View, useWindowDimensions, Alert, Platform } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  Image,
+  View,
+  useWindowDimensions,
+  Alert,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import NavigationUtil from '../../navigator/NavigationUtil';
 import { useDispatch } from 'react-redux';
 import { saveBottomNavigation } from '../../action/bottomnavigation';
 import FormInput from '../../common/form/FormInput';
-import { CustomButton } from '../../common/Component';
+import { CustomButton, Popup } from '../../common/Component';
 import { useValidation } from 'react-native-form-validator';
 import JPush from 'jpush-react-native';
 import apis from '../../apis';
@@ -19,6 +29,7 @@ export default (props: any) => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     loadStorage('loginRecord').then((res) => {
       setPassword(res?.password);
@@ -97,10 +108,39 @@ export default (props: any) => {
           onChangeText={setPassword}
           {...validOption('password', other)}
         />
+        <TouchableOpacity
+          style={{ marginLeft: 10 }}
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        >
+          <Text style={{ color: '#364ddb' }}>快速注册</Text>
+        </TouchableOpacity>
       </View>
       <View>
         <CustomButton title="登录" buttonStyle={{ width: 200, alignSelf: 'center' }} onClick={toLogin} />
       </View>
+      <Popup
+        modalVisible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        type="center"
+      >
+        <FormInput label="账号"></FormInput>
+        <FormInput label="密码"></FormInput>
+        <FormInput label="公司名"></FormInput>
+        <View style={{ height: 50 }}>
+          <CustomButton
+            title="注册"
+            buttonStyle={{ width: 200, alignSelf: 'center' }}
+            onClick={() => {
+              setModalVisible(false);
+              Alert.alert('注册完成，请等待审核');
+            }}
+          />
+        </View>
+      </Popup>
     </SafeAreaView>
   );
 };

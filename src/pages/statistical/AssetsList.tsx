@@ -66,7 +66,7 @@ export default (props: any) => {
     let res = _.toPairs(data);
     return (
       <TouchableOpacity
-        onPress={() => NavigationUtil.goPage(data, 'Assets')}
+        onPress={() => NavigationUtil.goPage({ listRef, ...data }, 'Assets')}
         onLongPress={() => delAsset(data._id)}
         style={{ padding: 10, borderBottomWidth: 1, borderColor: theme.borderColor }}
       >
