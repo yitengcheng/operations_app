@@ -137,18 +137,18 @@ export default (props: any) => {
                   ]);
                 }}
               >
-                <Text
-                  style={{
-                    borderColor: theme.borderColor,
-                    borderBottomWidth: 1,
-                    textAlign: 'center',
-                    padding: 10,
-                    color: '#000000',
-                    fontSize: theme.fontSize,
-                  }}
-                >
-                  {data.office}
-                </Text>
+                <View style={{ borderColor: theme.borderColor, borderBottomWidth: 1 }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      padding: 10,
+                      color: '#000000',
+                      fontSize: theme.fontSize,
+                    }}
+                  >
+                    {data.office}
+                  </Text>
+                </View>
               </TouchableOpacity>
             )}
           />

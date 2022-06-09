@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useRef } from 'react';
+import React, { useState, forwardRef, useRef, useEffect } from 'react';
 import { Alert, SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 import { CustomButton, ListData, NavBar, Popup } from '../../common/Component';
@@ -7,6 +7,7 @@ import { validOption } from '../../utils';
 import { useValidation } from 'react-native-form-validator';
 import { post } from '../../HiNet';
 import apis from '../../apis';
+import FormSelect from '../../common/form/FormSelect';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -17,21 +18,30 @@ export default (props: any) => {
   const [office, setOffice] = useState('');
   const [type, setType] = useState(''); // 1 添加 2修改
   const [id, setId] = useState(undefined);
+  const [dutyUser, setDutyUser] = useState([]);
+  const [headUser, setHeadUser] = useState('');
+
+  useEffect(() => {
+    initDutyUser();
+  }, []);
+
   const { validate, ...other } = useValidation({
-    state: { office },
+    state: { office, headUser },
     labels: {
       office: '巡检点',
+      headUser: '负责人',
     },
   });
   const addInspection = () => {
     const res = validate({
       office: { required: true },
+      headUser: { required: true },
     });
     if (!res) {
       Alert.alert('错误', '请仔细检查表单');
       return;
     }
-    post(apis.addInspection)({ office, id })().then((res) => {
+    post(apis.addInspection)({ office, id, headUser })().then((res) => {
       Alert.alert('提示', '成功', [
         {
           text: '确定',
@@ -44,6 +54,14 @@ export default (props: any) => {
         },
       ]);
     });
+  };
+  const initDutyUser = async () => {
+    let result = [];
+    const res = await post(apis.getDutyUser)()();
+    res.map((item) => {
+      result.push({ label: item.nickName, value: item._id });
+    });
+    setDutyUser(result);
   };
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
@@ -64,13 +82,14 @@ export default (props: any) => {
           url={`${apis.getInspectionAddressList}`}
           renderItem={(data) => (
             <TouchableOpacity
-              onLongPress={() => {
+              onPress={() => {
                 Alert.alert('', '请选择操作', [
                   {
                     text: '编辑',
                     onPress: () => {
                       setModalVisible(true);
                       setOffice(data.office);
+                      setHeadUser(data?.headUser ?? '');
                       setType(2);
                       setId(data._id);
                     },
@@ -87,27 +106,32 @@ export default (props: any) => {
                               setModalVisible(false);
                               setId(undefined);
                               setOffice('');
+                              setHeadUser('');
                             },
                           },
                         ]);
                       });
                     },
                   },
+                  {
+                    text: '取消',
+                    onPress: () => {},
+                  },
                 ]);
               }}
             >
-              <Text
-                style={{
-                  borderColor: theme.borderColor,
-                  borderBottomWidth: 1,
-                  textAlign: 'center',
-                  padding: 10,
-                  color: '#000000',
-                  fontSize: theme.fontSize,
-                }}
-              >
-                {data.office}
-              </Text>
+              <View style={{ borderColor: theme.borderColor, borderBottomWidth: 1 }}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    padding: 10,
+                    color: '#000000',
+                    fontSize: theme.fontSize,
+                  }}
+                >
+                  {data.office}
+                </Text>
+              </View>
             </TouchableOpacity>
           )}
         />
@@ -120,6 +144,13 @@ export default (props: any) => {
         type="center"
       >
         <FormInput label="巡检点" defaultValue={office} onChangeText={setOffice} {...validOption('office', other)} />
+        <FormSelect
+          label="负责人"
+          options={dutyUser}
+          defaultValue={headUser}
+          onChange={setHeadUser}
+          {...validOption('headUser', other)}
+        />
         <View>
           <CustomButton
             title="提交"

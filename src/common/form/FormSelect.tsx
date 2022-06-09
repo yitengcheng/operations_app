@@ -11,9 +11,14 @@ import Label from './Label';
  */
 const FormSelect = (props: any) => {
   const { label, placeholder, options, onChange, defaultValue, editable = true, ...other } = props;
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState();
   const placeholderText = placeholder ?? `请选择${label}`;
   let items = options.length === 0 && !!defaultValue ? [{ label: defaultValue + '', value: defaultValue }] : options;
+  useEffect(() => {
+    console.log('======', defaultValue);
+
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   return (
     <View style={styles.column}>

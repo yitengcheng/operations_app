@@ -43,10 +43,17 @@ export default (props: any) => {
               },
             },
             {
-              text: '巡检历史',
+              text: '故障巡检记录',
               icon: require('../../assets/image/check_history.png'),
               func: () => {
-                NavigationUtil.goPage({}, 'InspectionHistory');
+                NavigationUtil.goPage({ status: 2 }, 'InspectionHistory');
+              },
+            },
+            {
+              text: '正常巡检记录',
+              icon: require('../../assets/image/check_history.png'),
+              func: () => {
+                NavigationUtil.goPage({ status: 1 }, 'InspectionHistory');
               },
             },
           ]}

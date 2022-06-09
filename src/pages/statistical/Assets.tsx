@@ -28,6 +28,7 @@ export default (props: any) => {
   const [componentsOption, setComponentsOption] = useState({});
   const [templateId, setTemplateId] = useState('');
   const [id, setId] = useState(params?._id ?? '');
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     initTemplate();
   }, []);
@@ -227,6 +228,7 @@ export default (props: any) => {
         refreshControl={
           <RefreshControl
             title="Loading"
+            refreshing={isLoading}
             titleColor={theme.fontColor}
             colors={[theme.primary]}
             onRefresh={() => {

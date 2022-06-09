@@ -38,7 +38,7 @@ export const NavBar = (props: any) => {
   return (
     <View style={[{ backgroundColor: theme.primary }, styles.navBar]}>
       {_.has(props, 'navigation') ? (
-        <TouchableOpacity onPress={goBack}>
+        <TouchableOpacity onPress={goBack} style={{ padding: 10 }}>
           <Image
             source={require('../assets/image/back.png')}
             style={{ marginLeft: 10, width: 15, height: 15 }}
@@ -281,11 +281,12 @@ const List = (props: any, ref: any) => {
           margin: 5,
           flexDirection: 'row',
           justifyContent: 'space-between',
+          height: 35,
         }}
       >
         <TextInput
           placeholder="请输入关键词"
-          style={{ padding: 3 }}
+          style={{ padding: 3, flex: 1 }}
           onChangeText={setKeyword}
           clearButtonMode="always"
         />
@@ -376,7 +377,6 @@ export const Popup = (props: any) => {
           <View
             style={{
               flexDirection: 'row',
-              padding: 8,
               borderBottomWidth: 1,
               borderColor: theme.borderColor,
             }}
@@ -384,7 +384,7 @@ export const Popup = (props: any) => {
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
               <Text>{title}</Text>
             </View>
-            <TouchableOpacity onPress={() => onClose && onClose()}>
+            <TouchableOpacity onPress={() => onClose && onClose()} style={{ padding: 10 }}>
               <Image source={require('../assets/image/close.png')} style={{ width: 15, height: 15 }} />
             </TouchableOpacity>
           </View>

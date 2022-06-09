@@ -22,6 +22,8 @@ import InspectionHistory from '../pages/inspection/InspectionHistory';
 import RepairList from '../pages/repair/RepairList';
 import RepairDetail from '../pages/repair/RepairDetail';
 import Assets from '../pages/statistical/Assets';
+import AssetsClassify from '../pages/statistical/AssetsClassify';
+import AssetsClassifyList from '../pages/statistical/AssetsClassifyList';
 import Schedule from '../pages/schedule';
 import RepairById from '../pages/repair/RepairById';
 import { Image, StyleSheet } from 'react-native';
@@ -243,6 +245,14 @@ export const pages = [
   {
     name: 'RepairById',
     component: RepairById,
+  },
+  {
+    name: 'AssetsClassify',
+    component: AssetsClassify,
+  },
+  {
+    name: 'AssetsClassifyList',
+    component: AssetsClassifyList,
   },
 ];
 

@@ -62,7 +62,7 @@ export default (props: any) => {
         }}
         transparent
       >
-        <View style={{ flex: 1, alignItems: 'flex-end', backgroundColor: 'rgba(0, 0, 0, 0.65)' }}>
+        <SafeAreaView style={{ flex: 1, alignItems: 'flex-end', backgroundColor: 'rgba(0, 0, 0, 0.65)' }}>
           <View style={{ width: width / 1.5, flex: 1, backgroundColor: theme.backgroundColor }}>
             <TouchableOpacity onPress={() => setModalVisible(false)}>
               <Text style={styles.closeText}>×</Text>
@@ -70,6 +70,7 @@ export default (props: any) => {
             <TouchableOpacity
               style={{ borderColor: theme.borderColor, ...styles.pendingBox }}
               onPress={() => {
+                setModalVisible(false);
                 NavigationUtil.goPage({}, 'ChangeShiftList');
               }}
             >
@@ -87,7 +88,7 @@ export default (props: any) => {
               <Text style={{ color: '#000000' }}>调班</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
     </SafeAreaView>
   );

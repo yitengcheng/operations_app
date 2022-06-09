@@ -135,8 +135,10 @@ export default (props: any) => {
             title="注册"
             buttonStyle={{ width: 200, alignSelf: 'center' }}
             onClick={() => {
-              setModalVisible(false);
-              Alert.alert('注册完成，请等待审核');
+              post(apis.reigist)()().then(() => {
+                setModalVisible(false);
+                Alert.alert('注册完成，请等待审核');
+              });
             }}
           />
         </View>

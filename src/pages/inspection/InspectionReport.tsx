@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 import { CustomButton, NavBar } from '../../common/Component';
 import FormInput from '../../common/form/FormInput';
@@ -9,6 +9,7 @@ import { get, post } from '../../HiNet';
 import apis from '../../apis';
 import { validOption } from '../../utils';
 import NavigationUtil from '../../navigator/NavigationUtil';
+import FormUpload from '../../common/form/FormUpload';
 
 export default (props: any) => {
   const theme = useSelector((state) => {
@@ -22,6 +23,8 @@ export default (props: any) => {
   const [remark, setRemark] = useState('');
   const [parentOptions, setParentOptions] = useState([]);
   const [childrenOptions, setChildrenOptions] = useState([]);
+  const [remarkPhoto, setRemarkPhoto] = useState([]);
+  const [status, setStatus] = useState('');
 
   const { validate, ...other } = useValidation({
     state: { parentId, childrenId, remark },
@@ -29,6 +32,7 @@ export default (props: any) => {
       parentId: '巡检点',
       childrenId: '办公点',
       remark: '巡检情况',
+      status: '状态',
     },
   });
   useEffect(() => {
@@ -61,12 +65,17 @@ export default (props: any) => {
       childrenId: { required: true },
       parentId: { required: true },
       remark: { required: true },
+      status: { required: true },
     });
     if (!res) {
       Alert.alert('错误', '请仔细检查表单');
       return;
     }
-    post(apis.reportInspection)({ childrenId, parentId, remark })().then((res) => {
+    if (remarkPhoto.length < 1) {
+      Alert.alert('错误', '请最少上传一张现场照片');
+      return;
+    }
+    post(apis.reportInspection)({ childrenId, parentId, remark, status, remarkPhoto })().then((res) => {
       Alert.alert('提示', '提交成功', [
         {
           text: '确定',
@@ -81,7 +90,7 @@ export default (props: any) => {
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
       <NavBar title="巡检上报" {...props} />
-      <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
+      <ScrollView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         <FormSelect label="巡检点" options={parentOptions} onChange={setParentId} {...validOption('parentId', other)} />
         <FormSelect
           label="办公点"
@@ -89,11 +98,21 @@ export default (props: any) => {
           onChange={setChildrenId}
           {...validOption('childrenId', other)}
         />
+        <FormSelect
+          label="巡检状态"
+          options={[
+            { label: '正常', value: 1 },
+            { label: '故障', value: 2 },
+          ]}
+          onChange={setStatus}
+          {...validOption('status', other)}
+        />
+        <FormUpload label="现场图片" count={5} onChange={setRemarkPhoto} />
         <FormInput label="巡检情况" onChangeText={setRemark} multiline={true} {...validOption('remark', other)} />
         <View>
           <CustomButton title="提交" onClick={report} />
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

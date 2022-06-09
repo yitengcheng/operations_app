@@ -5,4 +5,5 @@ export default {
   delInspection: '/patrol/address/delete', // 删除巡检/办公点
   reportInspection: '/patrol/insert', // 提交巡检记录
   getInspectionList: '/patrol/list', // 获取巡检记录
+  completeInspection: '/patrol/complete', // 故障巡检完成修复
 };

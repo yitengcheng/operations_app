@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, useWindowDimensions, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  useWindowDimensions,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  RefreshControl,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import { BarChart } from 'react-native-chart-kit';
 import { get, post } from '../../HiNet';
@@ -23,9 +33,10 @@ export default (props: any) => {
   const [addressId, setAddressId] = useState(undefined);
   const [chartData, setChartData] = useState({ labels: ['测试1', '测试2'], datasets: [{ data: [1, 1] }] });
   const [items, setItems] = useState([]);
+  const [assetsModal, setAssetsModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     initFaultCount();
-    initOptions();
     initAssetCount();
   }, []);
   useEffect(() => {
@@ -63,7 +74,23 @@ export default (props: any) => {
   };
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
-      <ScrollView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: theme.backgroundColor }}
+        refreshControl={
+          <RefreshControl
+            title="Loading"
+            titleColor={theme.fontColor}
+            colors={[theme.primary]}
+            onRefresh={() => {
+              initFaultCount();
+              initOptions();
+              initAssetCount();
+            }}
+            tintColor={theme.primary}
+            refreshing={isLoading}
+          />
+        }
+      >
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', borderWidth: 1, borderColor: theme.borderColor }}>
           <TouchableOpacity
             style={[
@@ -76,7 +103,9 @@ export default (props: any) => {
             }}
           >
             <Text style={{ fontSize: 24, color: theme.fontColor }}>故障总数</Text>
-            <Text style={[styles.countNum, { color: '#000000' }]}>{faultTotal}</Text>
+            <View style={styles.countNumBox}>
+              <Text style={[styles.countNum, { color: '#000000' }]}>{faultTotal}</Text>
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.countBox, { width: (screenWidth - 2) / 2 }]}
@@ -85,7 +114,9 @@ export default (props: any) => {
             }}
           >
             <Text style={{ fontSize: 24, color: theme.fontColor }}>已解决故障</Text>
-            <Text style={[styles.countNum, { color: theme.success }]}>{faultCompleteTotal}</Text>
+            <View style={styles.countNumBox}>
+              <Text style={[styles.countNum, { color: theme.success }]}>{faultCompleteTotal}</Text>
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.countBox, { width: (screenWidth - 2) / 2 }]}
@@ -94,18 +125,23 @@ export default (props: any) => {
             }}
           >
             <Text style={{ fontSize: 24, color: theme.fontColor }}>待处理故障</Text>
-            <Text style={[styles.countNum, { color: theme.warrning }]}>{faultPendingTotal}</Text>
+            <View style={styles.countNumBox}>
+              <Text style={[styles.countNum, { color: theme.warrning }]}>{faultPendingTotal}</Text>
+            </View>
           </TouchableOpacity>
-          <View
+          <TouchableOpacity
             style={[
               styles.countBox,
               styles.leftTopBorder,
               { width: (screenWidth - 2) / 2, borderColor: theme.borderColor },
             ]}
+            onPress={() => NavigationUtil.goPage({}, 'AssetsClassify')}
           >
             <Text style={{ fontSize: 24, color: theme.fontColor }}>资产总数</Text>
-            <Text style={[styles.countNum, { color: theme.error }]}>{assetCount}</Text>
-          </View>
+            <View style={styles.countNumBox}>
+              <Text style={[styles.countNum, { color: theme.error }]}>{assetCount}</Text>
+            </View>
+          </TouchableOpacity>
         </View>
         <Text style={{ fontSize: theme.fontSize, color: theme.fontColor, margin: 10 }}>各巡检点巡检次数统计</Text>
         <RNPickerSelect
@@ -176,10 +212,12 @@ const styles = StyleSheet.create({
     height: 160,
     padding: 10,
   },
+  countNumBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   countNum: {
     fontSize: 22,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    flex: 1,
   },
 });

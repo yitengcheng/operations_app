@@ -15,6 +15,10 @@ target 'react_native_template' do
     # :hermes_enabled => false
   )
 
+
+
+  pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
+
   target 'react_native_templateTests' do
     inherit! :complete
     # Pods for testing
