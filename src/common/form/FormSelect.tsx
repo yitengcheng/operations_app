@@ -15,8 +15,6 @@ const FormSelect = (props: any) => {
   const placeholderText = placeholder ?? `请选择${label}`;
   let items = options.length === 0 && !!defaultValue ? [{ label: defaultValue + '', value: defaultValue }] : options;
   useEffect(() => {
-    console.log('======', defaultValue);
-
     setValue(defaultValue);
   }, [defaultValue]);
 
