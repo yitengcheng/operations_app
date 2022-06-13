@@ -129,6 +129,7 @@ export default (props: any) => {
       >
         <FormInput label="账号"></FormInput>
         <FormInput label="密码"></FormInput>
+        <FormInput label="联系方式"></FormInput>
         <FormInput label="公司名"></FormInput>
         <View style={{ height: 50 }}>
           <CustomButton
