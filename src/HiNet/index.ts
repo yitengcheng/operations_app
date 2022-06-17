@@ -9,7 +9,6 @@ import { loadStorage } from '../utils/localStorage';
  * @param api 要请求的接口
  */
 export function get(api: string) {
-  showLoading();
   return async (params?: {}) => {
     const token = await loadStorage('token');
     return handleData(
@@ -28,7 +27,6 @@ export function get(api: string) {
  * @returns
  */
 export function post(api: string) {
-  showLoading();
   return (params?: {}) => {
     return async (queryParams?: {} | string) => {
       let data;
@@ -72,7 +70,6 @@ function handleData(doAction: Promise<any>) {
         return res.text();
       })
       .then((result) => {
-        hidenLoading();
         console.log('response:', JSON.stringify(result));
         if (typeof result === 'string') {
           throw new Error(result);
@@ -90,7 +87,6 @@ function handleData(doAction: Promise<any>) {
         resolve(result?.data ?? result);
       })
       .catch((err) => {
-        hidenLoading();
         reject(err);
       });
   });
