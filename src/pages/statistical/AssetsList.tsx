@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Alert,
+  Button,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -65,18 +66,23 @@ export default (props: any) => {
   const renderItem = (data) => {
     let res = _.toPairs(data);
     return (
-      <TouchableOpacity
-        onPress={() => NavigationUtil.goPage({ listRef, ...data }, 'Assets')}
-        onLongPress={() => delAsset(data._id)}
-        style={{ padding: 10, borderBottomWidth: 1, borderColor: theme.borderColor }}
-      >
-        {res.map((item, index) => (
-          <View style={{ flexDirection: 'row' }} key={index}>
-            <Text style={{ fontSize: 16, color: '#000000' }}>{item?.[0]}：</Text>
-            <Text style={{ fontSize: 16, color: '#000000' }}>{item?.[1]}</Text>
-          </View>
-        ))}
-      </TouchableOpacity>
+      <View style={{ padding: 10, borderBottomWidth: 1, borderColor: theme.borderColor }}>
+        <TouchableOpacity
+          onPress={() => NavigationUtil.goPage({ listRef, ...data }, 'Assets')}
+          onLongPress={() => delAsset(data._id)}
+        >
+          {res.map((item, index) => (
+            <View style={{ flexDirection: 'row' }} key={index}>
+              <Text style={{ fontSize: 16, color: '#000000' }}>{item?.[0]}：</Text>
+              <Text style={{ fontSize: 16, color: '#000000' }}>{item?.[1]}</Text>
+            </View>
+          ))}
+        </TouchableOpacity>
+        <Button
+          title="为此资产创建工单"
+          onPress={() => NavigationUtil.goPage({ title: '故障上报', assetsId: data._id }, 'RepairDetail')}
+        ></Button>
+      </View>
     );
   };
   return (
