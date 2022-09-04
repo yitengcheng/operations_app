@@ -29,8 +29,11 @@ export default (props: any) => {
   const [templateId, setTemplateId] = useState('');
   const [id, setId] = useState(params?._id ?? '');
   const [isLoading, setIsLoading] = useState(false);
+  const [customerOption, setCustomerOption] = useState([]);
+  const [customerId, setCustomerId] = useState('');
   useEffect(() => {
     initTemplate();
+    initCustomers();
   }, []);
   const initTemplate = () => {
     post(`${apis.templateInfo}`)({ type: 1 })().then((res) => {
@@ -40,6 +43,7 @@ export default (props: any) => {
         _.toPairs(content).map((item) => {
           item?.[1] && pushComponent(item?.[1]);
         });
+        setCustomerId(params?.customerId);
         setComponents(_.uniqBy(components, 'label'));
         setTemplateId(res._id);
       }
@@ -207,7 +211,7 @@ export default (props: any) => {
     if (flag) {
       return;
     }
-    post(apis.addAssets)({ data, templateId, id })().then((res) => {
+    post(apis.addAssets)({ data, templateId, id, customerId })().then((res) => {
       Alert.alert('提示', '入库成功', [
         {
           text: '确定',
@@ -218,6 +222,16 @@ export default (props: any) => {
           },
         },
       ]);
+    });
+  };
+  const initCustomers = () => {
+    post(apis.customers)()().then((res) => {
+      const { list } = res;
+      let result = [];
+      list?.map((item) => {
+        result.push({ label: item?.name, value: item?._id });
+      });
+      setCustomerOption(result);
     });
   };
   return (
@@ -238,6 +252,14 @@ export default (props: any) => {
           />
         }
       >
+        <FormSelect
+          label="所属客户"
+          options={customerOption}
+          defaultValue={customerId}
+          onChange={(value) => {
+            setCustomerId(value);
+          }}
+        />
         {components.map((item, key) => (
           <View key={key}>{item?.com}</View>
         ))}

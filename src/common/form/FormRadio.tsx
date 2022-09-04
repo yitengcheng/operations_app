@@ -35,12 +35,12 @@ const FormRadio = (props: any) => {
       setOnSelect([item.value]);
     }
   };
-  const [onSelect, setOnSelect] = useState(defaultValue ?? []);
+  const [onSelect, setOnSelect] = useState([defaultValue] ?? []);
   useEffect(() => {
     onChange && onChange(multiple ? onSelect : onSelect?.[0]);
   }, [onSelect]);
   useEffect(() => {
-    setOnSelect(defaultValue);
+    setOnSelect([defaultValue]);
   }, [defaultValue]);
   return (
     <View style={[styles.column]}>

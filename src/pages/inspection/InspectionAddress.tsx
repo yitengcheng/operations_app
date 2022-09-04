@@ -20,28 +20,33 @@ export default (props: any) => {
   const [id, setId] = useState(undefined);
   const [dutyUser, setDutyUser] = useState([]);
   const [headUser, setHeadUser] = useState('');
+  const [customerOption, setCustomerOption] = useState([]);
+  const [customerId, setCustomerId] = useState('');
 
   useEffect(() => {
     initDutyUser();
+    initCustomers();
   }, []);
 
   const { validate, ...other } = useValidation({
-    state: { office, headUser },
+    state: { office, headUser, customerId },
     labels: {
       office: '巡检点',
       headUser: '负责人',
+      customerId: '所属客户',
     },
   });
   const addInspection = () => {
     const res = validate({
       office: { required: true },
       headUser: { required: true },
+      customerId: { required: true },
     });
     if (!res) {
       Alert.alert('错误', '请仔细检查表单');
       return;
     }
-    post(apis.addInspection)({ office, id, headUser })().then((res) => {
+    post(apis.addInspection)({ office, id, headUser, customerId })().then((res) => {
       Alert.alert('提示', '成功', [
         {
           text: '确定',
@@ -62,6 +67,16 @@ export default (props: any) => {
       result.push({ label: item.nickName, value: item._id });
     });
     setDutyUser(result);
+  };
+  const initCustomers = () => {
+    post(apis.customers)()().then((res) => {
+      const { list } = res;
+      let result = [];
+      list?.map((item) => {
+        result.push({ label: item?.name, value: item?._id });
+      });
+      setCustomerOption(result);
+    });
   };
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
@@ -90,6 +105,7 @@ export default (props: any) => {
                       setModalVisible(true);
                       setOffice(data.office);
                       setHeadUser(data?.headUser ?? '');
+                      setCustomerId(data?.customerId ?? '');
                       setType(2);
                       setId(data._id);
                     },
@@ -150,6 +166,15 @@ export default (props: any) => {
           defaultValue={headUser}
           onChange={setHeadUser}
           {...validOption('headUser', other)}
+        />
+        <FormSelect
+          label="所属客户"
+          options={customerOption}
+          defaultValue={customerId}
+          onChange={(value) => {
+            setCustomerId(value);
+          }}
+          {...validOption('customerId', other)}
         />
         <View>
           <CustomButton

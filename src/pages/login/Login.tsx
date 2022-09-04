@@ -108,14 +108,14 @@ export default (props: any) => {
           onChangeText={setPassword}
           {...validOption('password', other)}
         />
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={{ marginLeft: 10 }}
           onPress={() => {
             setModalVisible(true);
           }}
         >
           <Text style={{ color: '#364ddb' }}>快速注册</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
       <View>
         <CustomButton title="登录" buttonStyle={{ width: 200, alignSelf: 'center' }} onClick={toLogin} />

@@ -36,6 +36,7 @@ export default (props: any) => {
   const [type, setType] = useState('');
   const [label, setLabel] = useState('');
   const [hasRequired, setHasRequired] = useState('');
+  const [hasFilter, setHasFilter] = useState(0);
   const [options, setOptions] = useState([{ label: '选项1', value: '' }]);
   const [maxLength, setMaxLength] = useState('');
   const [count, setCount] = useState('');
@@ -63,7 +64,7 @@ export default (props: any) => {
   };
 
   const { validate, ...other } = useValidation({
-    state: { type, label, maxLength, hasRequired, count, minDate, maxDate },
+    state: { type, label, maxLength, hasRequired, count, minDate, maxDate, hasFilter },
     labels: {
       type: '类型',
       label: '框名',
@@ -72,6 +73,7 @@ export default (props: any) => {
       count: '可上传图片数',
       minDate: '可选最小日期',
       maxDate: '可选最大日期',
+      hasFilter: '是否作为过滤选项',
     },
   });
 
@@ -101,9 +103,10 @@ export default (props: any) => {
         maxDate,
         minDate,
         hasRequired,
-        maxLength,
+        maxLength: length,
         options: tmpOption,
         count,
+        hasFilter,
       },
       index,
     );
@@ -116,9 +119,10 @@ export default (props: any) => {
           maxDate,
           minDate,
           hasRequired,
-          maxLength,
+          maxLength: length,
           options: tmpOption,
           count,
+          hasFilter,
         },
       }),
     );
@@ -205,6 +209,7 @@ export default (props: any) => {
     setMinDate('');
     setMaxDate('');
     setIndex('');
+    setHasFilter(0);
   };
 
   const selectOptions = () => {
@@ -277,6 +282,7 @@ export default (props: any) => {
     setHasRequired(componentsOption[label]?.hasRequired);
     setMinDate(componentsOption[label]?.minDate);
     setMaxDate(componentsOption[label]?.maxDate);
+    setHasFilter(componentsOption[label]?.hasFilter);
     setIndex(index);
   };
   const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => {
@@ -374,7 +380,14 @@ export default (props: any) => {
               defaultValue={hasRequired}
               onChange={(value) => setHasRequired(value)}
             />
+            <FormRadio
+              label="模板项是否为过滤字段"
+              defaultValue={hasFilter}
+              onChange={setHasFilter}
+              {...validOption('hasFilter', other)}
+            />
             <FormInput label="模板项名称" value={label} onChangeText={setLabel} {...validOption('label', other)} />
+
             {(type === '文字输入框' || type === '多行文字输入框') && (
               <FormInput
                 label="最大长度"

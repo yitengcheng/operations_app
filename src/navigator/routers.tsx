@@ -9,6 +9,7 @@ import Inspection from '../pages/inspection';
 import Scheduling from '../pages/scheduling';
 import Statistical from '../pages/statistical';
 import StaffManagement from '../pages/personal/StaffManagement';
+import CustomerManagement from '../pages/personal/CustomerManagement';
 import AddStaff from '../pages/personal/AddStaff';
 import Template from '../pages/personal/Template';
 import ModfiyPassword from '../pages/personal/ModfiyPassword';
@@ -185,6 +186,10 @@ export const pages = [
   {
     name: 'StaffManagement',
     component: StaffManagement,
+  },
+  {
+    name: 'CustomerManagement',
+    component: CustomerManagement,
   },
   {
     name: 'AddStaff',

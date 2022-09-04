@@ -77,6 +77,13 @@ export default (props: any) => {
               },
             },
             {
+              text: '客户管理',
+              icon: require('../../assets/image/customer.png'),
+              func: () => {
+                NavigationUtil.goPage({}, 'CustomerManagement');
+              },
+            },
+            {
               text: '资产模板',
               icon: require('../../assets/image/putIn.png'),
               func: () => {
