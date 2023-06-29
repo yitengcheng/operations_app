@@ -16,7 +16,6 @@ import { saveBottomNavigation } from '../../action/bottomnavigation';
 import FormInput from '../../common/form/FormInput';
 import { CustomButton, Popup } from '../../common/Component';
 import { useValidation } from 'react-native-form-validator';
-import JPush from 'jpush-react-native';
 import apis from '../../apis';
 import { post, get } from '../../HiNet';
 import { validOption } from '../../utils';
@@ -38,15 +37,6 @@ export default (props: any) => {
     saveStorage('token', '');
   }, []);
   let registrationId;
-  JPush.setLoggerEnable(true);
-  JPush.init({ appKey: '27282edcc5414ca852184e55', channel: 'default', production: 1 });
-  //连接状态
-  JPush.addConnectEventListener((result) => {
-    result.connectEnable &&
-      JPush.getRegistrationID((res) => {
-        registrationId = res.registerID;
-      });
-  });
 
   const { validate, ...other } = useValidation({
     state: { username, password },
