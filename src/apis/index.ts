@@ -8,6 +8,7 @@ import inspection from './inspection';
 import fault from './fault';
 import statistical from './statistical';
 import customer from './customer';
+import good from './good';
 
 export default {
   ...upload,
@@ -20,4 +21,5 @@ export default {
   ...fault,
   ...statistical,
   ...customer,
+  ...good,
 };

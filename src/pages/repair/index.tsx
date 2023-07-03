@@ -31,7 +31,11 @@ export default (props: any) => {
     });
   };
   const toListPage = (title: string, type: number) => {
-    NavigationUtil.goPage({ title, type }, 'RepairList');
+    if (type) {
+      NavigationUtil.goPage({ title, type }, 'RepairList');
+    } else {
+      NavigationUtil.goPage({ title: '客户资产' }, 'CustomerGoodList');
+    }
   };
   const onBarCodeRead = (e) => {
     setModalVisible(false);
@@ -105,6 +109,10 @@ export default (props: any) => {
               style={styles.option_icon}
               resizeMode="contain"
             />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.option_box} onPress={() => toListPage('客户资产')}>
+            <Text style={styles.btnText}>客户资产</Text>
+            <Image source={require('../../assets/image/ziyuan.png')} style={styles.option_icon} resizeMode="contain" />
           </TouchableOpacity>
         </View>
       </View>

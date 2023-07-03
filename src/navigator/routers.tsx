@@ -28,6 +28,7 @@ import AssetsClassifyList from '../pages/statistical/AssetsClassifyList';
 import Schedule from '../pages/schedule';
 import RepairById from '../pages/repair/RepairById';
 import { Image, StyleSheet } from 'react-native';
+import CustomerGoodList from '../pages/repair/CustomerGoodList';
 
 // 底部导航
 export const tabs = {
@@ -258,6 +259,10 @@ export const pages = [
   {
     name: 'AssetsClassifyList',
     component: AssetsClassifyList,
+  },
+  {
+    name: 'CustomerGoodList',
+    component: CustomerGoodList,
   },
 ];
 

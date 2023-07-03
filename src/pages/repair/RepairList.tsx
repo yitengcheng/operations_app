@@ -100,12 +100,18 @@ export default (props: any) => {
           <View style={styles.itemBox}>
             <Text style={styles.itemText}>故障详情：</Text>
           </View>
-          {res.map((item, index) => (
-            <View style={{ flexDirection: 'row' }} key={index}>
-              <Text style={{ color: '#000000' }}>{item?.[0]}：</Text>
-              <Text style={{ color: '#000000' }}>{item?.[1]}</Text>
-            </View>
-          ))}
+          {res.map((item, index) => {
+            if (item?.[0] == 'customerId') {
+              return;
+            } else {
+              return (
+                <View style={{ flexDirection: 'row' }} key={index}>
+                  <Text style={{ color: '#000000' }}>{item?.[0]}：</Text>
+                  <Text style={{ color: '#000000' }}>{item?.[1]}</Text>
+                </View>
+              );
+            }
+          })}
           {conclusion && (
             <View style={styles.itemBox}>
               <Text style={styles.itemText}>处理情况：{conclusion ?? ''}</Text>
