@@ -58,8 +58,8 @@ export default (props: any) => {
   const getRepair = () => {
     post(apis.repairDetail)({ faultId: props.route.params.faultId })().then((res) => {
       const { asset, fault } = res;
-      delete asset._id;
-      delete asset.__v;
+      delete asset?._id;
+      delete asset?.__v;
       const {
         createTime,
         status,
@@ -132,29 +132,55 @@ export default (props: any) => {
             <Image source={require('../../assets/image/asset.png')} style={{ width: 20, height: 20, marginRight: 5 }} />
             <Text style={{ fontSize: 20, fontWeight: '700', color: '#000000' }}>资产详情</Text>
           </View>
-          {_.toPairs(asset).map((item, index) => (
-            <View style={{ flexDirection: 'row' }} key={randomId()}>
-              <Text style={{ color: '#000000' }}>{item?.[0]}：</Text>
-              {_.isArray(item?.[1]) && checkFileExt(item?.[1]?.[0]) ? (
-                <View
-                  style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap', paddingVertical: 5 }}
-                >
-                  {item?.[1]?.map((imgUrl) => (
-                    <Image
-                      source={{
-                        uri: togetherUrl(imgUrl),
-                      }}
-                      key={randomId()}
-                      style={{ width: 80, height: 80, margin: 5 }}
-                      resizeMode="contain"
-                    />
-                  ))}
+          <View>
+            {asset?.name ? (
+              <View>
+                <View style={{ flexDirection: 'row' }} key={randomId()}>
+                  <Text style={{ color: '#000000' }}>名称：{asset?.name}</Text>
                 </View>
-              ) : (
-                <Text style={{ color: '#000000' }}>{item?.[1]}</Text>
-              )}
-            </View>
-          ))}
+                <View style={{ flexDirection: 'row' }} key={randomId()}>
+                  <Text style={{ color: '#000000' }}>型号：{asset?.models}</Text>
+                </View>
+                <View style={{ flexDirection: 'row' }} key={randomId()}>
+                  <Text style={{ color: '#000000' }}>品牌：{asset?.brand}</Text>
+                </View>
+                <View style={{ flexDirection: 'row' }} key={randomId()}>
+                  <Text style={{ color: '#000000' }}>固定资产编号：{asset?.fixedNumber}</Text>
+                </View>
+              </View>
+            ) : (
+              <View>
+                {_.toPairs(asset).map((item, index) => (
+                  <View style={{ flexDirection: 'row' }} key={randomId()}>
+                    <Text style={{ color: '#000000' }}>{item?.[0]}：</Text>
+                    {_.isArray(item?.[1]) && checkFileExt(item?.[1]?.[0]) ? (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
+                          flexWrap: 'wrap',
+                          paddingVertical: 5,
+                        }}
+                      >
+                        {item?.[1]?.map((imgUrl) => (
+                          <Image
+                            source={{
+                              uri: togetherUrl(imgUrl),
+                            }}
+                            key={randomId()}
+                            style={{ width: 80, height: 80, margin: 5 }}
+                            resizeMode="contain"
+                          />
+                        ))}
+                      </View>
+                    ) : (
+                      <Text style={{ color: '#000000' }}>{item?.[1]}</Text>
+                    )}
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
         </View>
         <View style={{ padding: 10, borderBottomColor: theme.borderColor, borderBottomWidth: 5 }}>
           <View
