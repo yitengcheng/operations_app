@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import apis from '../../apis';
@@ -6,6 +6,7 @@ import { ListData, NavBar, Popup } from '../../common/Component';
 import { post } from '../../HiNet';
 import { dayFormat, randomId, togetherUrl } from '../../utils';
 import NavigationUtil from '../../navigator/NavigationUtil';
+import FormSelect from '../../common/form/FormSelect';
 export default (props: any) => {
   const theme = useSelector((state) => {
     return state.theme.theme;
@@ -16,7 +17,16 @@ export default (props: any) => {
   const listRef = useRef();
   const { title } = props.route.params;
   const [customerId, setCustomerId] = useState();
+  const [customerFlag, setCustomerFlag] = useState(false);
+  const [customers, setCustomers] = useState([]);
 
+  useEffect(() => {
+    let tmp = [];
+    userInfo?.customerList?.map((item) => {
+      tmp.push({ label: item.name, value: item._id });
+    });
+    setCustomers(tmp);
+  }, ['userInfo']);
   const report = (data) => {
     NavigationUtil.goPage({ title: '故障上报', assetsId: data._id }, 'RepairDetail');
   };
@@ -44,10 +54,27 @@ export default (props: any) => {
 
   return (
     <SafeAreaView style={[{ backgroundColor: theme.primary }, styles.root]}>
-      <NavBar title={title} {...props} />
+      <NavBar title={title} {...props} rightTitle="客户" onRightClick={() => setCustomerFlag(true)} />
       <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
         <ListData ref={listRef} url={apis.goodShareList} renderItem={renderItem} params={{ customerId }} />
       </View>
+      <Popup
+        modalVisible={customerFlag}
+        onClose={() => {
+          setCustomerFlag(false);
+        }}
+        type="center"
+      >
+        <FormSelect
+          label="客户"
+          options={customers}
+          onChange={(value) => {
+            setCustomerId(value);
+            setCustomerFlag(false);
+            listRef.current?.refresh();
+          }}
+        />
+      </Popup>
     </SafeAreaView>
   );
 };

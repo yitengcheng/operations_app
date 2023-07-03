@@ -228,6 +228,11 @@ const List = (props: any, ref: any) => {
     setNoMore(false);
     getData(pageNo);
   }, []);
+  useEffect(() => {
+    setpageNo(1);
+    setNoMore(false);
+    getData(pageNo);
+  }, ['params']);
   const getData = (pageNo: number) => {
     post(url)({ pageNum: pageNo, pageSize: 10, keyword, ...params })()
       .then((res) => {
@@ -324,7 +329,7 @@ const List = (props: any, ref: any) => {
             refreshing={isLoading}
             onRefresh={() => {
               setpageNo(1);
-              getData(pageNo);
+              getData(1);
             }}
             tintColor={theme.primary}
           />
